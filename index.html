@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>WP25-CMS（WordPress）サイト制作</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Kaisei+Decol&family=Yomogi&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap');
+    
+    :root {
+      --fashion-1: #593C47;
+      --fashion-2: #F2E63D;
+      --fashion-3: #F2C53D;
+      --fashion-4: #F25C05;
+      --fashion-5: #F24405;
+      --shadow-color: rgba(89, 60, 71, 0.15);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      background-color: #f8f9fa;
+      color: #334155;
+      line-height: 1.4;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px var(--shadow-color);
+      overflow: hidden;
+      position: relative;
+    }
+    
+    /* 手書き風の装飾パターン */
+    .container::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(var(--fashion-2) 1px, transparent 1px),
+        radial-gradient(var(--fashion-3) 1px, transparent 1px);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+      opacity: 0.07;
+      z-index: 0;
+    }
+    
+    .content {
+      position: relative;
+      z-index: 1;
+      padding: 30px;
+    }
+    
+    /* ヘッダー */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 3px solid var(--fashion-3);
+      margin-bottom: 30px;
+      position: relative;
+    }
+    
+    .header::after {
+      content: "✂️";
+      position: absolute;
+      right: 15px;
+      bottom: -16px;
+      font-size: 24px;
+      transform: rotate(-10deg);
+    }
+    
+    .title {
+      font-family: 'Kaisei Decol', serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--fashion-1);
+      position: relative;
+      display: inline-block;
+      background: linear-gradient(90deg, var(--fashion-1) 0%, var(--fashion-4) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+    
+    .title::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 8px;
+      bottom: -8px;
+      left: 0;
+      background: url("data:image/svg+xml,%3Csvg width='100' height='8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,4 C20,0 25,8 45,4 C65,0 75,8 100,4' stroke='%23F25C05' fill='none' stroke-width='2'/%3E%3C/svg%3E") repeat-x;
+      background-size: 100px 8px;
+    }
+    
+    .date {
+      font-family: 'Yomogi', cursive;
+      font-size: 16px;
+      color: var(--fashion-5);
+      text-align: right;
+    }
+    
+    /* メインコンテンツ */
+    .main-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-top: 40px;
+      position: relative;
+    }
+    
+    /* カード */
+    .card {
+      flex: 1 1 calc(50% - 30px);
+      min-width: 300px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      box-shadow: 0 4px 15px var(--shadow-color);
+      padding: 25px;
+      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      backdrop-filter: blur(5px);
+      border: 2px solid transparent;
+      background-clip: padding-box;
+      overflow: hidden;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px var(--shadow-color);
+      border-color: rgba(242, 230, 60, 0.3);
+    }
+    
+    /* カードヘッダー */
+    .card-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      border-bottom: 2px dashed var(--fashion-3);
+      padding-bottom: 10px;
+      position: relative;
+    }
+    
+    .card-date {
+      font-family: 'Yomogi', cursive;
+      font-size: 18px;
+      color: var(--fashion-1);
+      padding: 5px 15px;
+      background-color: var(--fashion-2);
+      border-radius: 20px;
+      position: relative;
+      margin-right: 15px;
+      transform: rotate(-2deg);
+    }
+    
+    .card-date::before {
+      content: "📅";
+      margin-right: 5px;
+    }
+    
+    .card-title {
+      font-family: 'Kaisei Decol', serif;
+      font-size: 22px;
+      color: var(--fashion-5);
+      position: relative;
+    }
+    
+    /* カード内容 */
+    .card-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .card-icon {
+      position: absolute;
+      right: 15px;
+      top: 15px;
+      font-size: 60px;
+      opacity: 0.15;
+      transform: rotate(10deg);
+      z-index: 0;
+    }
+    
+    .tag {
+      display: inline-block;
+      font-family: 'Yomogi', cursive;
+      background-color: var(--fashion-4);
+      color: white;
+      padding: 3px 12px;
+      border-radius: 15px;
+      font-size: 14px;
+      margin: 5px 5px 5px 0;
+      position: relative;
+    }
+    
+    .tag::before {
+      content: "#";
+      margin-right: 2px;
+    }
+    
+    /* 装飾コーナー */
+    .card::before {
+      content: "";
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      top: -2px;
+      left: -2px;
+      background: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0 L40,0 C20,5 5,20 0,40 L0,0 Z' fill='%23F2C53D'/%3E%3C/svg%3E") no-repeat;
+      z-index: 0;
+    }
+    
+    /* 手描き風ボタン */
+    .button {
+      display: inline-block;
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-weight: 700;
+      background-color: var(--fashion-4);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      margin-top: 15px;
+      position: relative;
+      transition: transform 0.2s ease;
+      border: 2px solid var(--fashion-5);
+      box-shadow: 3px 3px 0 var(--fashion-1);
+    }
+    
+    .button:hover {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 var(--fashion-1);
+    }
+    
+    .button::after {
+      content: "→";
+      margin-left: 8px;
+    }
+    
+    /* フッター */
+    .footer {
+      margin-top: 50px;
+      text-align: center;
+      font-family: 'Yomogi', cursive;
+      font-size: 14px;
+      color: var(--fashion-1);
+      padding-top: 20px;
+      border-top: 1px dashed var(--fashion-3);
+      position: relative;
+    }
+    
+    .footer::before {
+      content: "✒️";
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: white;
+      padding: 0 10px;
+    }
+    
+    /* 手書き風の矢印 */
+    .arrow {
+      position: absolute;
+      width: 80px;
+      height: 50px;
+      left: 50%;
+      top: 40%;
+      transform: translateX(-50%) rotate(90deg);
+      opacity: 0.7;
+    }
+    
+    @media (max-width: 768px) {
+      .card {
+        flex: 1 1 100%;
+      }
+      
+      .arrow {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="content">
+      <header class="header">
+        <div>
+          <h1 class="title">WP25-CMS（WordPress）サイト制作</h1>
+          <p style="font-family: 'Yomogi', cursive; margin-top: 5px; color: #475569;">
+            <span style="background: rgba(242, 196, 60, 0.3); padding: 0 5px;">WordPress学習カリキュラム</span> 📝
+          </p>
+          <div style="margin-top: 15px; text-align: center;">
+            <div style="display: inline-block; padding: 10px 25px; background: rgba(242, 196, 60, 0.2); border-radius: 30px; transform: rotate(-1deg); position: relative;">
+              <span style="font-family: 'Kaisei Decol', serif; font-size: 18px; color: var(--fashion-5);">
+                🎯 目標：世界シェアNo.1のWordPressでサイトを作れるようになる！
+              </span>
+              <svg width="100" height="20" style="position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%);" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,0 C25,20 75,20 100,0" stroke="#F2C53D" fill="none" stroke-width="2"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="date"></div>
+      </header>
+      
+      <main class="main-content">
+        <div class="card">
+          <div class="card-icon">📚</div>
+          <div class="card-header">
+            <div class="card-date">4月15日</div>
+            <h2 class="card-title">CMS・WordPress概要</h2>
+          </div>
+          <div class="card-content">
+            <div class="tags">
+              <span class="tag">CMSとは</span>
+              <span class="tag">WordPress基礎</span>
+            </div>
+            <p style="margin-top: 15px; position: relative; z-index: 1;">
+              CMSとはなにか、メリットやデメリットは？またWordPressの基本的な概要と特徴について学びます。
+            </p>
+            <div style="margin-top: 10px; padding: 10px; background: rgba(242, 196, 60, 0.15); border-radius: 8px; border-left: 3px solid var(--fashion-3);">
+              <p style="font-family: 'Yomogi', cursive; font-size: 15px;">
+                <span style="font-weight: bold; color: var(--fashion-5);">📌 ポイント:</span> 
+                WordPressが選ばれる理由を知ろう！
+              </p>
+            </div>
+            <a href="#" class="button">資料をみる</a>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-icon">💻</div>
+          <div class="card-header">
+            <div class="card-date">4月22日</div>
+            <h2 class="card-title">WordPressインストール</h2>
+          </div>
+          <div class="card-content">
+						次回はWordPressを実際にインストールしていきます！
+            <!-- <div class="tags">
+              <span class="tag">環境構築</span>
+              <span class="tag">インストール手順</span>
+              <span class="tag">初期設定</span>
+            </div>
+            <p style="margin-top: 15px; position: relative; z-index: 1;">
+              WordPressを自分のサーバーにインストールして、実際にサイトを構築する手順を学びます。サーバー設定からデータベース連携まで。
+            </p>
+            <div style="margin-top: 10px; padding: 10px; background: rgba(242, 91, 4, 0.15); border-radius: 8px; border-left: 3px solid var(--fashion-4);">
+              <p style="font-family: 'Yomogi', cursive; font-size: 15px;">
+                <span style="font-weight: bold; color: var(--fashion-5);">⚠️ 注意点:</span> 
+                データベースの設定情報は必ずメモを取っておきましょう！
+              </p>
+            </div>
+            <a href="#" class="button">資料をみる</a> -->
+          </div>
+        </div>
+      </main>
+      
+
+      
+      <footer class="footer">
+        <p>WP25-CMS（WordPress）サイト制作 資料一覧</p>
+      </footer>
+    </div>
+  </div>
+</body>
+</html>
