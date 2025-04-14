@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="robots" content="noindex, nofollow">
+    <title>CMSとWordPressの概要 - グラフィックレコーディング</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kaisei+Decol&family=Yomogi&family=Zen+Kurenaido&display=swap');
+        
+        :root {
+            --fashion-1: #593C47;
+            --fashion-2: #F2E63D;
+            --fashion-3: #F2C53D;
+            --fashion-4: #F25C05;
+            --fashion-5: #F24405;
+            --neutral-dark: #334155;
+            --neutral-mid: #475569;
+            --neutral-light: #F8FAFC;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Zen Kaku Gothic New', sans-serif;
+            line-height: 1.4;
+            color: var(--neutral-dark);
+            background-color: #f9f9f9;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23e2e8f0' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--fashion-1), var(--fashion-5));
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        
+        .title {
+            font-family: 'Kaisei Decol', serif;
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .date {
+            font-family: 'Yomogi', cursive;
+            font-size: 16px;
+            color: var(--fashion-2);
+            text-align: right;
+        }
+        
+        .doodle {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 40px;
+            opacity: 0.3;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        
+        .column {
+            width: 33.333%;
+            padding: 15px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #f0f0f0;
+        }
+        
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--fashion-3), var(--fashion-4));
+            border-radius: 3px 0 0 3px;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .heading {
+            font-family: 'Kaisei Decol', serif;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--fashion-1);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px dashed var(--fashion-3);
+            display: flex;
+            align-items: center;
+        }
+        
+        .heading-icon {
+            margin-right: 8px;
+            background: var(--fashion-3);
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 16px;
+        }
+        
+        .sub-heading {
+            font-family: 'Zen Kurenaido', sans-serif;
+            font-size: 18px;
+            color: #1e40af;
+            margin: 15px 0 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sub-heading::before {
+            content: "✏️";
+            margin-right: 8px;
+        }
+        
+        .content {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .highlight {
+            font-weight: bold;
+            color: var(--fashion-5);
+            background: linear-gradient(transparent 60%, var(--fashion-2) 60%);
+            padding: 0 2px;
+        }
+        
+        .arrow {
+            position: absolute;
+            width: 50px;
+            height: 30px;
+            z-index: 1;
+        }
+        
+        .arrow-right {
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .arrow-down {
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%) rotate(90deg);
+        }
+        
+        .handdrawn-box {
+            border: 3px solid;
+            border-color: var(--fashion-4);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .handdrawn-box::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: white;
+            padding: 0 10px;
+            font-family: 'Yomogi', cursive;
+            color: var(--fashion-4);
+            font-weight: bold;
+        }
+        
+        .list {
+            margin: 10px 0 10px 10px;
+        }
+        
+        .list-item {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .list-item::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--fashion-4);
+            font-weight: bold;
+        }
+        
+        .label {
+            display: inline-block;
+            background: var(--fashion-3);
+            color: var(--fashion-1);
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-right: 5px;
+            font-weight: bold;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: rgba(89, 60, 71, 0.1);
+            color: var(--fashion-1);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin: 2px;
+        }
+        
+        .badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--fashion-5);
+            color: white;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: bold;
+            transform: rotate(15deg);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .stat-item {
+            width: 33%;
+        }
+        
+        .stat-number {
+            font-family: 'Kaisei Decol', serif;
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--fashion-4);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--neutral-mid);
+        }
+        
+        .connector {
+            position: absolute;
+            z-index: 0;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        
+        .table th {
+            background: var(--fashion-3);
+            color: var(--fashion-1);
+            text-align: left;
+            padding: 8px;
+            border: 1px dashed var(--fashion-1);
+        }
+        
+        .table td {
+            padding: 8px;
+            border: 1px dashed #ccc;
+        }
+        
+        .table tr:nth-child(even) {
+            background: rgba(242, 230, 61, 0.1);
+        }
+        
+        footer {
+            background: var(--fashion-1);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 12px;
+            border-radius: 0 0 12px 12px;
+        }
+        
+        /* 手描き風の要素 */
+        .handdrawn-circle {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--fashion-4);
+            border-radius: 50%;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        
+        .handdrawn-underline {
+            display: inline-block;
+            position: relative;
+        }
+        
+        .handdrawn-underline::after {
+            content: "";
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='3' viewBox='0 0 100 3' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,1.5 c 5,0 5,-1 10,-1 s 5,2 10,2 s 5,-2 10,-2 s 5,1 10,1 s 5,-1 10,-1 s 5,2 10,2 s 5,-2 10,-2 s 5,1 10,1 s 5,-1 10,-1 s 5,2 10,2' stroke='%23F25C05' stroke-width='1' fill='none' /%3E%3C/svg%3E");
+            background-repeat: repeat-x;
+        }
+        
+        .handdrawn-arrow {
+            position: relative;
+            display: inline-block;
+            padding-right: 20px;
+        }
+        
+        .handdrawn-arrow::after {
+            content: "→";
+            position: absolute;
+            right: 0;
+            color: var(--fashion-4);
+        }
+        
+        .note {
+            background: rgba(242, 230, 61, 0.2);
+            border-left: 4px solid var(--fashion-3);
+            padding: 10px 15px;
+            margin: 15px 0;
+            font-size: 14px;
+            position: relative;
+        }
+        
+        .note::before {
+            content: "📝";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            font-size: 20px;
+        }
+        
+        .bubble {
+            position: relative;
+            background: var(--fashion-2);
+            border-radius: 10px;
+            padding: 10px 15px;
+            margin: 15px 0 15px 30px;
+            font-family: 'Yomogi', cursive;
+            font-size: 14px;
+        }
+        
+        .bubble::before {
+            content: "";
+            position: absolute;
+            left: -15px;
+            top: 15px;
+            border: 8px solid transparent;
+            border-right-color: var(--fashion-2);
+        }
+        
+        /* レスポンシブ対応 */
+        @media (max-width: 900px) {
+            .column {
+                width: 50%;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .column {
+                width: 100%;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="title">CMSとWordPressの概要</div>
+            <div class="date">授業日：2025年4月15日</div>
+        </header>
+        
+        <div class="main-content">
+            <!-- 左カラム: CMSの基本概念 -->
+            <div class="column">
+                <div class="section">
+                    <div class="heading">
+                        <div class="heading-icon">🔍</div>
+                        CMSの基本概念
+                    </div>
+                    
+                    <div class="card">
+                        <div class="sub-heading">CMSとは</div>
+                        <div class="content">
+                            <span class="highlight">コンテンツ管理システム（CMS）</span>とは、Webサイトのコンテンツを構成する<br>
+                            ・テキスト<br>
+                            ・画像<br>
+                            ・デザイン<br>
+                            ・レイアウト情報<br>
+                            を一元的に保存・管理するシステムです。
+                        </div>
+                        
+                        <div class="note">
+                            CMSを導入していないWebサイトでは、完成したWebページデータを1ページずつ作成・管理しますが、CMSを導入したWebサイトでは、データベースに個別に保存された画像、テキスト、テンプレートなどのデータをCMSが必要に応じて取り出し、Webページを自動生成します！
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card">
+                        <div class="sub-heading">CMSを利用するメリット</div>
+                        <div class="list">
+                            <div class="list-item">専門知識がなくてもWebサイトの更新が容易</div>
+                            <div class="list-item">情報発信力とブランディングを共に成長させるWebサイト構築が可能</div>
+                            <div class="list-item">Webサイトを誰でもコントロールしやすくできる</div>
+                            <div class="list-item">運用コストの削減</div>
+                            <div class="list-item">コンテンツの一元管理による効率化</div>
+                        </div>
+                        
+                        <div class="sub-heading">CMSのデメリット</div>
+                        <div class="list">
+                            <div class="list-item">導入初期コストがかかる場合がある</div>
+                            <div class="list-item">カスタマイズの自由度やセキュリティ面で制約を受ける場合がある</div>
+                            <div class="list-item">学習コストが発生する</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="card">
+                        <div class="sub-heading">CMSの種類と導入事例</div>
+                        <div class="table">
+                            <table>
+                                <tr>
+                                    <th>CMS名</th>
+                                    <th>特徴</th>
+                                    <th>導入事例</th>
+                                </tr>
+                                <tr>
+                                    <td><a href="https://ja.wordpress.org/" target="_blank">WordPress</a></td>
+                                    <td>世界で最も人気のあるCMS。多様なプラグインとテーマが利用可能。</td>
+                                    <td>多くの企業サイトやメディアサイト</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="https://new.drupal.org/home" target="_blank">Drupal</a></td>
+                                    <td>高度なセキュリティと拡張性を持つ大規模サイト向けCMS</td>
+                                    <td><a href="https://www.digital.go.jp/" target="_blank">デジタル庁</a></td>
+                                </tr>
+																<tr>
+																	<td><a href="https://www.movabletype.jp/" target="_blank">Movable Type</a></td>
+																	<td>静的サイト生成が可能で、セキュリティ性が高く大企業や官公庁に選ばれるCMS</td>
+																	<td><a href="https://www.arc.setsunan.ac.jp/" target="_blank">摂南大学理工学部建築学科</a></td>
+															</tr>
+                                <tr>
+                                    <td><a href="https://studio.design/ja" target="_blank">Studio</a></td>
+                                    <td>ノーコードで直感的に高品質デザインが実現できるCMS</td>
+                                    <td><a href="https://sompo.io/ja" target="_blank">SOMPO Digital Lab</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="https://ja.wix.com/" target="_blank">Wix</a></td>
+                                    <td>豊富なテンプレートで初心者でも簡単にサイト構築可能</td>
+                                    <td><a href="https://www.omaetachi.net/" target="_blank">かまいたちオフィシャルサイト</a></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="bubble">
+                            CMSには様々な種類があり、それぞれ特徴と利用目的が異なります。用途に応じて最適なものを選びましょう！
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 中央カラム: WordPressの紹介 -->
+            <div class="column">
+                <div class="section">
+                    <div class="heading">
+                        <div class="heading-icon">📊</div>
+                        WordPressの紹介
+                    </div>
+                    
+                    <div class="card">
+                        <div class="sub-heading">WordPressの概要</div>
+                        <div class="content">
+                            <span class="highlight">WordPressは無料で利用できるオープンソースのCMS</span>であり、GNU General Public License (GPL) v2（またはそれ以降）のライセンスで提供されています。
+                        </div>
+                        
+                        <div class="stats">
+                            <div class="stat-item">
+                                <div class="stat-number">43.4%</div>
+                                <div class="stat-label">全Webサイト中の割合</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">61.3%</div>
+                                <div class="stat-label">CMS利用サイト中の割合</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">5万+</div>
+                                <div class="stat-label">利用可能なプラグイン数</div>
+                            </div>
+                        </div>
+												<div class="content">※2025年4月14日現在</div>
+                        
+                        <div class="badge">No.1</div>
+                    </div>
+                    
+                    <div class="handdrawn-box">
+                        <div class="sub-heading">オープンソースの利点</div>
+                        <div class="list">
+                            <div class="list-item">無料で利用できる</div>
+                            <div class="list-item">世界中の開発者によって常に改善されている</div>
+                            <div class="list-item">自由にカスタマイズできる</div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card">
+                        <div class="sub-heading">WordPressが選ばれる理由</div>
+                        <div class="content">
+                            <div class="tag" style="background-color: var(--fashion-3); color: var(--fashion-1); font-weight: bold; font-size: 14px; padding: 5px 12px; margin-bottom: 10px;">無料・オープンソース</div>
+                            <div class="tag" style="background-color: var(--fashion-3); color: var(--fashion-1); font-weight: bold; font-size: 14px; padding: 5px 12px; margin-bottom: 10px;">テーマやプラグインで拡張可能</div>
+                            <div class="tag" style="background-color: var(--fashion-3); color: var(--fashion-1); font-weight: bold; font-size: 14px; padding: 5px 12px; margin-bottom: 10px;">柔軟性が高い</div>
+                            <div class="tag">多くのメディアタイプに対応</div>
+                            <div class="tag">学習しやすい</div>
+                            <div class="tag">豊富なコミュニティサポート</div>
+                            <div class="tag">サイト管理が容易</div>
+                            <div class="tag">SEOに優れている</div>
+                            <div class="tag">完全な管理権限</div>
+                            <div class="tag">優れたブログ機能</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="card">
+                        <div class="sub-heading">WordPressの導入事例</div>
+                        <div class="content">
+                            WordPressは以下のような有名企業でも導入されています：
+                            <div class="list">
+                                <div class="list-item"><a href="https://www.whitehouse.gov/" target="_blank">ホワイトハウス</a></div>
+                                <div class="list-item"><a href="https://corporate.kakaku.com/" target="_blank">株式会社カカクコム</a></div>
+                                <div class="list-item"><a href="https://www.yamasa.com/" target="_blank">ヤマサ醤油株式会社</a></div>
+																<div class="list-item"><a href="https://www.momat.go.jp/" target="_blank">東京国立近代美術館</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右カラム: WordPressの構成要素 -->
+            <div class="column">
+                <div class="section">
+                    <div class="heading">
+                        <div class="heading-icon">🧩</div>
+                        WordPressの構成要素
+                    </div>
+                    
+                    <div class="card">
+                        <div class="sub-heading">基本構成</div>
+                        <div class="content">
+                            WordPressは、主に以下の要素で構成されています：
+                        </div>
+                        
+                        <div class="handdrawn-box">
+                            <div class="label">PHP</div>
+                            <div class="content">
+                                WordPressの主要なプログラミング言語であり、WordPressの動作を制御します。
+                            </div>
+                        </div>
+                        
+                        <div class="handdrawn-box">
+                            <div class="label">データベース</div>
+                            <div class="content">
+                                MySQL/MariaDBなどのデータベース管理システムを使用。記事の本文や投稿日時などのデータが格納されます。
+                            </div>
+                        </div>
+                        
+                        <div class="handdrawn-box">
+                            <div class="label">コンテンツファイル群</div>
+                            <div class="content">
+                                <strong>テーマ</strong>：Webサイトのデザインを制御。多数のテーマを利用可能。<br>
+                                <strong>プラグイン</strong>：Webサイトに機能を追加。7万以上存在。<br>
+                                <strong>メディア</strong>：画像、動画、PDFなどのファイル。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="card">
+                        <div class="sub-heading">WordPressのドキュメント</div>
+                        <div class="content">
+                            WordPressに関する情報は以下の公式サイトで入手できます：
+                            
+                            <div class="list">
+                                <div class="list-item"><a href="https://ja.wordpress.org/support/" target="_blank">WordPress公式サポートページ</a> - 基本的な使い方、カスタマイズ、トラブルシューティング</div>
+                                <div class="list-item"><a href="https://ja.wordpress.org/support/forums/" target="_blank">WordPressフォーラム</a> - ユーザー同士の質問と回答</div>
+                                <div class="list-item"><a href="https://learn.wordpress.org/?locale=ja" target="_blank">Learn WordPress</a> - すべてのレベルに対応した無料の教育リソース</div>
+                            </div>
+                        </div>
+                        
+                        <div class="note">
+                            <strong>高度な技術情報：</strong><br>
+                            <a href="https://ja.wordpress.org/team/handbook/" target="_blank">WordPress開発ハンドブック</a> - 開発者向けの詳細な技術ドキュメント
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            出典: WordPress.org、Kinstaブログほか。2025年4月作成
+        </footer>
+    </div>
+</body>
+</html>
