@@ -115,27 +115,31 @@
     
     /* メインコンテンツ */
     .main-content {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 30px;
-      margin-top: 40px;
-      position: relative;
-    }
+			display: grid;
+			grid-template-columns: repeat(2, 1fr); /* 常に2列のグリッドを作成 */
+			gap: 30px;
+			margin-top: 40px;
+			position: relative;
+		}
+
+		@media (max-width: 768px) {
+			.main-content {
+				grid-template-columns: 1fr; /* 小さい画面では単一カラム */
+			}
+		}
     
     /* カード */
     .card {
-      flex: 1 1 calc(50% - 30px);
-      min-width: 300px;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 12px;
-      box-shadow: 0 4px 15px var(--shadow-color);
-      padding: 25px;
-      position: relative;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      backdrop-filter: blur(5px);
-      border: 2px solid transparent;
-      background-clip: padding-box;
-      overflow: hidden;
+			background: rgba(255, 255, 255, 0.9);
+			border-radius: 12px;
+			box-shadow: 0 4px 15px var(--shadow-color);
+			padding: 25px;
+			position: relative;
+			transition: transform 0.3s ease, box-shadow 0.3s ease;
+			backdrop-filter: blur(5px);
+			border: 2px solid transparent;
+			background-clip: padding-box;
+			overflow: hidden;
     }
     
     .card:hover {
@@ -143,7 +147,7 @@
       box-shadow: 0 8px 20px var(--shadow-color);
       border-color: rgba(242, 230, 60, 0.3);
     }
-    
+
     /* カードヘッダー */
     .card-header {
       display: flex;
@@ -270,27 +274,6 @@
       transform: translateX(-50%);
       background-color: white;
       padding: 0 10px;
-    }
-    
-    /* 手書き風の矢印 */
-    .arrow {
-      position: absolute;
-      width: 80px;
-      height: 50px;
-      left: 50%;
-      top: 40%;
-      transform: translateX(-50%) rotate(90deg);
-      opacity: 0.7;
-    }
-    
-    @media (max-width: 768px) {
-      .card {
-        flex: 1 1 100%;
-      }
-      
-      .arrow {
-        display: none;
-      }
     }
   </style>
 </head>
