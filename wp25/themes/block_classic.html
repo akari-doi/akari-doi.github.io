@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ブロックテーマとクラシックテーマ - 詳細比較</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #ec4899 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #4a5568;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #4f46e5, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: #718096;
+            font-weight: 300;
+        }
+
+        .intro-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .intro-section h2 {
+            font-size: 1.8rem;
+            color: #4a5568;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .intro-section h2::before {
+            content: "📖";
+            font-size: 1.5rem;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .theme-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .theme-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .block-theme {
+            border-top: 5px solid #06b6d4;
+        }
+
+        .classic-theme {
+            border-top: 5px solid #f59e0b;
+        }
+
+        .theme-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .block-theme h3 {
+            color: #0891b2;
+        }
+
+        .classic-theme h3 {
+            color: #d97706;
+        }
+
+        .block-theme h3::before {
+            content: "🆕";
+        }
+
+        .classic-theme h3::before {
+            content: "🔄";
+        }
+
+        .feature-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .feature-item {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #e2e8f0;
+        }
+
+        .block-theme .feature-item {
+            border-left-color: #06b6d4;
+        }
+
+        .classic-theme .feature-item {
+            border-left-color: #f59e0b;
+        }
+
+        .feature-item h4 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #2d3748;
+        }
+
+        .feature-item p {
+            color: #4a5568;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .detailed-comparison {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .detailed-comparison h2 {
+            font-size: 1.8rem;
+            color: #4a5568;
+            margin-bottom: 25px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .detailed-comparison h2::before {
+            content: "⚖️";
+            font-size: 1.5rem;
+        }
+
+        .comparison-table {
+            display: grid;
+            gap: 20px;
+        }
+
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 200px 1fr 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .comparison-category {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .comparison-content {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #e2e8f0;
+        }
+
+        .block-content {
+            border-left-color: #06b6d4;
+        }
+
+        .classic-content {
+            border-left-color: #f59e0b;
+        }
+
+        .comparison-content h4 {
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: #2d3748;
+        }
+
+        .comparison-content p {
+            color: #4a5568;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .industry-status {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .industry-status h2 {
+            font-size: 1.8rem;
+            color: #4a5568;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .industry-status h2::before {
+            content: "🏢";
+            font-size: 1.5rem;
+        }
+
+        .status-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .status-item {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid #0284c7;
+        }
+
+        .status-item h3 {
+            font-size: 1.3rem;
+            color: #0c4a6e;
+            margin-bottom: 10px;
+        }
+
+        .learning-path {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .learning-path h2 {
+            font-size: 1.8rem;
+            color: #4a5568;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .learning-path h2::before {
+            content: "🎯";
+            font-size: 1.5rem;
+        }
+
+        .learning-steps {
+            display: grid;
+            gap: 15px;
+        }
+
+        .learning-step {
+            background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid #f59e0b;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .step-number {
+            background: #f59e0b;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .step-content h3 {
+            font-size: 1.2rem;
+            color: #92400e;
+            margin-bottom: 5px;
+        }
+
+        .step-content p {
+            color: #a16207;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-category {
+                text-align: left;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>ブロックテーマとクラシックテーマ</h1>
+            <p class="subtitle">新旧WordPressテーマの特徴を詳しく理解しよう</p>
+        </div>
+
+        <div class="intro-section">
+            <h2>はじめに</h2>
+            <p>WordPress 5.9以降、従来の「クラシックテーマ」に加えて「ブロックテーマ」という新しいタイプのテーマが登場しました。この2つのテーマタイプは、編集方法・技術的構造・カスタマイズ方法が大きく異なります。Web制作者として、それぞれの特徴を理解し、適切に使い分けることが重要です。</p>
+        </div>
+
+        <div class="comparison-grid">
+            <div class="theme-card block-theme">
+                <h3>ブロックテーマ</h3>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <h4>🎨 フルサイト編集（FSE）</h4>
+                        <p>ヘッダー、フッター、サイドバーまで含むサイト全体をブロックエディターで編集可能</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>📝 HTMLテンプレート</h4>
+                        <p>PHPではなくHTMLベースのテンプレートファイルを使用</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>⚙️ theme.json</h4>
+                        <p>テーマの設定やスタイルをJSONファイルで管理</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🔧 ビジュアル編集</h4>
+                        <p>コードを書かずに管理画面上でレイアウトやデザインを変更</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="theme-card classic-theme">
+                <h3>クラシックテーマ</h3>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <h4>📄 PHPテンプレート</h4>
+                        <p>PHP、HTML、CSSを組み合わせた従来のテーマ構造</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🎛️ カスタマイザー</h4>
+                        <p>WordPress標準のカスタマイザーやウィジェットを使用</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>⚡ functions.php</h4>
+                        <p>テーマの機能追加や設定をPHPファイルで記述</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🔐 細かい制御</h4>
+                        <p>PHPやフックを使った詳細なカスタマイズが可能</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="detailed-comparison">
+            <h2>詳細比較表</h2>
+            <div class="comparison-table">
+                <div class="comparison-row">
+                    <div class="comparison-category">編集方法</div>
+                    <div class="comparison-content block-content">
+                        <h4>ブロックテーマ</h4>
+                        <p>• サイトエディターでサイト全体を編集<br>• ブロックの組み合わせでレイアウト構築<br>• 直感的なビジュアル編集</p>
+                    </div>
+                    <div class="comparison-content classic-content">
+                        <h4>クラシックテーマ</h4>
+                        <p>• カスタマイザーでの設定変更<br>• PHPファイルの直接編集<br>• ウィジェットエリアでの配置</p>
+                    </div>
+                </div>
+
+                <div class="comparison-row">
+                    <div class="comparison-category">技術的知識</div>
+                    <div class="comparison-content block-content">
+                        <h4>ブロックテーマ</h4>
+                        <p>• 基本：ブロックエディターの操作<br>• 応用：HTML、CSS、JSON<br>• 高度：React、JavaScript</p>
+                    </div>
+                    <div class="comparison-content classic-content">
+                        <h4>クラシックテーマ</h4>
+                        <p>• 基本：HTML、CSS<br>• 応用：PHP、WordPress関数<br>• 高度：フック（アクション・フィルター）</p>
+                    </div>
+                </div>
+
+                <div class="comparison-row">
+                    <div class="comparison-category">カスタマイズ性</div>
+                    <div class="comparison-content block-content">
+                        <h4>ブロックテーマ</h4>
+                        <p>• 自由度の高いレイアウト<br>• ブロックパターンの活用<br>• グローバルスタイルで統一管理</p>
+                    </div>
+                    <div class="comparison-content classic-content">
+                        <h4>クラシックテーマ</h4>
+                        <p>• PHPでの細かい制御<br>• カスタムフィールドとの連携<br>• 独自の機能実装</p>
+                    </div>
+                </div>
+
+                <div class="comparison-row">
+                    <div class="comparison-category">学習コスト</div>
+                    <div class="comparison-content block-content">
+                        <h4>ブロックテーマ</h4>
+                        <p>• 初期：比較的簡単<br>• 中級：theme.jsonの理解<br>• 上級：ブロック開発の知識</p>
+                    </div>
+                    <div class="comparison-content classic-content">
+                        <h4>クラシックテーマ</h4>
+                        <p>• 初期：HTML/CSSの基礎<br>• 中級：PHPプログラミング<br>• 上級：フック（アクション・フィルター）</p>
+                    </div>
+                </div>
+
+                <div class="comparison-row">
+                    <div class="comparison-category">メンテナンス</div>
+                    <div class="comparison-content block-content">
+                        <h4>ブロックテーマ</h4>
+                        <p>• WordPressの更新に依存<br>• ブロック仕様の変更リスク<br>• 将来的な安定性に期待</p>
+                    </div>
+                    <div class="comparison-content classic-content">
+                        <h4>クラシックテーマ</h4>
+                        <p>• 長期間の安定性<br>• 豊富な情報とサポート<br>• 既存サイトとの互換性</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="industry-status">
+            <h2>現在の業界状況</h2>
+            <div class="status-grid">
+                <div class="status-item">
+                    <h3>🏭 制作企業の現状</h3>
+                    <p>多くのWeb制作会社では、安定性と豊富な開発資産を理由に、現在もクラシックテーマを主流として使用しています。長年蓄積されたノウハウ、既存のプラグインとの互換性、クライアントワークでの安定した運用を重視する傾向があります。</p>
+                </div>
+                <div class="status-item">
+                    <h3>🚧 ブロックテーマの課題</h3>
+                    <p>ブロックテーマはまだ進化途中の技術で、一部の機能や拡張性で制限があります。また、既存のプラグインやカスタマイズ手法との互換性に課題があり、企業レベルでの本格導入は慎重に検討されています。</p>
+                </div>
+                <div class="status-item">
+                    <h3>🔮 将来の展望</h3>
+                    <p>WordPressの公式方針として、ブロックテーマは今後の標準になる予定です。しかし、クラシックテーマのサポートは継続されるため、両方の技術を理解しておくことが重要です。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-path">
+            <h2>これからの学習の例</h2>
+            <div class="learning-steps">
+                <div class="learning-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>クラシックテーマの基礎</h3>
+                        <p>HTML、CSS、PHPの基礎を身につけ、WordPressの基本的なテンプレート階層を理解する</p>
+                    </div>
+                </div>
+                <div class="learning-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>既存テーマのカスタマイズ</h3>
+                        <p>人気のクラシックテーマを使って、実際の案件レベルのカスタマイズを経験する</p>
+                    </div>
+                </div>
+                <div class="learning-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>ブロックエディターの理解</h3>
+                        <p>ブロックエディターの操作方法と仕組みを学び、コンテンツ作成に慣れる</p>
+                    </div>
+                </div>
+                <div class="learning-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>ブロックテーマの探求</h3>
+                        <p>theme.jsonやフルサイト編集の仕組みを学び、新しい制作手法を習得する</p>
+                    </div>
+                </div>
+                <div class="learning-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h3>適切な使い分け</h3>
+                        <p>プロジェクトの要件に応じて、最適なテーマタイプを選択できるスキルを身につける</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordPressテーマについて - 専門学校生向けまとめ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #4a5568;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .content-grid {
+            display: grid;
+            gap: 30px;
+            grid-template-columns: 1fr;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h2 {
+            font-size: 1.8rem;
+            color: #4a5568;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h2::before {
+            font-size: 1.5rem;
+        }
+
+        .card:nth-child(1) h2::before { content: "💡"; }
+        .card:nth-child(2) h2::before { content: "⚙️"; }
+        .card:nth-child(3) h2::before { content: "📦"; }
+        .card:nth-child(4) h2::before { content: "✨"; }
+        .card:nth-child(5) h2::before { content: "⚠️"; }
+        .card:nth-child(6) h2::before { content: "🏆"; }
+
+        .card p {
+            margin-bottom: 15px;
+            color: #4a5568;
+            font-size: 1.1rem;
+        }
+
+        .function-list {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .function-item {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .function-item strong {
+            color: #2d3748;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .theme-list {
+            display: grid;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .theme-item {
+            background: linear-gradient(135deg, #f0fff4 0%, #e6fffa 100%);
+            padding: 12px 18px;
+            border-radius: 10px;
+            border-left: 4px solid #38a169;
+            font-size: 1rem;
+        }
+
+        .theme-item strong {
+            color: #22543d;
+        }
+
+        .benefit-list {
+            display: grid;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .benefit-item {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef5e7 100%);
+            padding: 12px 18px;
+            border-radius: 10px;
+            border-left: 4px solid #ed8936;
+        }
+
+        .benefit-item strong {
+            color: #c05621;
+        }
+
+        .warning-content {
+            background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+            border-left: 4px solid #e53e3e;
+        }
+
+        .warning-content strong {
+            color: #742a2a;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .official-features {
+            display: grid;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .official-item {
+            background: linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%);
+            padding: 12px 18px;
+            border-radius: 10px;
+            border-left: 4px solid #319795;
+        }
+
+        .official-item strong {
+            color: #234e52;
+        }
+
+        .footer {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer p {
+            font-size: 1.2rem;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>WordPressテーマについて</h1>
+        </div>
+
+        <div class="content-grid">
+            <div class="card">
+                <h2>テーマとは何か？</h2>
+                <p>WordPressの「テーマ」とは、ウェブサイトの見た目（デザインやレイアウト）を決めるファイルの集まりです。テーマを変更するだけで、サイトの外観を簡単に変えることができます。</p>
+            </div>
+
+            <div class="card functions">
+                <h2>テーマの5つの主な機能</h2>
+                <div class="function-list">
+                    <div class="function-item">
+                        <strong>データの取得</strong>
+                        PHPを使ってコンテンツやデータを取得する
+                    </div>
+                    <div class="function-item">
+                        <strong>多言語対応</strong>
+                        翻訳ファイルでボタンや見出しを翻訳する
+                    </div>
+                    <div class="function-item">
+                        <strong>表示</strong>
+                        HTMLを出力しPHPで取得したデータをブラウザ上に表示する
+                    </div>
+                    <div class="function-item">
+                        <strong>装飾機能</strong>
+                        CSS、JavaScript、画像でデザインや動きをつける
+                    </div>
+                    <div class="function-item">
+                        <strong>カスタマイズ機能</strong>
+                        管理画面（カスタマイザー等）から様々な設定項目、機能を提供する
+                    </div>
+                </div>
+            </div>
+
+            <div class="card defaults">
+                <h2>デフォルトテーマについて</h2>
+                <p>WordPressをインストールすると、最初から「Twenty Twenty」などのデフォルトテーマが設定されています。これらは用途別に作られています：</p>
+                <div class="theme-list">
+                    <div class="theme-item">
+                        <strong>Twenty Twenty</strong> - ランディングページ向け
+                    </div>
+                    <div class="theme-item">
+                        <strong>Twenty Nineteen</strong> - 写真ブログ・スタートアップ向け
+                    </div>
+                    <div class="theme-item">
+                        <strong>Twenty Seventeen</strong> - 飲食店・小規模サイト向け
+                    </div>
+                    <div class="theme-item">
+                        <strong>Twenty Sixteen</strong> - モバイル対応ブログ向け
+                    </div>
+                </div>
+            </div>
+
+            <div class="card benefits">
+                <h2>テーマを使うメリット</h2>
+                <div class="benefit-list">
+                    <div class="benefit-item">
+                        <strong>簡単操作</strong> - デザインの知識がなくても数クリックで見た目を変更
+                    </div>
+                    <div class="benefit-item">
+                        <strong>柔軟性</strong> - 1カラムから3カラムレイアウトへの変更も簡単
+                    </div>
+                    <div class="benefit-item">
+                        <strong>効率性</strong> - サイト制作時間の大幅短縮
+                    </div>
+                    <div class="benefit-item">
+                        <strong>クライアント対応</strong> - お客様に複数のデザイン案を簡単に提示可能
+                    </div>
+                </div>
+            </div>
+
+            <div class="card warning">
+                <h2>注意点：「なんでもできるテーマ」について</h2>
+                <div class="warning-content">
+                    <p><strong>多機能すぎるテーマは避けましょう。理由：</strong>テーマを変更すると使えなくなる機能が出てくる</p>
+                    <p><strong>推奨方法：</strong> デザインはテーマで、機能はプラグインで分けて管理</p>
+                </div>
+            </div>
+
+            <div class="card official">
+                <h2>公式テーマ・プラグインとは</h2>
+                <p>デフォルトテーマ以外にも、WordPress.orgで配布される「公式」のテーマ・プラグインがあります：</p>
+                <div class="official-features">
+                    <div class="official-item">
+                        <strong>品質保証</strong> - 世界中のWordPressコミュニティのレビューワーによる厳しいチェック済み
+                    </div>
+                    <div class="official-item">
+                        <strong>ライセンス</strong> - すべての構成要素をGPLで無料利用可能
+                    </div>
+                    <div class="official-item">
+                        <strong>サポート</strong> - フォーラムで質問・情報交換が可能
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
