@@ -282,6 +282,81 @@
       background-color: white;
       padding: 0 10px;
     }
+
+		/* フローティングボタン */
+    .floating-buttons {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .floating-btn {
+      display: block;
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--fashion-4) 0%, var(--fashion-5) 100%);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(242, 76, 5, 0.4);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      border: 3px solid var(--fashion-1);
+      font-size: 14px;
+      text-align: center;
+      min-width: 180px;
+    }
+    
+    .floating-btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .floating-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(242, 76, 5, 0.6);
+      background: linear-gradient(135deg, var(--fashion-5) 0%, var(--fashion-4) 100%);
+    }
+    
+    .floating-btn:hover::before {
+      left: 100%;
+    }
+    
+    .floating-btn:active {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(242, 76, 5, 0.4);
+    }
+    
+    .floating-btn .icon {
+      margin-right: 8px;
+      font-size: 16px;
+    }
+    
+    /* モバイル対応 */
+    @media (max-width: 768px) {
+      .floating-buttons {
+        bottom: 20px;
+        right: 20px;
+      }
+      
+      .floating-btn {
+        min-width: 150px;
+        padding: 10px 16px;
+        font-size: 13px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -406,7 +481,7 @@
 						<p style="margin-top: 15px; position: relative; z-index: 1;">
 							資料：教科書Lesson03の51ページから
 						</p>
-						<a href="https://docs.google.com/document/d/1i0Q9KsxPPDle_RvJk_T6ch6Nc4wPfqV6fltlFNVta6Q/edit?usp=sharing" target="_blank" class="button">資料補足</a>
+						<a href="https://docs.google.com/document/d/1i0Q9KsxPPDle_RvJk_T6ch6Nc4wPfqV6fltlFNVta6Q/edit?usp=sharing" target="_blank" class="button">補足資料</a>
 					</div>
 				</div>
 
@@ -462,7 +537,7 @@
 						<p style="margin-top: 15px; position: relative; z-index: 1;">
 							資料：教科書Lesson04の71ページから
 						</p>
-						<a href="https://docs.google.com/document/d/1XADXlbuPcO9wOBM3K58bRMD6z5rdx5aAiLO6K8jJ4S0/edit?usp=sharing" target="_blank" class="button">資料補足</a>
+						<a href="https://docs.google.com/document/d/1XADXlbuPcO9wOBM3K58bRMD6z5rdx5aAiLO6K8jJ4S0/edit?usp=sharing" target="_blank" class="button">補足資料</a>
 					</div>
 				</div>
 
@@ -490,7 +565,7 @@
 						<p style="margin-top: 15px; position: relative; z-index: 1;">
 							資料：教科書Lesson04の75ページから
 						</p>
-						<a href="https://docs.google.com/document/d/1XADXlbuPcO9wOBM3K58bRMD6z5rdx5aAiLO6K8jJ4S0/edit?tab=t.0" target="_blank" class="button">資料補足</a>
+						<a href="https://docs.google.com/document/d/1XADXlbuPcO9wOBM3K58bRMD6z5rdx5aAiLO6K8jJ4S0/edit?tab=t.0#heading=h.xu9ba2skz23v" target="_blank" class="button">補足資料</a>
 					</div>
 				</div>
 
@@ -520,12 +595,45 @@
 						<a href="themes/block_classic.html" target="_blank" class="button">資料2</a>
 					</div>
 				</div>
+
+				<div class="card">
+					<div class="card-icon">⚡</div>
+					<div class="card-header">
+						<div class="card-date">6月24日</div>
+						<h2 class="card-title">Lightningテーマでサイトを作ろう</h2>
+					</div>
+					<div class="card-content">
+						<div class="tags">
+							<span class="tag">Lightning</span>
+							<span class="tag">公式テーマ</span>
+						</div>
+						<p style="margin-top: 15px; position: relative; z-index: 1;">
+							Lightningテーマを使って美容サロンサイトを作成します。
+						</p>
+						<div style="margin-top: 10px; padding: 10px; background: rgba(242, 196, 60, 0.15); border-radius: 8px; border-left: 3px solid var(--fashion-3);">
+							<p style="font-family: 'Yomogi', cursive; font-size: 15px;">
+								<span style="font-weight: bold; color: var(--fashion-5);">📌 ポイント:</span> 
+								既存のテーマの機能だけでも魅力的なサイトができることを体験しよう！
+							</p>
+						</div>
+						<a href="https://docs.google.com/document/d/1XdMxEBslFIeAbUBK4S_NvDMWtP4sdLyX3dRf3MaQFE8/edit?usp=sharing" target="_blank" class="button">資料をみる</a>
+					</div>
+				</div>
       </main>
       
       <footer class="footer">
         <p>WP25-CMS（WordPress）サイト制作 資料一覧</p>
       </footer>
     </div>
+  </div>
+	<!-- フローティングボタン -->
+  <div class="floating-buttons">
+    <a href="https://forms.gle/h9ViDd62xdy7ojn49" target="_blank" class="floating-btn">
+      <span class="icon">💬</span>質問フォーム
+    </a>
+    <a href="https://docs.google.com/document/d/1p9CjK6PYwHoACqxAQaYebKfMjW0acJiJxDv_U8ZOido/edit?usp=sharing" target="_blank" class="floating-btn">
+      <span class="icon">📋</span>休んだ人用手順書
+    </a>
   </div>
 </body>
 </html>
