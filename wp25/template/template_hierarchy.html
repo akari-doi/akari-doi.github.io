@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordPressのページ表示の仕組み（テンプレート階層）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.7;
+            color: #1a202c;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 400% 400%;
+            animation: gradientShift 3s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .meta-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .meta-item {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1rem;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+						text-align: left;
+        }
+        
+        .meta-item:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+        }
+        
+        .content {
+            padding: 3rem;
+            background: linear-gradient(to bottom, #ffffff 0%, #f8fafc 100%);
+        }
+        
+        h2 {
+            color: #1e3a8a;
+            font-size: 1.8rem;
+            margin: 3rem 0 1.5rem 0;
+            padding: 1rem 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+        }
+        
+        h2::before {
+            content: '';
+            width: 5px;
+            height: 35px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 3px;
+            margin-right: 1rem;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, transparent);
+            border-radius: 1px;
+        }
+        
+        h3 {
+            color: #374151;
+            font-size: 1.3rem;
+            margin: 2rem 0 1rem 0;
+            font-weight: 600;
+        }
+        
+        h4 {
+            color: #4b5563;
+            font-size: 1.1rem;
+            margin: 1.5rem 0 0.8rem 0;
+            font-weight: 600;
+        }
+        
+        p {
+            margin-bottom: 1.2rem;
+            text-align: justify;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+        
+        ul, ol {
+            margin: 1.2rem 0;
+            padding-left: 2rem;
+        }
+        
+        li {
+            margin-bottom: 0.8rem;
+        }
+        
+        pre {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        
+        pre::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            border-radius: 10px 10px 0 0;
+        }
+        
+        code {
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            padding: 0.3rem 0.6rem;
+            border-radius: 5px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #dc2626;
+            font-weight: 600;
+            border: 1px solid #cbd5e1;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+            color: #374151;
+            border: none;
+            font-weight: 500;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e5e7eb;
+        }
+        
+        th, td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            font-weight: 700;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+        
+        tr {
+            transition: all 0.3s ease;
+        }
+        
+        tr:hover {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border: 1px solid #bfdbfe;
+            border-left: 4px solid #3b82f6;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+            position: relative;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 1px solid #f59e0b;
+            border-left: 4px solid #f59e0b;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1);
+            position: relative;
+        }
+        
+        .step-number {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 0.8rem;
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        .file-tree {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            color: #e5e7eb;
+            padding: 2rem;
+            border-radius: 10px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 2rem 0;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border: 1px solid #374151;
+            position: relative;
+            white-space: pre;
+        }
+        
+        .file-tree::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981, #3b82f6);
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .priority-flow {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 50%, #93c5fd 100%);
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            box-shadow: 0 6px 15px rgba(59, 130, 246, 0.15);
+            border: 1px solid #bfdbfe;
+            text-align: center;
+        }
+        
+        .priority-flow .flow-item {
+            margin: 1rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255,255,255,0.9);
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        
+        .priority-flow .flow-item:hover {
+            background: rgba(255,255,255,1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2);
+        }
+        
+        .priority-flow .arrow {
+            font-size: 1.2rem;
+            color: #3b82f6;
+            margin: 0.5rem 0;
+            font-weight: bold;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #f3f4f6;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+        
+        .numbered-list {
+            counter-reset: step-counter;
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .numbered-list li {
+            counter-increment: step-counter;
+            margin: 1.2rem 0;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 8px;
+            border-left: 3px solid #3b82f6;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .numbered-list li:hover {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            transform: translateX(5px);
+        }
+        
+        .numbered-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .summary-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 10px;
+            padding: 1.8rem;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .summary-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+        
+        .summary-card h4 {
+            color: #1e3a8a;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            .container {
+                box-shadow: none;
+                margin: 0;
+            }
+            h2 {
+                break-after: avoid;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                border-radius: 12px;
+            }
+            .content {
+                padding: 2rem 1.5rem;
+            }
+            header {
+                padding: 2rem 1.5rem;
+            }
+            header h1 {
+                font-size: 2rem;
+            }
+            .meta-info {
+                grid-template-columns: 1fr;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+            .numbered-list li {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>WordPressのページ表示の仕組み（テンプレート階層）</h1>
+            <div class="meta-info">
+                <div class="meta-item">
+                    <strong>目的:</strong> WordPressがどのテンプレートファイルを選んでページを表示するかを理解する
+                </div>
+                <div class="meta-item">
+                    <strong>使用テーマ:</strong> Twenty Seventeen
+                </div>
+                <div class="meta-item">
+                    <strong>環境:</strong> Local（ローカル環境）
+                </div>
+            </div>
+        </header>
+
+        <div class="content">
+            <h2>1. WordPressページ表示の基本</h2>
+            
+            <h3>1.1 WordPressはどうやってページを作っているの？</h3>
+            
+            <p>通常のHTMLサイトとWordPressサイトの違い：</p>
+            
+            <div class="highlight-box">
+                <h4>通常のHTMLサイト</h4>
+                <pre><code>about.html ← 直接このファイルが表示される
+contact.html ← 直接このファイルが表示される
+index.html ← 直接このファイルが表示される</code></pre>
+            </div>
+            
+            <div class="highlight-box">
+                <h4>WordPressサイト</h4>
+                <div class="priority-flow">
+                    <div class="flow-item">ユーザーがURLにアクセス</div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-item">WordPressが「どのページを表示するか」を判断</div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-item">適切なテンプレートファイルを選択</div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-item">データベースから内容を取得</div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-item"><strong>テンプレートファイル + データ = 完成したページ</strong></div>
+                </div>
+            </div>
+            
+            <h3>1.2 テンプレートファイルとは</h3>
+            
+            <p><strong>テンプレートファイル</strong> = ページの「型」を決めるPHPファイル</p>
+            
+            <p>例えば：</p>
+            <ul>
+                <li><code>index.php</code> = トップページの型</li>
+                <li><code>single.php</code> = ブログ記事ページの型</li>
+                <li><code>page.php</code> = 固定ページの型</li>
+            </ul>
+            
+            <p>WordPressは「今表示しようとしているのはどんなページか？」を判断して、適切なテンプレートファイルを自動で選びます。</p>
+
+            <h2>2. テンプレート階層とは</h2>
+            
+            <h3>2.1 優先順位のルール</h3>
+            
+            <p>WordPressは<strong>決まった順番</strong>でテンプレートファイルを探します。見つかったら、それを使ってページを表示します。</p>
+            
+            <div class="priority-flow">
+                <div class="flow-item">より具体的なファイル</div>
+                <div class="arrow">↓（なければ）</div>
+                <div class="flow-item">やや具体的なファイル</div>
+                <div class="arrow">↓（なければ）</div>
+                <div class="flow-item">一般的なファイル</div>
+                <div class="arrow">↓（なければ）</div>
+                <div class="flow-item"><strong>index.php（必ず存在するフォールバック）</strong></div>
+            </div>
+            
+            <h3>2.2 実例：ブログ記事ページの場合</h3>
+            
+            <p>投稿タイプ「post」、スラッグ「hello-world」の記事を表示する場合：</p>
+            
+            <div class="priority-flow">
+                <div class="flow-item">1. single-post-hello-world.php（投稿タイプ+スラッグ指定）← 最優先</div>
+                <div class="arrow">↓（なければ）</div>
+                <div class="flow-item">2. single-post.php（投稿タイプ指定）</div>
+                <div class="arrow">↓（なければ）</div>
+                <div class="flow-item">3. single.php（一般的なブログ記事）</div>
+                <div class="arrow">↓（なければ）</div>
+                <div class="flow-item">4. singular.php（投稿・固定ページ共通）</div>
+                <div class="arrow">↓（なければ）</div>
+                <div class="flow-item">5. index.php（フォールバック）← 必ず存在</div>
+            </div>
+
+            <h2>3. 主要なテンプレートファイル</h2>
+            
+            <h3>3.1 必須ファイル</h3>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>ファイル名</th>
+                        <th>用途</th>
+                        <th>重要度</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>index.php</code></td>
+                        <td>すべてのページのフォールバック</td>
+                        <td>★★★</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>3.2 よく使われるファイル</h3>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>ファイル名</th>
+                        <th>用途</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>front-page.php</code></td>
+                        <td>サイトのフロントページ（最初に表示されるページ）</td>
+                    </tr>
+                    <tr>
+                        <td><code>home.php</code></td>
+                        <td>ブログ投稿一覧ページ</td>
+                    </tr>
+                    <tr>
+                        <td><code>single.php</code></td>
+                        <td>ブログ記事の個別ページ</td>
+                    </tr>
+                    <tr>
+                        <td><code>page.php</code></td>
+                        <td>固定ページ</td>
+                    </tr>
+                    <tr>
+                        <td><code>archive.php</code></td>
+                        <td>アーカイブページ</td>
+                    </tr>
+                    <tr>
+                        <td><code>search.php</code></td>
+                        <td>検索結果ページ</td>
+                    </tr>
+                    <tr>
+                        <td><code>404.php</code></td>
+                        <td>エラーページ</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>3.3 より具体的なファイル</h3>
+            
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <h4>固定ページの場合：</h4>
+                    <div class="priority-flow">
+                        <div class="flow-item">page-about.php<br>（スラッグ「about」専用）</div>
+                        <div class="arrow">↓</div>
+                        <div class="flow-item">page-123.php<br>（ページID「123」専用）</div>
+                        <div class="arrow">↓</div>
+                        <div class="flow-item">page.php<br>（すべての固定ページ）</div>
+                        <div class="arrow">↓</div>
+                        <div class="flow-item">singular.php</div>
+                        <div class="arrow">↓</div>
+                        <div class="flow-item">index.php</div>
+                    </div>
+                </div>
+                
+                <div class="summary-card">
+                    <h4>カテゴリーページの場合：</h4>
+                    <div class="priority-flow">
+                        <div class="flow-item">category-news.php<br>（カテゴリー「news」専用）</div>
+                        <div class="arrow">↓</div>
+                        <div class="flow-item">category-5.php<br>（カテゴリーID「5」専用）</div>
+                        <div class="arrow">↓</div>
+                        <div class="flow-item">category.php<br>（すべてのカテゴリー）</div>
+                        <div class="arrow">↓</div>
+                        <div class="flow-item">archive.php<br>（すべてのアーカイブ）</div>
+                        <div class="arrow">↓</div>
+                        <div class="flow-item">index.php</div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>4. テンプレート階層の実例</h2>
+            
+            <h3>4.1 シナリオ1：会社概要ページを作った場合</h3>
+            
+            <div class="warning-box">
+                <h4>設定：</h4>
+                <ul>
+                    <li>固定ページを作成</li>
+                    <li>ページタイトル：「会社概要」</li>
+                    <li>スラッグ：「about」</li>
+                    <li>ページID：「25」</li>
+                </ul>
+            </div>
+            
+            <p><strong>WordPressが探すファイルの順番：</strong></p>
+            <div class="priority-flow">
+                <div class="flow-item">1. page-about.php<br>スラッグ「about」専用ファイル</div>
+                <div class="arrow">↓</div>
+                <div class="flow-item">2. page-25.php<br>ID「25」専用ファイル</div>
+                <div class="arrow">↓</div>
+                <div class="flow-item">3. page.php<br>すべての固定ページ用</div>
+                <div class="arrow">↓</div>
+                <div class="flow-item">4. singular.php<br>投稿・固定ページ共通</div>
+                <div class="arrow">↓</div>
+                <div class="flow-item">5. index.php<br>最終フォールバック</div>
+            </div>
+            
+            <h3>4.2 シナリオ2：「お知らせ」カテゴリーページを表示する場合</h3>
+            
+            <div class="warning-box">
+                <h4>設定：</h4>
+                <ul>
+                    <li>カテゴリー名：「お知らせ」</li>
+                    <li>スラッグ：「news」</li>
+                    <li>カテゴリーID：「3」</li>
+                </ul>
+            </div>
+            
+            <p><strong>WordPressが探すファイルの順番：</strong></p>
+            <div class="priority-flow">
+                <div class="flow-item">1. category-news.php<br>スラッグ「news」専用ファイル</div>
+                <div class="arrow">↓</div>
+                <div class="flow-item">2. category-3.php<br>ID「3」専用ファイル</div>
+                <div class="arrow">↓</div>
+                <div class="flow-item">3. category.php<br>すべてのカテゴリー用</div>
+                <div class="arrow">↓</div>
+                <div class="flow-item">4. archive.php<br>すべてのアーカイブ用</div>
+                <div class="arrow">↓</div>
+                <div class="flow-item">5. index.php<br>最終フォールバック</div>
+            </div>
+            
+            <h3>4.3 シナリオ3：存在しないページにアクセスした場合</h3>
+            
+            <p><strong>WordPressが探すファイルの順番：</strong></p>
+            <div class="priority-flow">
+                <div class="flow-item">1. 404.php<br>404エラー専用ファイル</div>
+                <div class="arrow">↓</div>
+                <div class="flow-item">2. index.php<br>最終フォールバック</div>
+            </div>
+
+            <h2>5. 準備：環境とツールのセットアップ</h2>
+            
+            <h3>5.1 Local環境の起動</h3>
+            
+            <p><strong>まずはローカル環境を立ち上げましょう</strong></p>
+            <ol>
+                <li><strong>Localアプリケーションを起動</strong></li>
+                <li><strong>「wp-site」を選択</strong></li>
+                <li><strong>「Start site」ボタンをクリック</strong></li>
+                <li><strong>「WP Admin」ボタンをクリック</strong> - WordPress管理画面にログイン</li>
+            </ol>
+            
+            <h3>5.2 Show Current Templateプラグインのインストール</h3>
+            
+            <p><strong>テンプレート階層を視覚的に確認できる便利なプラグインを使用します</strong></p>
+            
+            <ol>
+                <li>WordPress管理画面の左メニューから <strong>プラグイン > 新規追加</strong> をクリック</li>
+                <li>検索ボックスに「<strong>Show Current Template</strong>」と入力</li>
+                <li>該当するプラグインの <strong>「今すぐインストール」</strong> をクリック</li>
+                <li>インストール完了後、<strong>「有効化」</strong> をクリック</li>
+            </ol>
+            
+            <div class="warning-box">
+                <h4>プラグインの機能：</h4>
+                <ul>
+                    <li>現在表示中のページでどのテンプレートファイルが使われているかが分かる</li>
+                    <li>ファイルパスも表示される</li>
+                    <li>リアルタイムでテンプレート階層を確認できる</li>
+                </ul>
+            </div>
+            
+            <h3>5.3 Twenty Seventeenテーマのインストール</h3>
+            
+            <p><strong>手順：</strong></p>
+            <ol>
+                <li>WordPress管理画面 > 外観 > テーマ</li>
+                <li>「新しいテーマを追加」をクリック</li>
+                <li>「Twenty Seventeen」を検索</li>
+                <li>インストール・有効化</li>
+            </ol>
+
+            <h2>6. 実際にファイルを確認してみよう</h2>
+            
+            <h3>6.1 ファイル確認</h3>
+            
+            <p><strong>ローカル環境でのファイル確認方法：</strong></p>
+            
+            <div class="file-tree">wp-site/
+└── app/
+    └── public/
+        └── wp-content/
+            └── themes/
+                └── twentyseventeen/
+                    ├── 404.php
+                    ├── archive.php
+                    ├── front-page.php
+                    ├── page.php
+                    ├── single.php
+                    ├── search.php
+                    ├── index.php
+                    ├── header.php
+                    ├── footer.php
+                    ├── functions.php
+                    └── style.css</div>
+            
+            <p><small>※主なファイルだけ書き出しています。実際にはもっと多くのファイルが存在します。</small></p>
+            
+            <div class="warning-box">
+                <h4>確認方法：</h4>
+                <p><strong>Localを使って開く</strong>: Localの「Site folder」をクリックしてwp-siteフォルダを開き、上記のようにフォルダをたどっていき、twentyseventeenフォルダを開く</p>
+            </div>
+            
+            <h4>Twenty Seventeenで確認すべきファイル：</h4>
+            
+            <p><strong>手順1：</strong> 以下のファイルが存在するかチェックして記録</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>ファイル名</th>
+                        <th>存在する？</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>index.php</code></td>
+                        <td>□ Yes □ No</td>
+                    </tr>
+                    <tr>
+                        <td><code>front-page.php</code></td>
+                        <td>□ Yes □ No</td>
+                    </tr>
+                    <tr>
+                        <td><code>home.php</code></td>
+                        <td>□ Yes □ No</td>
+                    </tr>
+                    <tr>
+                        <td><code>single.php</code></td>
+                        <td>□ Yes □ No</td>
+                    </tr>
+                    <tr>
+                        <td><code>page.php</code></td>
+                        <td>□ Yes □ No</td>
+                    </tr>
+                    <tr>
+                        <td><code>archive.php</code></td>
+                        <td>□ Yes □ No</td>
+                    </tr>
+                    <tr>
+                        <td><code>category.php</code></td>
+                        <td>□ Yes □ No</td>
+                    </tr>
+                    <tr>
+                        <td><code>404.php</code></td>
+                        <td>□ Yes □ No</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p><strong>手順2：</strong> Show Current Templateプラグインでページごとのテンプレートを確認</p>
+            
+            <h3>6.2 Show Current Templateでの実践確認</h3>
+            
+            <div class="highlight-box">
+                <h4>各ページで実際に確認してみましょう：</h4>
+                <ol>
+                    <li><strong>フロントページ</strong> → <code>front-page.php</code> が表示される（Twenty Seventeenはカスタマイズにより例外あり）</li>
+                    <li><strong>ブログ記事ページ</strong> → <code>single.php</code> が表示される</li>
+                    <li><strong>固定ページ</strong> → <code>page.php</code> が表示される</li>
+                    <li><strong>存在しないURL</strong> → <code>404.php</code> が表示される</li>
+                </ol>
+            </div>
+
+            <h2>7. まとめ</h2>
+            
+            <div class="highlight-box">
+                <h3>テンプレート階層の重要ポイント</h3>
+                
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <h4>WordPressは自動でファイルを選ぶ</h4>
+                        <ul>
+                            <li>決まった順番でファイルを探す</li>
+                            <li>見つかったファイルを使ってページを表示</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="summary-card">
+                        <h4>具体的 → 一般的の順番</h4>
+                        <ul>
+                            <li>より具体的なファイルが優先される</li>
+                            <li>最終的には <code>index.php</code> がフォールバック</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="summary-card">
+                        <h4>ファイル名には意味がある</h4>
+                        <ul>
+                            <li><code>page-about.php</code> = 「about」スラッグの固定ページ専用</li>
+                            <li><code>category-news.php</code> = 「news」カテゴリー専用</li>
+                            <li><code>single.php</code> = すべてのブログ記事</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="summary-card">
+                        <h4>実際のファイル確認が重要</h4>
+                        <ul>
+                            <li>テーマによって存在するファイルは異なる</li>
+                            <li>自分で作成することもできる</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="summary-card">
+                        <h4>Show Current Templateで確認できる</h4>
+                        <ul>
+                            <li>今表示されているページがどのファイルを使っているかがわかる</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h2>参考資料</h2>
+            
+            <div class="warning-box">
+                <h4>WordPress公式ドキュメント：</h4>
+                <p><a href="https://developer.wordpress.org/themes/basics/template-hierarchy/" target="_blank">Template Hierarchy（テンプレート階層）</a><br>
+                より詳細な情報や高度な活用方法について学ぶことができます</p>
+                
+                <h4>便利なプラグイン：</h4>
+                <p><a href="https://ja.wordpress.org/plugins/show-current-template/" target="_blank">Show Current Template</a><br>
+                現在使用されているテンプレートファイルを確認できます</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
