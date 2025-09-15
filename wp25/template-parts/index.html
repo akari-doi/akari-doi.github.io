@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordPressのテンプレートパーツと呼び出し関数</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+            line-height: 1.8;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-left: 15px;
+            border-left: 4px solid #3498db;
+        }
+        h3 {
+            color: #2980b9;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        h4 {
+            color: #2980b9;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .concept-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .concept-box h3 {
+            color: white;
+            margin-top: 0;
+        }
+        .code-block {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            border-left: 4px solid #3498db;
+        }
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', monospace;
+        }
+        .diagram {
+            background-color: #ecf0f1;
+            border: 2px solid #bdc3c7;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            border-radius: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .important {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .important::before {
+            content: "💡 ";
+            font-weight: bold;
+        }
+        .warning {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .warning::before {
+            content: "⚠️ ";
+            font-weight: bold;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .success::before {
+            content: "✅ ";
+            font-weight: bold;
+        }
+        .file-structure {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            border-left: 4px solid #28a745;
+        }
+        .file-structure pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', monospace;
+        }
+        .step {
+            background-color: #e8f4fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .step-number {
+            background-color: #2196F3;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        ul, ol {
+            padding-left: 25px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        /* ファイル名用のスタイル */
+        .filename {
+            display: inline-block;
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 4px 8px;
+            margin: 2px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #495057;
+            font-weight: 500;
+        }
+        
+        .filename.php {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+				.warning {
+					.filename.php {
+						background-color: #fff;
+					}
+				}
+        
+        .filename.folder {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+        
+        .filename.function {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        
+        .filename.html {
+            background-color: #fff3cd;
+            border-color: #ffeaa7;
+            color: #856404;
+        }
+        /* 参考資料リスト用 */
+        .reference-list li {
+            margin-bottom: 18px;
+        }
+        .reference-list li:last-child {
+            margin-bottom: 0;
+        }
+        .reference-list li a {
+            display: block;
+						width: fit-content;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WordPressのテンプレートパーツと呼び出し関数</h1>
+
+        <div class="concept-box">
+            <h3>今日の学習目標</h3>
+            <ul>
+                <li>テンプレートパーツの仕組みを理解する</li>
+                <li>4つの主要な呼び出し関数を覚える</li>
+                <li><span class="filename function">get_template_part()</span>の活用方法を学ぶ</li>
+                <li>テンプレートパーツをカスタマイズする</li>
+            </ul>
+        </div>
+
+        <h2>1. テンプレートパーツとは</h2>
+        
+        <p>テンプレートパーツとは、<strong>ヘッダー、フッター、サイドバーなど、サイトの共通部分を別ファイルにしたもの</strong>です。</p>
+
+        <div class="diagram">
+            <h4>single.phpの構造</h4>
+            <div style="border: 2px solid #333; padding: 10px; margin: 10px auto; max-width: 300px;">
+                <div style="background: #3498db; color: white; padding: 5px;">get_header(); → header.phpの内容</div>
+                <div style="background: #95a5a6; color: white; padding: 20px; margin: 5px 0;">記事の内容</div>
+                <div style="background: #e74c3c; color: white; padding: 5px;">get_footer(); → footer.phpの内容</div>
+            </div>
+        </div>
+
+        <div class="success">
+            <strong>メリット</strong>
+            <ul>
+                <li>1箇所修正すれば全ページに反映</li>
+                <li>コードの重複がない</li>
+                <li>管理が楽</li>
+                <li>保守性・効率性が大幅向上</li>
+            </ul>
+        </div>
+
+        <h2>2. 基本の3つのテンプレートパーツ</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ファイル名</th>
+                    <th>役割</th>
+                    <th>呼び出し関数</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="filename php">header.php</span></td>
+                    <td>サイト上部（&lt;head&gt;〜ヘッダー）</td>
+                    <td><span class="filename function">get_header()</span></td>
+                </tr>
+                <tr>
+                    <td><span class="filename php">footer.php</span></td>
+                    <td>サイト下部（フッター〜&lt;/html&gt;）</td>
+                    <td><span class="filename function">get_footer()</span></td>
+                </tr>
+                <tr>
+                    <td><span class="filename php">sidebar.php</span></td>
+                    <td>サイドバー部分</td>
+                    <td><span class="filename function">get_sidebar()</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>ファイルの内容例</h3>
+
+        <h4><span class="filename php">header.php</span></h4>
+        <p><span class="filename html">&lt;!DOCTYPE html&gt;</span>から始まって、<span class="filename html">&lt;div id="content"&gt;</span>で終わる（ページの上半分）</p>
+
+        <h4><span class="filename php">footer.php</span></h4>
+        <p><span class="filename html">&lt;/div&gt;&lt;!-- #content --&gt;</span>から始まって<span class="filename html">&lt;/html&gt;</span>で終わる（ページの下半分）</p>
+
+        <h4><span class="filename php">sidebar.php</span></h4>
+        <div class="code-block">
+            <pre>&lt;?php
+if ( ! is_active_sidebar( 'sidebar-1' ) ) {
+    return;
+}
+?&gt;
+&lt;aside id="secondary" class="widget-area"&gt;
+    &lt;?php dynamic_sidebar( 'sidebar-1' ); ?&gt;
+&lt;/aside&gt;</pre>
+        </div>
+
+        <h2>3. 呼び出し関数の詳細</h2>
+
+        <h3>基本的な使い方</h3>
+        
+        <div class="code-block">
+            <pre>&lt;?php get_header(); ?&gt;
+// header.phpの内容がここに挿入される
+
+&lt;?php get_footer(); ?&gt;
+// footer.phpの内容がここに挿入される</pre>
+        </div>
+
+        <h3>パラメータ付きの呼び出し</h3>
+        
+        <div class="code-block">
+            <pre>&lt;?php get_header(); ?&gt;
+// header.phpを呼び出し
+
+&lt;?php get_header('special'); ?&gt;
+// header-special.phpを呼び出し</pre>
+        </div>
+
+        <div class="important">
+            トップページだけ特別なヘッダーにしたい場合などに使えます。
+        </div>
+
+        <h2>4. <span class="filename function">get_template_part()</span>の活用</h2>
+
+        <p><strong>ヘッダー、フッター、サイドバー以外のパーツ</strong>を呼び出したい場合に使用します。</p>
+
+        <h3>Twenty Seventeenの実例</h3>
+        
+        <div class="code-block">
+            <pre>// page.phpの例
+get_template_part( 'template-parts/page/content', 'page' );
+// → template-parts/page/content-page.php を呼び出し</pre>
+        </div>
+
+        <h3>フォルダ構成の例</h3>
+        
+        <div class="file-structure">
+            <pre>/wp-content/themes/twentyseventeen/
+├── <span class="filename folder">template-parts/</span>
+│   └── <span class="filename folder">page/</span>
+│       ├── <span class="filename php">content-page.php</span>
+│       └── <span class="filename php">content-front-page.php</span></pre>
+        </div>
+
+        <div class="success">
+            どの部分に使うパーツなのかわかりやすいように、ファイルがフォルダ分けされています。
+        </div>
+
+        <h3>フォールバック機能</h3>
+
+        <div class="step">
+            <strong>優先順位の仕組み</strong>
+        </div>
+
+        <div class="code-block">
+            <pre>get_template_part('template-parts/page/content', 'page');</pre>
+        </div>
+
+        <p><strong>WordPressが探す順番：</strong></p>
+				<p>パラメーターの $name （pageの部分）で特別なテンプレートを指定しているので</p>
+        <ol>
+            <li><span class="filename php">template-parts/page/content-page.php</span> ← まずこれを探す</li>
+            <li><span class="filename php">template-parts/page/content.php</span> ← なければこれを使う（フォールバック）</li>
+        </ol>
+
+        <div class="warning">
+            <strong>index.phpのようにフォールバックを用意する</strong><br>
+            <span class="filename php">content-page.php</span>を作る場合は、<span class="filename php">content.php</span>も用意しておくほうがよいです。<br>
+						<span class="filename php">content.php</span>は実際にはTwenty Seventeenのpageフォルダには存在しませんが、もしその両方のファイルがないと、「何も表示されない状態」が発生する可能性があります。
+        </div>
+
+        <h2>5. 4つの関数まとめ</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>用途</th>
+                    <th>関数</th>
+                    <th>呼び出すファイル</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ヘッダー</td>
+                    <td><span class="filename function">get_header()</span></td>
+                    <td><span class="filename php">header.php</span></td>
+                </tr>
+                <tr>
+                    <td>フッター</td>
+                    <td><span class="filename function">get_footer()</span></td>
+                    <td><span class="filename php">footer.php</span></td>
+                </tr>
+                <tr>
+                    <td>サイドバー</td>
+                    <td><span class="filename function">get_sidebar()</span></td>
+                    <td><span class="filename php">sidebar.php</span></td>
+                </tr>
+                <tr style="background-color: #fff3cd;">
+                    <td><strong>その他すべて</strong></td>
+                    <td><span class="filename function">get_template_part()</span></td>
+                    <td>指定したファイル</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>6. 実習：<span class="filename php">header.php</span>をカスタマイズ</h2>
+
+        <div class="warning">
+            <strong>注意事項</strong><br>
+            本来であれば、テーマをカスタマイズする際は安全性のため子テーマを作成するべきです。しかし、今回は学習のために親テーマを直接編集します。実際の開発では必ず子テーマを使用してください。
+        </div>
+
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong><span class="filename php">header.php</span>を開く</strong>
+        </div>
+
+        <p>Twenty Seventeenの<span class="filename php">header.php</span>をテキストエディタで開きます。</p>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>簡単なカスタマイズ</strong>
+        </div>
+
+        <p>実際の<span class="filename php">header.php</span>の中身を確認して、修正できそうな箇所を探します。</p>
+
+        <h4>カスタマイズ例1：HTMLコメントを追加</h4>
+        <div class="code-block">
+            <pre>&lt;!-- カスタマイズされたヘッダーです --&gt;</pre>
+        </div>
+
+        <h4>カスタマイズ例2：ページ上部にボーダーを追加</h4>
+        <div class="code-block">
+            <pre>&lt;body &lt;?php body_class(); ?&gt; style="border-top: 5px solid #ff6b35;"&gt;</pre>
+        </div>
+
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>確認</strong>
+        </div>
+
+        <p>ブラウザでサイトを確認し、カスタマイズが全ページに反映されていることを確認します。</p>
+
+        <div class="success">
+            <strong>ポイント</strong>
+            <ul>
+                <li><span class="filename php">header.php</span>の修正が全ページに反映される</li>
+                <li>これがテンプレートパーツの仕組み</li>
+                <li>1ファイルの修正で効率的にカスタマイズできる</li>
+            </ul>
+        </div>
+
+        <h2>7. まとめ</h2>
+
+        <div class="concept-box">
+            <h3>今日学んだ重要なポイント</h3>
+            <ol>
+                <li><strong>テンプレートパーツとは？</strong><br>
+                    ヘッダー、フッター、サイドバーなど、共通部分を別ファイルにしたもの</li>
+                <li><strong>4つの呼び出し関数</strong><br>
+                    <span class="filename function">get_header()</span>, <span class="filename function">get_footer()</span>, <span class="filename function">get_sidebar()</span>, <span class="filename function">get_template_part()</span></li>
+                <li><strong>フォールバック機能</strong><br>
+                    ファイルがない場合の代替表示機能がある</li>
+            </ol>
+        </div>
+
+				<div class="success">
+					<strong>参考資料</strong>
+					<ul class="reference-list" style="margin-bottom: 0;">
+							<li><strong>get_template_part() - カスタムテンプレートパーツの呼び出し</strong>
+									<a href="https://developer.wordpress.org/reference/functions/get_template_part/" target="_blank">https://developer.wordpress.org/reference/functions/get_template_part/</a>
+							</li>
+							<li><strong>get_header() - ヘッダーテンプレートの呼び出し</strong>
+									<a href="https://developer.wordpress.org/reference/functions/get_header/" target="_blank">https://developer.wordpress.org/reference/functions/get_header/</a>
+							</li>
+							<li><strong>get_footer() - フッターテンプレートの呼び出し</strong>
+									<a href="https://developer.wordpress.org/reference/functions/get_footer/" target="_blank">https://developer.wordpress.org/reference/functions/get_footer/</a>
+							</li>
+							<li><strong>get_sidebar() - サイドバーテンプレートの呼び出し</strong>
+									<a href="https://developer.wordpress.org/reference/functions/get_sidebar/" target="_blank">https://developer.wordpress.org/reference/functions/get_sidebar/</a>
+							</li>
+							<li><strong>テンプレートに関する包括的なガイド</strong>
+									<a href="https://developer.wordpress.org/themes/basics/template-files/" target="_blank">https://developer.wordpress.org/themes/basics/template-files/</a>
+							</li>
+					</ul>
+        </div>
+
+        <div class="important">
+            <strong>次回予告</strong><br>
+            WordPressの重要な関数について学習し、これまでの総復習を行います。
+        </div>
+
+        <hr style="margin: 40px 0; border: none; border-top: 2px solid #ecf0f1;">
+        
+    </div>
+</body>
+</html>
