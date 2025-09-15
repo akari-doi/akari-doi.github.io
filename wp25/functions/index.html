@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordPress関数の学習（機能別分類編）</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2980b9;
+            margin-top: 40px;
+            padding: 10px 0;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+        }
+        .toc {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .toc h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .toc ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .toc a {
+            text-decoration: none;
+            color: #2980b9;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        code {
+            background: #f1c40f;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+            color: #ecf0f1;
+            font-weight: normal;
+        }
+        .highlight {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .important {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .warning {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #3498db;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+        table code {
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        .checklist {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .checklist h4 {
+            margin-top: 0;
+            color: #27ae60;
+        }
+        .checklist ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .checklist li {
+            margin: 8px 0;
+        }
+        .checklist input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .step {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .step h4 {
+            margin-top: 0;
+            color: #1565c0;
+        }
+        .category {
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            background: #f8fbff;
+        }
+        .category h3 {
+            color: #2980b9;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WordPress関数の学習（機能別分類編）</h1>
+        
+        <div class="toc">
+            <h3>📋 目次</h3>
+            <ul>
+                <li><a href="#section1">1. WordPressの関数とは何か</a></li>
+                <li><a href="#section2">2. テンプレート読み込み関数（ファイルを呼び出す）</a></li>
+                <li><a href="#section3">3. 条件分岐関数（「もし〜なら」の判定）</a></li>
+                <li><a href="#section4">4. ループ関数（複数の投稿を処理）</a></li>
+                <li><a href="#section5">5. コンテンツ出力関数（データベースから情報を取得・表示）</a></li>
+                <li><a href="#section6">6. 実践演習：学んだ関数でpage.phpを編集してみよう</a></li>
+                <li><a href="#section7">7. まとめ：4つの関数カテゴリー</a></li>
+            </ul>
+        </div>
+
+        <div class="important">
+            <strong>📌 今日の学習目標</strong><br>
+            ・WordPressの動的な仕組みを関数を通して理解する<br>
+            ・テンプレート制作でよく使う4つのカテゴリの関数を知る<br>
+            ・実際のTwenty Seventeenのコードから関数の使用例を確認できる<br>
+            ・基本的なテンプレートファイルを関数を使って作成できる
+        </div>
+
+        <h2 id="section1">1. WordPressの関数とは何か</h2>
+
+        <h3>1.1 HTMLサイトとの違い</h3>
+        
+        <div style="display: flex; gap: 20px; margin: 20px 0;">
+            <div style="flex: 1;">
+                <h4>静的HTMLサイト</h4>
+                <pre><code>&lt;h1&gt;私のブログ&lt;/h1&gt;
+&lt;p&gt;2025年9月15日&lt;/p&gt;
+&lt;h2&gt;今日の記事タイトル&lt;/h2&gt;</code></pre>
+                <p>👆 手動で書く必要がある</p>
+            </div>
+            <div style="flex: 1;">
+                <h4>WordPressサイト</h4>
+                <pre><code>&lt;h1&gt;&lt;?php bloginfo('name'); ?&gt;&lt;/h1&gt;
+&lt;p&gt;&lt;?php the_date(); ?&gt;&lt;/p&gt;
+&lt;h2&gt;&lt;?php the_title(); ?&gt;&lt;/h2&gt;</code></pre>
+                <p>👆 関数でデータベースから自動取得</p>
+            </div>
+        </div>
+
+        <div class="highlight">
+            <strong>WordPressには多くの関数がありますが、今回は学習しやすいように、テンプレート制作でよく使う4つのカテゴリに分けて紹介します：</strong>
+            <ol>
+                <li><strong>テンプレート読み込み関数</strong> → ファイルを呼び出す</li>
+                <li><strong>条件分岐関数</strong> → 「もし〜なら」の判定</li>
+                <li><strong>ループ関数</strong> → 複数の投稿を処理</li>
+                <li><strong>コンテンツ出力関数</strong> → データベースから情報を取得・表示</li>
+            </ol>
+        </div>
+
+        <h2 id="section2">2. テンプレート読み込み関数（ファイルを呼び出す）</h2>
+
+        <div class="category">
+            <h3>🔗 テンプレート読み込み関数の役割</h3>
+            <p>他のファイルを読み込んで、テンプレートを分割して管理するための関数です。</p>
+        </div>
+
+        <h3>2.1 基本的なテンプレート読み込み</h3>
+
+        <div class="step">
+            <h4>📁 Twenty Seventeenの実際のコード例を確認してみよう</h4>
+            <p>Localでindex.phpを開いて、以下のコードを探してください：</p>
+        </div>
+
+        <pre><code>&lt;?php get_header(); ?&gt;
+
+&lt;div class="wrap"&gt;
+    &lt;!-- ページの内容 --&gt;
+&lt;/div&gt;
+
+&lt;?php get_footer(); ?&gt;</code></pre>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>関数</th>
+                    <th>役割</th>
+                    <th>読み込まれるファイル</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>get_header()</code></td>
+                    <td>ヘッダー部分を読み込み</td>
+                    <td>header.php</td>
+                </tr>
+                <tr>
+                    <td><code>get_footer()</code></td>
+                    <td>フッター部分を読み込み</td>
+                    <td>footer.php</td>
+                </tr>
+                <tr>
+                    <td><code>get_sidebar()</code></td>
+                    <td>サイドバーを読み込み</td>
+                    <td>sidebar.php</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>2.2 引数を使った応用</h3>
+        <pre><code>&lt;?php get_header('custom'); ?&gt;  // header-custom.php を読み込み
+&lt;?php get_sidebar('shop'); ?&gt;   // sidebar-shop.php を読み込み</code></pre>
+
+        <h3>2.3 テンプレートパーツの読み込み</h3>
+        
+        <div class="step">
+            <h4>📁 Twenty Seventeenで実際に使われている例を確認</h4>
+            <p>index.phpやfooter.phpで以下のようなコードを探してみてください：</p>
+        </div>
+
+        <pre><code>// index.php から
+get_template_part( 'template-parts/post/content', get_post_format() );
+
+// footer.php から
+get_template_part( 'template-parts/footer/footer', 'widgets' );
+get_template_part( 'template-parts/footer/site', 'info' );</code></pre>
+
+        <div class="highlight">
+            <strong><code>get_template_part()</code> の仕組み：</strong><br>
+            <code>get_template_part( 'フォルダ/ファイル名', '追加部分' );</code><br>
+            結果：<code>フォルダ/ファイル名-追加部分.php</code> が読み込まれる
+        </div>
+
+        <div class="checklist">
+            <h4>✅ テンプレート読み込み関数 確認チェックリスト</h4>
+            <ul>
+                <li><input type="checkbox"> Twenty Seventeenのindex.phpで<code>get_header()</code>を見つけた</li>
+                <li><input type="checkbox"> <code>get_footer()</code>の位置を確認した</li>
+                <li><input type="checkbox"> <code>get_template_part()</code>がどのファイルで使われているか確認した</li>
+                <li><input type="checkbox"> template-partsフォルダの中身を確認した</li>
+            </ul>
+        </div>
+
+        <h2 id="section3">3. 条件分岐関数（「もし〜なら」の判定）</h2>
+
+        <div class="category">
+            <h3>🔀 条件分岐関数の役割</h3>
+            <p>「もしブログページなら」「もしアイキャッチ画像があるなら」といった条件に応じて表示を切り替える関数です。</p>
+        </div>
+
+        <div style="margin: 15px 0;">
+            <strong>参考：</strong> <a href="https://developer.wordpress.org/themes/basics/conditional-tags/" target="_blank">Conditional Tags（WordPress公式ドキュメント）</a>
+        </div>
+
+        <h3>3.1 基本的な考え方</h3>
+        
+        <ul>
+            <li>「もしブログページなら、タイトルを表示」</li>
+            <li>「もしアイキャッチ画像があるなら、画像を表示」</li>
+            <li>「もしメニューが設定されていたら、ナビゲーションを表示」</li>
+        </ul>
+
+        <h3>3.2 ページの種類を判定</h3>
+
+        <div class="step">
+            <h4>📁 Twenty Seventeenの実際の使用例を確認</h4>
+            <p>index.phpで以下のようなコードを探してみてください：</p>
+        </div>
+
+        <pre><code>&lt;?php if ( is_home() && ! is_front_page() ) : ?&gt;
+    &lt;header class="page-header"&gt;
+        &lt;h1 class="page-title"&gt;&lt;?php single_post_title(); ?&gt;&lt;/h1&gt;
+    &lt;/header&gt;
+&lt;?php else : ?&gt;
+    &lt;header class="page-header"&gt;
+        &lt;h2 class="page-title"&gt;&lt;?php _e( 'Posts', 'twentyseventeen' ); ?&gt;&lt;/h2&gt;
+    &lt;/header&gt;
+&lt;?php endif; ?&gt;</code></pre>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>関数</th>
+                    <th>判定内容</th>
+                    <th>使用場面</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>is_home()</code></td>
+                    <td>ブログのホームページか</td>
+                    <td>ブログ一覧ページでのみ特別な表示</td>
+                </tr>
+                <tr>
+                    <td><code>is_front_page()</code></td>
+                    <td>サイトのトップページか</td>
+                    <td>フロントページ専用のヘッダー表示</td>
+                </tr>
+                <tr>
+                    <td><code>is_single()</code></td>
+                    <td>投稿の個別ページか</td>
+                    <td>記事ページでのみコメント欄表示</td>
+                </tr>
+                <tr>
+                    <td><code>is_page()</code></td>
+                    <td>固定ページか</td>
+                    <td>固定ページでのみサイドバー非表示</td>
+                </tr>
+                <tr>
+                    <td><code>is_category()</code></td>
+                    <td>カテゴリーページか</td>
+                    <td>カテゴリー説明文の表示</td>
+                </tr>
+                <tr>
+                    <td><code>is_404()</code></td>
+                    <td>404エラーページか</td>
+                    <td>エラーメッセージの表示</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>3.3 コンテンツの存在を判定</h3>
+
+        <div class="step">
+            <h4>📁 Twenty Seventeenのheader.phpとfooter.phpで確認</h4>
+            <p>以下のようなコードを探してみてください：</p>
+        </div>
+
+        <pre><code>// header.php から
+&lt;?php if ( has_post_thumbnail() ) : ?&gt;
+    &lt;div class="featured-image"&gt;
+        &lt;?php the_post_thumbnail(); ?&gt;
+    &lt;/div&gt;
+&lt;?php endif; ?&gt;
+
+// footer.php から
+&lt;?php if ( has_nav_menu( 'social' ) ) : ?&gt;
+    &lt;nav class="social-navigation"&gt;
+        &lt;?php wp_nav_menu( array( 'theme_location' =&gt; 'social' ) ); ?&gt;
+    &lt;/nav&gt;
+&lt;?php endif; ?&gt;</code></pre>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>関数</th>
+                    <th>判定内容</th>
+                    <th>使用場面</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>has_post_thumbnail()</code></td>
+                    <td>アイキャッチ画像があるか</td>
+                    <td>画像がある場合のみ表示</td>
+                </tr>
+                <tr>
+                    <td><code>has_nav_menu()</code></td>
+                    <td>メニューが設定されているか</td>
+                    <td>メニューがある場合のみナビゲーション表示</td>
+                </tr>
+                <tr>
+                    <td><code>is_active_sidebar()</code></td>
+                    <td>ウィジェットが設定されているか</td>
+                    <td>サイドバーに内容がある場合のみ表示</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="important">
+            <strong>💡 条件分岐のコツ</strong><br>
+            ・<strong>is</strong> = 「〜ですか？」<br>
+            ・<strong>has</strong> = 「〜を持っていますか？」<br>
+            ・<strong>&&</strong> = 「かつ」<br>
+            ・<strong>!</strong> = 「ではない」
+        </div>
+
+        <div class="checklist">
+            <h4>✅ 条件分岐関数 確認チェックリスト</h4>
+            <ul>
+                <li><input type="checkbox"> Show Current Templateプラグインで現在のページがhome, page, singleのどれか確認した</li>
+                <li><input type="checkbox"> Twenty Seventeenのindex.phpで条件分岐を見つけた</li>
+                <li><input type="checkbox"> header.phpで<code>has_post_thumbnail()</code>を見つけた</li>
+                <li><input type="checkbox"> footer.phpで<code>has_nav_menu()</code>を見つけた</li>
+            </ul>
+        </div>
+
+        <h2 id="section4">4. ループ関数（複数の投稿を処理）</h2>
+
+        <div class="category">
+            <h3>🔄 ループ関数の役割</h3>
+            <p>複数の投稿を順番に処理して表示するための関数です。ブログ一覧ページなどで使用されます。</p>
+        </div>
+
+        <div style="margin: 15px 0;">
+            <strong>参考：</strong> <a href="https://developer.wordpress.org/themes/basics/the-loop/" target="_blank">The Loop（WordPress公式ドキュメント）</a>
+        </div>
+
+        <h3>4.1 WordPressループの基本構造</h3>
+
+        <div class="step">
+            <h4>📁 Twenty Seventeenの実際のコードを確認</h4>
+            <p>index.phpで以下のようなコードを探してみてください：</p>
+        </div>
+
+        <pre><code>&lt;?php
+if ( have_posts() ) :
+    // Start the Loop.
+    while ( have_posts() ) :
+        the_post();
+        
+        get_template_part( 'template-parts/post/content', get_post_format() );
+        
+    endwhile;
+    
+    the_posts_pagination();
+else :
+    get_template_part( 'template-parts/post/content', 'none' );
+endif;
+?&gt;</code></pre>
+
+        <h3>4.2 ループ関数の役割</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>関数</th>
+                    <th>役割</th>
+                    <th>詳細</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>have_posts()</code></td>
+                    <td>投稿があるかチェック</td>
+                    <td>true/false を返す</td>
+                </tr>
+                <tr>
+                    <td><code>the_post()</code></td>
+                    <td>次の投稿データをセットアップ</td>
+                    <td>投稿情報をグローバル変数に設定</td>
+                </tr>
+                <tr>
+                    <td><code>the_posts_pagination()</code></td>
+                    <td>ページネーション表示</td>
+                    <td>「前へ」「次へ」リンクを生成</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>4.3 ループの流れを理解しよう</h3>
+
+        <div style="background: #f8fbff; border: 2px solid #3498db; border-radius: 8px; padding: 20px; margin: 20px 0;">
+            <h4 style="margin-top: 0; color: #2980b9;">🔄 ループの動作</h4>
+            <ol>
+                <li><code>have_posts()</code> で「投稿はありますか？」とチェック</li>
+                <li><code>while</code> で「投稿がある限り繰り返し」</li>
+                <li><code>the_post()</code> で「次の投稿データを準備」</li>
+                <li>投稿の情報を表示（タイトル、本文など）</li>
+                <li>2に戻って次の投稿へ</li>
+            </ol>
+        </div>
+
+        <h3>4.4 ループ内で使える関数</h3>
+
+        <div class="warning">
+            <strong>⚠️ 重要：以下の関数はループ内（<code>the_post()</code> の後）でのみ使用可能</strong>
+        </div>
+
+        <pre><code>while ( have_posts() ) :
+    the_post();
+    
+    // ここで以下の関数が使える
+    the_title();        // タイトル表示
+    the_content();      // 本文表示
+    the_excerpt();      // 抜粋表示
+    the_date();         // 投稿日表示
+    the_permalink();    // リンク表示
+    
+endwhile;</code></pre>
+
+        <div class="checklist">
+            <h4>✅ ループ関数 確認チェックリスト</h4>
+            <ul>
+                <li><input type="checkbox"> index.phpで<code>have_posts()</code>を見つけた</li>
+                <li><input type="checkbox"> <code>while</code>文を見つけた</li>
+                <li><input type="checkbox"> <code>the_post()</code>の位置を確認した</li>
+                <li><input type="checkbox"> ブログ一覧ページでループが動作していることを確認した</li>
+            </ul>
+        </div>
+
+        <h2 id="section5">5. コンテンツ出力関数（データベースから情報を取得・表示）</h2>
+
+        <div class="category">
+            <h3>📤 コンテンツ出力関数の役割</h3>
+            <p>データベースから投稿の情報やサイトの情報を取得して表示する関数です。</p>
+        </div>
+
+        <div style="margin: 15px 0;">
+            <strong>参考：</strong> <a href="https://developer.wordpress.org/themes/basics/template-tags/" target="_blank">Template Tags（WordPress公式ドキュメント）</a>
+        </div>
+
+        <h3>5.1 <code>the_</code> と <code>get_</code> の違い</h3>
+
+        <div class="step">
+            <h4>📁 Twenty Seventeenの実際の使用例を確認</h4>
+            <p>inc/template-tags.phpで以下のようなコードを探してみてください：</p>
+        </div>
+
+        <pre><code>// template-tags.php から
+function twentyseventeen_time_link() {
+    $time_string = sprintf( $time_string,
+        get_the_date( DATE_W3C ),  // 値を取得して変数に保存
+        get_the_date()            // 値を取得して変数に保存
+    );
+    
+    return '&lt;a href="' . esc_url( get_permalink() ) . '"&gt;' . $time_string . '&lt;/a&gt;';
+}</code></pre>
+
+        <table>
+            <thead>
+                <tr>
+                    <th><code>the_</code> 関数</th>
+                    <th><code>get_</code> 関数</th>
+                    <th>違い</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>the_title()</code></td>
+                    <td><code>get_the_title()</code></td>
+                    <td>the_は直接出力 / get_は値を返す</td>
+                </tr>
+                <tr>
+                    <td><code>the_content()</code></td>
+                    <td><code>get_the_content()</code></td>
+                    <td>同上</td>
+                </tr>
+                <tr>
+                    <td><code>the_date()</code></td>
+                    <td><code>get_the_date()</code></td>
+                    <td>同上</td>
+                </tr>
+                <tr>
+                    <td><code>the_permalink()</code></td>
+                    <td><code>get_permalink()</code></td>
+                    <td>同上</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>5.2 使い分けの例</h3>
+
+        <div style="display: flex; gap: 20px; margin: 20px 0;">
+            <div style="flex: 1;">
+                <h4>直接表示したい場合</h4>
+                <pre><code>&lt;h1&gt;&lt;?php the_title(); ?&gt;&lt;/h1&gt;</code></pre>
+            </div>
+            <div style="flex: 1;">
+                <h4>加工してから表示したい場合</h4>
+                <pre><code>&lt;?php 
+$title = get_the_title();
+$title = '【新着】' . $title;
+echo $title;
+?&gt;</code></pre>
+            </div>
+        </div>
+
+        <h3>5.3 投稿情報を取得する関数</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>関数</th>
+                    <th>取得内容</th>
+                    <th>使用例</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>the_title()</code></td>
+                    <td>投稿タイトル</td>
+                    <td><code>&lt;h2&gt;&lt;?php the_title(); ?&gt;&lt;/h2&gt;</code></td>
+                </tr>
+                <tr>
+                    <td><code>the_content()</code></td>
+                    <td>投稿本文</td>
+                    <td><code>&lt;div&gt;&lt;?php the_content(); ?&gt;&lt;/div&gt;</code></td>
+                </tr>
+                <tr>
+                    <td><code>the_excerpt()</code></td>
+                    <td>投稿抜粋</td>
+                    <td><code>&lt;p&gt;&lt;?php the_excerpt(); ?&gt;&lt;/p&gt;</code></td>
+                </tr>
+                <tr>
+                    <td><code>the_date()</code></td>
+                    <td>投稿日</td>
+                    <td><code>&lt;time&gt;&lt;?php the_date(); ?&gt;&lt;/time&gt;</code></td>
+                </tr>
+                <tr>
+                    <td><code>the_time()</code></td>
+                    <td>投稿時刻</td>
+                    <td><code>&lt;time&gt;&lt;?php the_time('H:i'); ?&gt;&lt;/time&gt;</code></td>
+                </tr>
+                <tr>
+                    <td><code>the_author()</code></td>
+                    <td>投稿者名</td>
+                    <td><code>&lt;span&gt;&lt;?php the_author(); ?&gt;&lt;/span&gt;</code></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>5.4 サイト情報を取得する関数</h3>
+
+        <div class="step">
+            <h4>📁 Twenty Seventeenのheader.phpで確認</h4>
+            <p>以下のようなコードを探してみてください：</p>
+        </div>
+
+        <pre><code>&lt;meta charset="&lt;?php bloginfo( 'charset' ); ?&gt;"&gt;
+&lt;html &lt;?php language_attributes(); ?&gt; class="no-js no-svg"&gt;
+&lt;body &lt;?php body_class(); ?&gt;&gt;</code></pre>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>関数</th>
+                    <th>取得内容</th>
+                    <th>結果例</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>bloginfo('name')</code></td>
+                    <td>サイト名</td>
+                    <td>「私のブログ」</td>
+                </tr>
+                <tr>
+                    <td><code>bloginfo('description')</code></td>
+                    <td>サイトの説明</td>
+                    <td>「日々の出来事を綴るブログ」</td>
+                </tr>
+                <tr>
+                    <td><code>bloginfo('charset')</code></td>
+                    <td>文字コード</td>
+                    <td>「UTF-8」</td>
+                </tr>
+                <tr>
+                    <td><code>language_attributes()</code></td>
+                    <td>言語属性</td>
+                    <td><code>lang="ja"</code></td>
+                </tr>
+                <tr>
+                    <td><code>body_class()</code></td>
+                    <td>bodyタグのクラス</td>
+                    <td><code>class="home blog"</code></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>5.5 必須関数（必ず入れる関数）</h3>
+
+        <div class="step">
+            <h4>📁 Twenty Seventeenのheader.phpとfooter.phpで確認</h4>
+            <p>以下のコードを探してみてください：</p>
+        </div>
+
+        <pre><code>&lt;!-- header.php の &lt;head&gt; 内 --&gt;
+&lt;?php wp_head(); ?&gt;
+&lt;/head&gt;
+
+&lt;!-- footer.php の &lt;/body&gt; 前 --&gt;
+&lt;?php wp_footer(); ?&gt;
+&lt;/body&gt;</code></pre>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>関数</th>
+                    <th>役割</th>
+                    <th>重要度</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>wp_head()</code></td>
+                    <td>ヘッダー情報を出力</td>
+                    <td>★★★ 必須</td>
+                </tr>
+                <tr>
+                    <td><code>wp_footer()</code></td>
+                    <td>フッター情報を出力</td>
+                    <td>★★★ 必須</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="important">
+            <strong>💡 なぜ必須なの？</strong><br>
+            ・<code>wp_head()</code> → CSS、JavaScript、SEO情報などを自動出力<br>
+            ・<code>wp_footer()</code> → プラグインのスクリプトなどを自動出力<br>
+            ・これらがないとWordPressが正常に動作しない
+        </div>
+
+        <div class="checklist">
+            <h4>✅ コンテンツ出力関数 確認チェックリスト</h4>
+            <ul>
+                <li><input type="checkbox"> header.phpで<code>wp_head()</code>を見つけた</li>
+                <li><input type="checkbox"> footer.phpで<code>wp_footer()</code>を見つけた</li>
+                <li><input type="checkbox"> <code>bloginfo('charset')</code>の使用例を確認した</li>
+                <li><input type="checkbox"> <code>the_title()</code>と<code>get_the_title()</code>の違いを理解した</li>
+            </ul>
+        </div>
+
+        <h2 id="section6">6. 実践演習：学んだ関数でpage.phpを編集してみよう</h2>
+
+        <div class="warning">
+            <strong>⚠️ 作業前に必ずバックアップを取りましょう</strong><br>
+            ファイルを編集する前に、元のファイルをコピーして保存しておくことが重要です。
+        </div>
+
+        <h3>6.1 準備作業</h3>
+
+        <div class="step">
+            <h4>📁 ステップ1：page.phpをバックアップ</h4>
+            <ol>
+                <li>Localのサイトフォルダを開く</li>
+                <li><code>wp-content/themes/twentyseventeen/page.php</code> を探す</li>
+                <li>page.phpをコピーして <code>page_backup.php</code> として保存</li>
+                <li>元に戻したい時は、page_backup.phpの内容をpage.phpにコピー</li>
+            </ol>
+        </div>
+
+        <h3>6.2 段階的に編集</h3>
+
+        <div class="step">
+            <h4>📝 ステップ2：基本構造を作成</h4>
+            <p>page.phpの内容を以下のように変更してみましょう：</p>
+        </div>
+
+        <pre><code>&lt;?php
+/* テンプレート読み込み関数 */
+get_header(); 
+?&gt;
+
+&lt;div class="wrap"&gt;
+    &lt;div id="primary" class="content-area"&gt;
+        &lt;main id="main" class="site-main"&gt;
+            
+            &lt;?php
+            /* ループ関数 */
+            if ( have_posts() ) :
+                while ( have_posts() ) :
+                    the_post();
+            ?&gt;
+                    
+                    &lt;article class="page"&gt;
+                        &lt;header class="entry-header"&gt;
+                            &lt;!-- コンテンツ出力関数 --&gt;
+                            &lt;h1 class="entry-title"&gt;&lt;?php the_title(); ?&gt;&lt;/h1&gt;
+                            
+                            &lt;!-- 条件分岐関数 + コンテンツ出力関数 --&gt;
+                            &lt;?php if ( has_post_thumbnail() ) : ?&gt;
+                                &lt;div class="featured-image"&gt;
+                                    &lt;?php the_post_thumbnail(); ?&gt;
+                                &lt;/div&gt;
+                            &lt;?php endif; ?&gt;
+                        &lt;/header&gt;
+
+                        &lt;div class="entry-content"&gt;
+                            &lt;!-- コンテンツ出力関数 --&gt;
+                            &lt;?php the_content(); ?&gt;
+                        &lt;/div&gt;
+                    &lt;/article&gt;
+
+            &lt;?php
+                endwhile;
+            endif;
+            ?&gt;
+
+        &lt;/main&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;?php
+/* テンプレート読み込み関数 */
+get_footer(); 
+?&gt;</code></pre>
+
+        <div class="step">
+            <h4>📝 ステップ3：条件分岐を活用した応用版</h4>
+            <p>さらに高度な条件分岐を追加してみましょう：</p>
+        </div>
+
+        <pre><code>&lt;?php get_header(); ?&gt;
+
+&lt;div class="wrap"&gt;
+    &lt;!-- 条件分岐：特定ページでのみ特別なヘッダー --&gt;
+    &lt;?php if ( is_page( 'about' ) ) : ?&gt;
+        &lt;div class="about-hero"&gt;
+            &lt;h1&gt;私たちについて&lt;/h1&gt;
+            &lt;p&gt;会社の理念をご紹介します&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;?php endif; ?&gt;
+    
+    &lt;div id="primary" class="content-area"&gt;
+        &lt;main id="main" class="site-main"&gt;
+            
+            &lt;?php if ( have_posts() ) : ?&gt;
+                &lt;?php while ( have_posts() ) : the_post(); ?&gt;
+                    
+                    &lt;article class="page"&gt;
+                        &lt;header class="entry-header"&gt;
+                            &lt;h1&gt;&lt;?php the_title(); ?&gt;&lt;/h1&gt;
+                            
+                            &lt;!-- 条件分岐：画像がある場合のみ表示 --&gt;
+                            &lt;?php if ( has_post_thumbnail() ) : ?&gt;
+                                &lt;div class="featured-image"&gt;
+                                    &lt;?php the_post_thumbnail(); ?&gt;
+                                &lt;/div&gt;
+                            &lt;?php endif; ?&gt;
+                        &lt;/header&gt;
+
+                        &lt;div class="entry-content"&gt;
+                            &lt;?php the_content(); ?&gt;
+                        &lt;/div&gt;
+                    &lt;/article&gt;
+
+                &lt;?php endwhile; ?&gt;
+            &lt;?php endif; ?&gt;
+
+        &lt;/main&gt;
+    &lt;/div&gt;
+    
+    &lt;!-- 条件分岐：お問い合わせページ以外でサイドバー表示 --&gt;
+    &lt;?php if ( ! is_page( 'contact' ) ) : ?&gt;
+        &lt;?php get_sidebar(); ?&gt;
+    &lt;?php endif; ?&gt;
+&lt;/div&gt;
+
+&lt;?php get_footer(); ?&gt;</code></pre>
+
+        <div class="warning">
+            <strong>⚠️ エラーが出た場合</strong><br>
+            ・画面が真っ白になった → バックアップファイルから復元<br>
+            ・表示が崩れた → HTMLタグの閉じ忘れがないか確認<br>
+            ・関数が効かない → ループ内で使用しているか確認
+        </div>
+
+        <h2 id="section7">7. まとめ：4つの関数カテゴリー</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>カテゴリー</th>
+                    <th>主な役割</th>
+                    <th>代表的な関数</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>テンプレート読み込み</strong></td>
+                    <td>ファイルを呼び出す</td>
+                    <td><code>get_header()</code>, <code>get_footer()</code>, <code>get_template_part()</code></td>
+                </tr>
+                <tr>
+                    <td><strong>条件分岐</strong></td>
+                    <td>「もし〜なら」の判定</td>
+                    <td><code>is_home()</code>, <code>is_page()</code>, <code>has_post_thumbnail()</code></td>
+                </tr>
+                <tr>
+                    <td><strong>ループ</strong></td>
+                    <td>複数投稿の処理</td>
+                    <td><code>have_posts()</code>, <code>the_post()</code>, <code>while</code></td>
+                </tr>
+                <tr>
+                    <td><strong>コンテンツ出力</strong></td>
+                    <td>データ取得・表示</td>
+                    <td><code>the_title()</code>, <code>the_content()</code>, <code>bloginfo()</code></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="important">
+            <strong>🎓 今日の学習の成果</strong><br>
+            テンプレート制作でよく使う4つのカテゴリの関数を知ることができました。<br>
+            全部覚える必要はありません。代表的な関数を覚えて、必要な時に調べる習慣をつけましょう。
+        </div>
+
+        <div style="background: #e8f5e8; border: 2px solid #27ae60; border-radius: 8px; padding: 20px; margin: 20px 0; text-align: center;">
+            <h3 style="color: #27ae60; margin-top: 0;">🏆 お疲れさまでした！</h3>
+            <p style="margin-bottom: 0;">
+            次回はフックという仕組みを使って、より安全なカスタマイズ方法を学習します。</p>
+        </div>
+    </div>
+</body>
+</html>
