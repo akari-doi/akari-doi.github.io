@@ -775,139 +775,89 @@ echo $title;
             </ul>
         </div>
 
-        <h2 id="section6">6. 実践演習：学んだ関数でpage.phpを編集してみよう</h2>
+                <h2 id="section6">6. 実践演習:学んだ関数でpage.phpを編集してみよう</h2>
 
         <div class="warning">
-            <strong>⚠️ 作業前に必ずバックアップを取りましょう</strong><br>
-            ファイルを編集する前に、元のファイルをコピーして保存しておくことが重要です。
+            <strong>⚠️ 作業前の準備</strong><br>
+            前回の授業でテンプレートファイルをいろいろ編集して、元の状態がわからなくなっている方もいると思います。<br>
+            まずは新しいテーマファイルをダウンロードして入れ替えましょう。
         </div>
 
         <h3>6.1 準備作業</h3>
 
         <div class="step">
-            <h4>📁 ステップ1：page.phpをバックアップ</h4>
+            <h4>📝 ステップ1:Twenty Seventeenテーマの再ダウンロード</h4>
             <ol>
-                <li>Localのサイトフォルダを開く</li>
-                <li><code>wp-content/themes/twentyseventeen/page.php</code> を探す</li>
-                <li>page.phpをコピーして <code>page_backup.php</code> として保存</li>
-                <li>元に戻したい時は、page_backup.phpの内容をpage.phpにコピー</li>
+                <li><a href="https://ja.wordpress.org/themes/twentyseventeen/" target="_blank">WordPress公式サイトからTwenty Seventeenをダウンロード</a></li>
+                <li>ダウンロードしたZIPファイルを解凍</li>
+                <li>Localのサイトフォルダを開く（<code>Local Sites/サイト名/app/public/wp-content/themes/</code>）</li>
+                <li>既存の <code>twentyseventeen</code> フォルダを削除または別名に変更</li>
+                <li>新しくダウンロードした <code>twentyseventeen</code> フォルダをコピー</li>
             </ol>
         </div>
 
-        <h3>6.2 段階的に編集</h3>
-
         <div class="step">
-            <h4>📝 ステップ2：基本構造を作成</h4>
-            <p>page.phpの内容を以下のように変更してみましょう：</p>
+            <h4>📝 ステップ2:page.phpをバックアップ</h4>
+            <ol>
+                <li><code>wp-content/themes/twentyseventeen/page.php</code> を開く</li>
+                <li>page.phpをコピーして <code>page_backup.php</code> として保存</li>
+                <li>万が一問題が起きた時は、page_backup.phpの内容をpage.phpにコピーして戻せます</li>
+            </ol>
         </div>
 
-        <pre><code>&lt;?php
-/* テンプレート読み込み関数 */
-get_header(); 
-?&gt;
+        <h3>6.2 条件分岐を追加してみよう</h3>
 
-&lt;div class="wrap"&gt;
-    &lt;div id="primary" class="content-area"&gt;
-        &lt;main id="main" class="site-main"&gt;
-            
-            &lt;?php
-            /* ループ関数 */
-            if ( have_posts() ) :
-                while ( have_posts() ) :
-                    the_post();
-            ?&gt;
-                    
-                    &lt;article class="page"&gt;
-                        &lt;header class="entry-header"&gt;
-                            &lt;!-- コンテンツ出力関数 --&gt;
-                            &lt;h1 class="entry-title"&gt;&lt;?php the_title(); ?&gt;&lt;/h1&gt;
-                            
-                            &lt;!-- 条件分岐関数 + コンテンツ出力関数 --&gt;
-                            &lt;?php if ( has_post_thumbnail() ) : ?&gt;
-                                &lt;div class="featured-image"&gt;
-                                    &lt;?php the_post_thumbnail(); ?&gt;
-                                &lt;/div&gt;
-                            &lt;?php endif; ?&gt;
-                        &lt;/header&gt;
-
-                        &lt;div class="entry-content"&gt;
-                            &lt;!-- コンテンツ出力関数 --&gt;
-                            &lt;?php the_content(); ?&gt;
-                        &lt;/div&gt;
-                    &lt;/article&gt;
-
-            &lt;?php
-                endwhile;
-            endif;
-            ?&gt;
-
-        &lt;/main&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
-
-&lt;?php
-/* テンプレート読み込み関数 */
-get_footer(); 
-?&gt;</code></pre>
+        <div class="highlight">
+            <strong>💡 今回の演習のポイント</strong><br>
+            特定のページ（スラッグが「about」のページ）でのみ、特別なヘッダー部分を表示する条件分岐を追加します。<br>
+            これにより、ページによって表示内容を変えることができる仕組みを体験できます。
+        </div>
 
         <div class="step">
-            <h4>📝 ステップ3：条件分岐を活用した応用版</h4>
-            <p>さらに高度な条件分岐を追加してみましょう：</p>
+            <h4>📝 ステップ3:page.phpを編集</h4>
+            <p>page.phpの <code>&lt;?php get_header(); ?&gt;</code> の直後に、以下のコードを追加してください:</p>
         </div>
 
         <pre><code>&lt;?php get_header(); ?&gt;
 
-&lt;div class="wrap"&gt;
-    &lt;!-- 条件分岐：特定ページでのみ特別なヘッダー --&gt;
-    &lt;?php if ( is_page( 'about' ) ) : ?&gt;
-        &lt;div class="about-hero"&gt;
-            &lt;h1&gt;私たちについて&lt;/h1&gt;
-            &lt;p&gt;会社の理念をご紹介します&lt;/p&gt;
-        &lt;/div&gt;
-    &lt;?php endif; ?&gt;
-    
-    &lt;div id="primary" class="content-area"&gt;
-        &lt;main id="main" class="site-main"&gt;
-            
-            &lt;?php if ( have_posts() ) : ?&gt;
-                &lt;?php while ( have_posts() ) : the_post(); ?&gt;
-                    
-                    &lt;article class="page"&gt;
-                        &lt;header class="entry-header"&gt;
-                            &lt;h1&gt;&lt;?php the_title(); ?&gt;&lt;/h1&gt;
-                            
-                            &lt;!-- 条件分岐：画像がある場合のみ表示 --&gt;
-                            &lt;?php if ( has_post_thumbnail() ) : ?&gt;
-                                &lt;div class="featured-image"&gt;
-                                    &lt;?php the_post_thumbnail(); ?&gt;
-                                &lt;/div&gt;
-                            &lt;?php endif; ?&gt;
-                        &lt;/header&gt;
-
-                        &lt;div class="entry-content"&gt;
-                            &lt;?php the_content(); ?&gt;
-                        &lt;/div&gt;
-                    &lt;/article&gt;
-
-                &lt;?php endwhile; ?&gt;
-            &lt;?php endif; ?&gt;
-
-        &lt;/main&gt;
+&lt;!-- ↓↓↓ ここから追加 ↓↓↓ --&gt;
+&lt;!-- 条件分岐:特定ページでのみ特別なヘッダー --&gt;
+&lt;?php if ( is_page( 'about' ) ) : ?&gt;
+    &lt;div class="about-hero" style="background: #3498db; color: white; padding: 40px; text-align: center; margin-bottom: 20px;"&gt;
+        &lt;h1 style="margin: 0 0 10px 0;"&gt;私たちについて&lt;/h1&gt;
+        &lt;p style="margin: 0;"&gt;会社の理念をご紹介します&lt;/p&gt;
     &lt;/div&gt;
-    
-    &lt;!-- 条件分岐：お問い合わせページ以外でサイドバー表示 --&gt;
-    &lt;?php if ( ! is_page( 'contact' ) ) : ?&gt;
-        &lt;?php get_sidebar(); ?&gt;
-    &lt;?php endif; ?&gt;
-&lt;/div&gt;
+&lt;?php endif; ?&gt;
+&lt;!-- ↑↑↑ ここまで追加 ↑↑↑ --&gt;
 
-&lt;?php get_footer(); ?&gt;</code></pre>
+&lt;div class="wrap"&gt;
+    &lt;!-- 以下は元のコードのまま --&gt;</code></pre>
+
+        <div class="step">
+            <h4>📝 ステップ4:動作確認</h4>
+            <ol>
+                <li>WordPress管理画面で、固定ページ > 新規追加</li>
+                <li>タイトルを「私たちについて」として入力</li>
+                <li>パーマリンク（スラッグ）を「about」に設定</li>
+                <li>本文に適当なテキストを入力して公開</li>
+                <li>「about」ページを表示して、青い背景のヘッダーが表示されることを確認</li>
+                <li>他のページでは表示されないことを確認</li>
+            </ol>
+        </div>
+
+        <div class="important">
+            <strong>💡 このコードの仕組み</strong><br>
+            ・<code>is_page( 'about' )</code> = 「スラッグが'about'のページかどうか」を判定<br>
+            ・条件が true（真）の場合のみ、<code>&lt;div class="about-hero"&gt;</code> 以下が表示される<br>
+            ・他のページでは条件が false（偽）なので、何も表示されない<br><br>
+            このように条件分岐を使うことで、ページごとに異なる表示を実現できます。
+        </div>
 
         <div class="warning">
             <strong>⚠️ エラーが出た場合</strong><br>
             ・画面が真っ白になった → バックアップファイルから復元<br>
-            ・表示が崩れた → HTMLタグの閉じ忘れがないか確認<br>
-            ・関数が効かない → ループ内で使用しているか確認
+            ・表示が崩れた → HTMLタグの閉じ忘れがないか確認（特に <code>&lt;?php endif; ?&gt;</code>）<br>
+            ・青いヘッダーが表示されない → ページのスラッグが「about」になっているか確認
         </div>
 
         <h2 id="section7">7. まとめ：4つの関数カテゴリー</h2>
