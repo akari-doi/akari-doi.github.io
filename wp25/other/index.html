@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordPress その他重要な関数・主要機能</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 2em;
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            font-size: 1.6em;
+            color: #2c3e50;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-left: 10px;
+            border-left: 4px solid #3498db;
+        }
+        
+        h3 {
+            font-size: 1.3em;
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        h4 {
+            font-size: 1.1em;
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #e83e8c;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+            font-size: 1em;
+        }
+        
+        .note {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .bad-example {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .good-example {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .bad-example::before {
+            content: "❌ ダメな例（危険）";
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #721c24;
+        }
+        
+        .good-example::before {
+            content: "✅ 良い例（安全）";
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #155724;
+        }
+        
+        strong {
+            color: #2c3e50;
+        }
+        
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WordPress その他重要な関数・主要機能</h1>
+
+        <h2>その他重要な関数</h2>
+
+        <h3>テーマサポート関連：add_theme_support()</h3>
+        <p>テーマで使える機能を有効化します。<code>functions.php</code>に記述します。</p>
+
+<pre><code>function my_theme_setup() {
+    // アイキャッチ画像を有効化
+    add_theme_support('post-thumbnails');
+    
+    // タイトルタグをWordPressに管理させる
+    add_theme_support('title-tag');
+    
+    // カスタムロゴ機能を有効化
+    add_theme_support('custom-logo');
+}
+add_action('after_setup_theme', 'my_theme_setup');</code></pre>
+
+        <p><strong>主な機能と使い方：</strong></p>
+
+        <h4>1. post-thumbnails（アイキャッチ画像）</h4>
+<pre><code>&lt;!-- テンプレートでの出力 --&gt;
+&lt;?php if (has_post_thumbnail()) : ?&gt;
+    &lt;?php the_post_thumbnail('full'); ?&gt;
+&lt;?php endif; ?&gt;
+
+&lt;!-- サイズ指定も可能 --&gt;
+&lt;?php the_post_thumbnail('medium'); ?&gt; &lt;!-- 中サイズ --&gt;
+&lt;?php the_post_thumbnail('thumbnail'); ?&gt; &lt;!-- サムネイル --&gt;</code></pre>
+        <p>📖 <a href="https://developer.wordpress.org/themes/functionality/featured-images-post-thumbnails/" target="_blank">公式ドキュメント：Featured Images &amp; Post Thumbnails</a></p>
+
+        <h4>2. title-tag（タイトルタグ）</h4>
+        <p>有効化すると、WordPressが自動で <code>&lt;title&gt;</code> タグを生成してくれます。<br>
+        header.phpに <code>&lt;title&gt;</code> タグを書く必要はありません。</p>
+        <p>📖 <a href="https://developer.wordpress.org/reference/functions/add_theme_support/#title-tag" target="_blank">公式ドキュメント：Title Tag</a></p>
+
+        <h4>3. custom-logo（カスタムロゴ）</h4>
+<pre><code>&lt;!-- テンプレートでの出力 --&gt;
+&lt;?php if (has_custom_logo()) : ?&gt;
+    &lt;?php the_custom_logo(); ?&gt;
+&lt;?php else : ?&gt;
+    &lt;h1&gt;&lt;a href="&lt;?php echo esc_url(home_url('/')); ?&gt;"&gt;
+        &lt;?php bloginfo('name'); ?&gt;
+    &lt;/a&gt;&lt;/h1&gt;
+&lt;?php endif; ?&gt;</code></pre>
+        <p>管理画面の「外観 &gt; カスタマイズ &gt; サイト基本情報」からロゴ画像を設定できるようになります。</p>
+        <p>📖 <a href="https://developer.wordpress.org/themes/functionality/custom-logo/" target="_blank">公式ドキュメント：Custom Logo</a></p>
+        
+        <p style="margin-top: 20px;">📖 <a href="https://developer.wordpress.org/reference/functions/add_theme_support/" target="_blank">公式ドキュメント：add_theme_support()</a></p>
+
+        <h3>セキュリティ関連（エスケープ関数）</h3>
+        <p>データを出力する際は、必ずエスケープ処理をしましょう。</p>
+
+        <div class="bad-example">
+<pre><code>&lt;!-- XSS攻撃の危険性がある --&gt;
+&lt;h1&gt;&lt;?php echo $title; ?&gt;&lt;/h1&gt;
+&lt;a href="&lt;?php echo $url; ?&gt;"&gt;リンク&lt;/a&gt;
+&lt;div class="&lt;?php echo $class; ?&gt;"&gt;内容&lt;/div&gt;</code></pre>
+        </div>
+
+        <div class="good-example">
+<pre><code>&lt;!-- HTMLとして出力（タグを無効化） --&gt;
+&lt;h1&gt;&lt;?php echo esc_html($title); ?&gt;&lt;/h1&gt;
+
+&lt;!-- URLとして出力 --&gt;
+&lt;a href="&lt;?php echo esc_url($url); ?&gt;"&gt;リンク&lt;/a&gt;
+
+&lt;!-- HTML属性として出力 --&gt;
+&lt;div class="&lt;?php echo esc_attr($class); ?&gt;"&gt;内容&lt;/div&gt;</code></pre>
+        </div>
+
+        <p><strong>エスケープ関数の使い分け：</strong></p>
+        <ul>
+            <li><code>esc_html()</code> - 通常のテキスト出力に使用</li>
+            <li><code>esc_attr()</code> - HTML属性（class、id、data-*など）に使用</li>
+            <li><code>esc_url()</code> - URL出力に使用</li>
+        </ul>
+        
+        <p>📖 <a href="https://developer.wordpress.org/apis/security/escaping/" target="_blank">公式ドキュメント：Escaping</a></p>
+        <p>📖 <a href="https://developer.wordpress.org/reference/functions/esc_html/" target="_blank">esc_html()</a> / <a href="https://developer.wordpress.org/reference/functions/esc_attr/" target="_blank">esc_attr()</a> / <a href="https://developer.wordpress.org/reference/functions/esc_url/" target="_blank">esc_url()</a></p>
+
+        <h3>URL関連</h3>
+        <p>テーマ内でパスを扱う際に使う関数です。</p>
+
+<pre><code>&lt;!-- サイトのホームURL --&gt;
+&lt;a href="&lt;?php echo esc_url(home_url('/')); ?&gt;"&gt;トップページ&lt;/a&gt;
+
+&lt;!-- テーマフォルダ内の画像を読み込む --&gt;
+&lt;img src="&lt;?php echo esc_url(get_template_directory_uri()); ?&gt;/images/logo.png" alt="ロゴ"&gt;
+
+&lt;!-- テーマフォルダ内のCSSを読み込む --&gt;
+&lt;link rel="stylesheet" href="&lt;?php echo esc_url(get_template_directory_uri()); ?&gt;/style.css"&gt;
+
+&lt;!-- 子テーマの場合 --&gt;
+&lt;link rel="stylesheet" href="&lt;?php echo esc_url(get_stylesheet_directory_uri()); ?&gt;/custom.css"&gt;</code></pre>
+
+        <p><strong>URL関数の使い分け：</strong></p>
+        <ul>
+            <li><code>home_url()</code> - サイトのトップページURL</li>
+            <li><code>site_url()</code> - WordPressがインストールされているURL（通常はhome_urlと同じ）</li>
+            <li><code>get_template_directory_uri()</code> - 親テーマフォルダのURL</li>
+            <li><code>get_stylesheet_directory_uri()</code> - 子テーマフォルダのURL（子テーマがない場合は親テーマのURL）</li>
+        </ul>
+        
+        <p>📖 <a href="https://developer.wordpress.org/reference/functions/home_url/" target="_blank">home_url()</a> / <a href="https://developer.wordpress.org/reference/functions/site_url/" target="_blank">site_url()</a></p>
+        <p>📖 <a href="https://developer.wordpress.org/reference/functions/get_template_directory_uri/" target="_blank">get_template_directory_uri()</a> / <a href="https://developer.wordpress.org/reference/functions/get_stylesheet_directory_uri/" target="_blank">get_stylesheet_directory_uri()</a></p>
+
+        <h2>WordPressの主要機能（紹介）</h2>
+        <p>実務でよく使う機能を簡単に紹介します。</p>
+
+        <h3>カスタム投稿タイプとタクソノミー</h3>
+        <p><strong>カスタム投稿タイプ：</strong> 「投稿」や「固定ページ」以外の独自のコンテンツタイプを作れます。</p>
+        
+        <p><strong>使用例：</strong></p>
+        <ul>
+            <li>制作実績、お知らせ、商品情報、イベント情報など</li>
+        </ul>
+
+        <p><strong>カスタムタクソノミー：</strong> カテゴリーやタグのような独自の分類を作れます。</p>
+
+        <div class="note">
+            <p><strong>おすすめプラグイン：Custom Post Type UI</strong></p>
+            <ul>
+                <li>コードを書かずに管理画面から設定可能</li>
+                <li>直感的な操作で初心者にも扱いやすい</li>
+            </ul>
+        </div>
+        
+        <p>📖 <a href="https://developer.wordpress.org/plugins/post-types/" target="_blank">公式ドキュメント：Custom Post Types</a></p>
+        <p>🔌 <a href="https://wordpress.org/plugins/custom-post-type-ui/" target="_blank">プラグイン：Custom Post Type UI</a></p>
+
+        <h3>カスタムフィールド</h3>
+        <p>投稿や固定ページに独自の入力項目を追加できます。</p>
+
+        <p><strong>使用例：</strong></p>
+        <ul>
+            <li>価格、住所、電話番号、営業時間などの構造化データ</li>
+            <li>イベントの開催日時、場所</li>
+            <li>商品のスペック情報</li>
+        </ul>
+
+        <div class="note">
+            <p><strong>おすすめプラグイン：Advanced Custom Fields（ACF）</strong></p>
+            <ul>
+                <li>管理画面から直感的にフィールドを追加</li>
+                <li>テキスト、画像、日付、選択肢など様々なフィールドタイプ</li>
+                <li>Pro版では繰り返しフィールドなど高度な機能も</li>
+            </ul>
+        </div>
+
+<pre><code>&lt;!-- テンプレートでの使用例 --&gt;
+&lt;p&gt;価格: &lt;?php echo esc_html(get_field('price')); ?&gt;円&lt;/p&gt;
+&lt;p&gt;住所: &lt;?php echo esc_html(get_field('address')); ?&gt;&lt;/p&gt;</code></pre>
+
+        <p>📖 <a href="https://wordpress.org/support/article/custom-fields/" target="_blank">公式ドキュメント：Custom Fields</a></p>
+        <p>🔌 <a href="https://wordpress.org/plugins/advanced-custom-fields/" target="_blank">プラグイン：Advanced Custom Fields</a></p>
+
+        <h3>マルチサイト</h3>
+        <p>1つのWordPressインストールで複数のサイトを管理できる機能です。</p>
+
+        <p><strong>使用例：</strong></p>
+        <ul>
+            <li>企業サイトと採用サイトを別々に管理</li>
+            <li>多言語サイトの運営</li>
+            <li>フランチャイズの各店舗サイト</li>
+        </ul>
+
+        <div class="warning">
+            <strong>注意：</strong> 設定がやや複雑なため、必要な場合のみ使用を検討しましょう。
+        </div>
+        
+        <p>📖 <a href="https://developer.wordpress.org/advanced-administration/multisite/" target="_blank">公式ドキュメント：Multisite</a></p>
+
+        <h3>REST API</h3>
+        <p>WordPressのデータを外部システムと連携できる機能です。</p>
+
+        <p><strong>できること：</strong></p>
+        <ul>
+            <li>LINEボットとの連携（新着記事の自動通知など）</li>
+            <li>kintoneなど業務システムとのデータ連携</li>
+            <li>ヘッドレスCMS（WordPress＝データ管理、フロント＝React/Vue.jsなど別構築）</li>
+            <li>スマホアプリへのデータ配信</li>
+        </ul>
+
+        <p><strong>例：</strong> ブログの最新記事をJSON形式で取得</p>
+<pre><code>https://example.com/wp-json/wp/v2/posts</code></pre>
+        <p>ブラウザでこのURLにアクセスすると、記事データがJSON形式で表示されます。</p>
+
+        <div class="note">
+            WordPressはただのブログツールではなく、様々なシステムと連携できる柔軟なプラットフォームです。
+        </div>
+        
+        <p>📖 <a href="https://developer.wordpress.org/rest-api/" target="_blank">公式ドキュメント：REST API</a></p>
+
+    </div>
+</body>
+</html>

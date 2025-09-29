@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordPress Q&A</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 2em;
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .question {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 30px 0 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .question::before {
+            content: "Q. ";
+            color: #3498db;
+            font-size: 1.3em;
+        }
+        
+        h2 {
+            font-size: 1.4em;
+            color: #2c3e50;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 4px solid #27ae60;
+        }
+        
+        h2::before {
+            content: "A. ";
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        h3 {
+            font-size: 1.2em;
+            color: #34495e;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            margin-left: 25px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+        }
+        
+        code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #e83e8c;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+            font-size: 1em;
+        }
+        
+        .note {
+            background: #fff9e6;
+            border-left: 4px solid #f39c12;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .info {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .plugin-box {
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .plugin-box h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        strong {
+            color: #2c3e50;
+        }
+        
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        .link-button {
+            display: inline-block;
+            background: #3498db;
+            color: white !important;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 10px 0;
+            text-decoration: none;
+        }
+        
+        .link-button:hover {
+            background: #2980b9;
+            text-decoration: none;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WordPress Q&A</h1>
+
+        <div class="question">
+            サイトを作った際にアニメーションなどをつけれますか？
+        </div>
+
+        <h2>はい、つけられます！</h2>
+        <p>WordPressサイトにアニメーションを追加する方法は主に2つあります。</p>
+
+        <h3>方法1：JavaScriptを使ってアニメーションをつける</h3>
+        <p>これまでに学習した <code>wp_enqueue_script()</code> を使って、JavaScriptファイルを読み込み、アニメーションを実装できます。</p>
+
+        <h4>手順：</h4>
+
+        <p><strong>1. JavaScriptファイルを作成</strong></p>
+        <p>テーマフォルダ内に <code>js/animation.js</code> というファイルを作成します。</p>
+
+<pre><code>// animation.js の例（vanilla JavaScript）
+document.addEventListener('DOMContentLoaded', function() {
+    // スクロールで要素をフェードイン
+    const elements = document.querySelectorAll('.fade-in');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    });
+    
+    elements.forEach(element => {
+        observer.observe(element);
+    });
+});</code></pre>
+
+        <div class="note">
+            <strong>💡 jQueryを使う場合</strong><br>
+            WordPressでjQueryを使う場合は、特殊な書き方が必要です。通常の <code>$</code> は使えないため、以下のように記述します。
+<pre style="margin-top: 10px;"><code>// jQueryを使う場合
+jQuery(function($) {
+    // この中では $ が使える
+    $('.fade-in').on('click', function() {
+        $(this).addClass('active');
+    });
+});</code></pre>
+        </div>
+
+        <p><strong>2. functions.phpでJavaScriptを読み込む</strong></p>
+<pre><code>function my_enqueue_scripts() {
+    // JavaScriptファイルを読み込む
+    wp_enqueue_script(
+        'my-animation',                              // ハンドル名
+        get_stylesheet_directory_uri() . '/js/animation.js',  // ファイルのパス
+        array(),                                     // 依存関係（jQueryに依存する場合はarray('jquery')）
+        '1.0.0',                                     // バージョン
+        true                                         // フッターで読み込む
+    );
+}
+add_action('wp_enqueue_scripts', 'my_enqueue_scripts');</code></pre>
+
+        <p>📖 <a href="https://developer.wordpress.org/reference/functions/wp_enqueue_script/" target="_blank">公式ドキュメント：wp_enqueue_script()</a></p>
+
+        <p><strong>3. CSSでアニメーションのスタイルを定義</strong></p>
+<pre><code>/* style.cssに追加 */
+.fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in.active {
+    opacity: 1;
+    transform: translateY(0);
+}</code></pre>
+
+        <p><strong>4. HTMLでクラスを指定</strong></p>
+<pre><code>&lt;div class="fade-in"&gt;
+    &lt;h2&gt;スクロールするとフェードインします&lt;/h2&gt;
+&lt;/div&gt;</code></pre>
+
+        <div class="note">
+            <strong>💡 ポイント</strong><br>
+            このように、wp_enqueue_script()を使えば、独自のJavaScriptを安全に読み込んでアニメーションを実装できます。
+        </div>
+
+        <h3>方法2：プラグインを使う（もっと簡単！）</h3>
+        <p>コードを書かなくても、プラグインを使えばブロックごとに簡単にアニメーションをつけられます。</p>
+
+        <div class="plugin-box">
+            <h4>Blocks Animation</h4>
+            <ul>
+                <li>ブロックエディタの各ブロックに簡単にアニメーションを追加</li>
+                <li>フェードイン、スライドイン、ズームなど様々なアニメーション効果</li>
+                <li>管理画面から直感的に設定可能</li>
+            </ul>
+            <p>🔌 <a href="https://ja.wordpress.org/plugins/blocks-animation/" target="_blank">Blocks Animation</a></p>
+        </div>
+
+        <hr style="margin: 50px 0; border: none; border-top: 2px solid #e0e0e0;">
+
+        <div class="question">
+            実際の企業でよく使われるテーマやプラグインについて知りたいです
+        </div>
+
+        <h2>実務で人気のテーマ・プラグインを紹介します</h2>
+
+        <h3>人気のテーマ・プラグインを調べるなら</h3>
+        <p>このサイトで、実際にどのテーマやプラグインが人気なのかランキングで見ることができます。</p>
+
+        <a href="https://wp-search.org/ja/" target="_blank" class="link-button">📊 WP-Search.org で人気ランキングを見る</a>
+
+        <p style="margin-top: 15px;">多くのWordPressサイトで使われているテーマやプラグインが集計されているので、「どれを選べばいいかわからない」という時の参考になります。</p>
+
+        <div class="note">
+            <strong>💡 集計方法について</strong><br>
+            このサイトは公開されているWordPressサイトを調査してランキング化しています。集計期間は明記されていませんが、トレンドを知る参考になります。
+        </div>
+
+        <h3>私がよく使っているテーマ</h3>
+
+        <div class="plugin-box">
+            <h4>Blocksy（ブロックシー）</h4>
+            <p>軽量で高速、カスタマイズ性が高い無料テーマです。</p>
+            <ul>
+                <li>ブロックエディタとの相性が良い</li>
+                <li>読み込み速度が速い</li>
+                <li>ヘッダー・フッターのカスタマイズが柔軟</li>
+                <li>Pro版もあり、さらに高度な機能が使える</li>
+            </ul>
+            <p>🎨 <a href="https://creativethemes.com/blocksy/" target="_blank">Blocksy 公式サイト</a></p>
+        </div>
+
+        <div class="info">
+            <strong>その他の人気テーマ</strong>
+            <ul style="margin-top: 10px;">
+                <li><strong>SWELL</strong> - 日本で人気の有料テーマ</li>
+                <li><strong>Cocoon</strong> - 日本で人気の無料テーマ</li>
+                <li><strong>Astra</strong> - 海外で人気</li>
+                <li><strong>Kadence</strong> - 海外で人気</li>
+            </ul>
+        </div>
+
+        <h3>実務でよく使うプラグイン</h3>
+        <p>サイトの機能追加のプラグインも使いますが、<strong>どんなサイトにもよく使うのは保守・管理系のプラグイン</strong>です。</p>
+
+        <h4>日本語サイトに推奨</h4>
+        <div class="plugin-box">
+            <h4>WP Multibyte Patch</h4>
+            <p><strong>日本語環境を整えるプラグイン</strong></p>
+            <ul>
+                <li>日本語の文字化けを防ぐ（一部環境）</li>
+                <li>日本語ファイル名を自動で英数字に変換（サーバー移転時のトラブル防止）</li>
+                <li>日本語サイトでは入れておくと安心</li>
+            </ul>
+            <p>🔌 <a href="https://wordpress.org/plugins/wp-multibyte-patch/" target="_blank">WP Multibyte Patch</a></p>
+        </div>
+
+        <h4>保守・管理系プラグイン</h4>
+
+        <div class="plugin-box">
+            <h4>UpdraftPlus（アップドラフトプラス）</h4>
+            <p><strong>バックアップ用プラグイン</strong></p>
+            <ul>
+                <li>サイトのバックアップと復元が簡単</li>
+                <li>Googleドライブ、Dropboxなどクラウドに保存可能</li>
+                <li>定期的な自動バックアップ設定ができる</li>
+            </ul>
+            <p>🔌 <a href="https://wordpress.org/plugins/updraftplus/" target="_blank">UpdraftPlus</a></p>
+        </div>
+
+        <div class="plugin-box">
+            <h4>Site Kit by Google</h4>
+            <p><strong>Google各種サービス連携プラグイン</strong></p>
+            <ul>
+                <li>Google Analytics、Search Consoleを管理画面で確認</li>
+                <li>アクセス解析データを一元管理</li>
+                <li>Google公式プラグインで信頼性が高い</li>
+            </ul>
+            <p>🔌 <a href="https://wordpress.org/plugins/google-site-kit/" target="_blank">Site Kit by Google</a></p>
+        </div>
+
+        <div class="plugin-box">
+            <h4>Contact Form 7</h4>
+            <p><strong>お問い合わせフォーム作成プラグイン</strong></p>
+            <ul>
+                <li>日本で最も使われているフォームプラグイン</li>
+                <li>柔軟なカスタマイズが可能</li>
+                <li>スパム対策も可能</li>
+            </ul>
+            <p>🔌 <a href="https://wordpress.org/plugins/contact-form-7/" target="_blank">Contact Form 7</a></p>
+        </div>
+
+        <div class="info">
+            <strong>その他のプラグイン</strong>
+            <ul style="margin-top: 10px;">
+                <li><strong>Wordfence Security</strong> - セキュリティ対策</li>
+                <li><strong>All-in-One WP Migration</strong> - サイト移行用
+                    <br>📹 <a href="https://drive.google.com/file/d/1M31M_AVwmHe9c6l_sH_3XqM2q0nvGnzz/view?usp=sharing" target="_blank">ローカル環境から本番サーバーへ引っ越す方法（動画）</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="note">
+            <strong>💡 実務のポイント</strong><br>
+            企業サイトでは、見た目の派手さよりも<strong>「安全性」「保守性」「速度」</strong>が重視されます。そのため、バックアップや分析ツールなど、サイトを守り改善するプラグインが重要です。
+        </div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メニュー・ウィジェット・フック - WordPress学習</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 2em;
+            color: #0073aa;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #0073aa;
+        }
+        
+        h2 {
+            font-size: 1.6em;
+            color: #23282d;
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        h3 {
+            font-size: 1.3em;
+            color: #23282d;
+            margin: 30px 0 15px;
+        }
+        
+        h4 {
+            font-size: 1.1em;
+            color: #555;
+            margin: 20px 0 10px;
+        }
+        
+        p {
+            margin: 15px 0;
+        }
+        
+        code {
+            background: #f7f7f7;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: Consolas, Monaco, 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #d63384;
+        }
+        
+        pre {
+            background: #23282d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: Consolas, Monaco, 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 15px 20px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .note {
+            background: #e3f2fd;
+            padding: 15px 20px;
+            border-left: 4px solid #2196f3;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .warning {
+            background: #ffebee;
+            padding: 15px 20px;
+            border-left: 4px solid #f44336;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95em;
+        }
+        
+        table th {
+            background: #0073aa;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        table tr:hover {
+            background: #f5f5f5;
+        }
+        
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        a {
+            color: #0073aa;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        .reference {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .flow-diagram {
+            background: #f9f9f9;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>メニュー・ウィジェット・フック</h1>
+        
+        <h2>テーマでのナビゲーションメニューの構築</h2>
+        
+        <p>管理画面で「メニュー」を設定したことがありますね。今回は、そのメニューを<strong>テーマ側でどう実装するか</strong>を学びます。</p>
+        
+        <h3>メニューの仕組み（全体像）</h3>
+        
+        <div class="flow-diagram">① functions.phpでメニューの場所を登録
+   ↓
+② 管理画面で「メニュー」を作成し、登録した場所に割り当て
+   ↓
+③ テンプレートファイル（header.phpなど）でメニューを表示</div>
+        
+        <h3>① functions.phpでメニューを登録する</h3>
+        
+        <p>Twenty Seventeenの <code>functions.php</code> を開いて、<code>twentyseventeen_setup()</code> 関数内の以下のコードを探してください：</p>
+        
+        <pre><code>function twentyseventeen_setup() {
+    // 〜省略〜
+
+    // This theme uses wp_nav_menu() in two locations.
+    register_nav_menus(
+        array(
+            'top'    => __( 'Top Menu', 'twentyseventeen' ),
+            'social' => __( 'Social Links Menu', 'twentyseventeen' ),
+        )
+    );
+
+    // 〜省略〜
+}
+add_action( 'after_setup_theme', 'twentyseventeen_setup' );</code></pre>
+        
+        <h4>コードの解説</h4>
+        
+        <p><strong><code>register_nav_menus()</code></strong></p>
+        <ul>
+            <li>メニューを配置できる「場所」を登録する関数</li>
+            <li>配列で複数の場所を一度に登録できる</li>
+        </ul>
+        
+        <div class="reference">
+            📚 公式リファレンス: <a href="https://developer.wordpress.org/reference/functions/register_nav_menus/" target="_blank">register_nav_menus()</a> | <a href="https://developer.wordpress.org/themes/functionality/navigation-menus/" target="_blank">Navigation Menus</a>
+        </div>
+        
+        <pre><code>register_nav_menus( array(
+    'メニューのID' => '管理画面に表示される名前',
+) );</code></pre>
+        
+        <p>Twenty Seventeenでは：</p>
+        <ul>
+            <li><code>'top'</code> → トップメニュー（ヘッダーのナビゲーション）</li>
+            <li><code>'social'</code> → ソーシャルリンクメニュー（SNSアイコン用）</li>
+        </ul>
+        <p>の2箇所を登録しています。</p>
+        
+        <p><strong><code>__( 'Top Menu', 'twentyseventeen' )</code> について</strong></p>
+        <ul>
+            <li>これは翻訳関数です</li>
+            <li>翻訳ファイルがあれば、日本語環境では「トップメニュー」のように翻訳されて表示されます</li>
+        </ul>
+        
+        <p><strong><code>add_action( 'after_setup_theme', 'twentyseventeen_setup' )</code></strong></p>
+        <ul>
+            <li><code>after_setup_theme</code> というタイミング（フック）で関数を実行</li>
+            <li>テーマの初期設定はこのタイミングで行う</li>
+        </ul>
+        
+        <h3>② 管理画面での確認</h3>
+        
+        <p>Local で管理画面を開き、「外観」→「メニュー」を見てください。</p>
+        
+        <p>画面下部の「メニュー設定」に以下が表示されているはずです：</p>
+        <ul>
+            <li>☑ トップメニュー</li>
+            <li>☑ ソーシャルリンクメニュー</li>
+        </ul>
+        
+        <p>これが <code>functions.php</code> で登録した場所です！</p>
+        
+        <h3>③ テンプレートファイルでメニューを表示する</h3>
+        
+        <p>Twenty Seventeenの <code>header.php</code> を開いて、以下のコードを探してください：</p>
+        
+        <pre><code>&lt;div class="navigation-top"&gt;
+    &lt;div class="wrap"&gt;
+        &lt;?php get_template_part( 'template-parts/navigation/navigation', 'top' ); ?&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        
+        <p>さらに <code>template-parts/navigation/navigation-top.php</code> を開いてください：</p>
+        
+        <pre><code>&lt;nav id="site-navigation" class="main-navigation" aria-label="&lt;?php esc_attr_e( 'Top Menu', 'twentyseventeen' ); ?&gt;"&gt;
+    &lt;button class="menu-toggle" aria-controls="top-menu" aria-expanded="false"&gt;
+        &lt;?php
+        echo twentyseventeen_get_svg( array( 'icon' => 'bars' ) );
+        echo twentyseventeen_get_svg( array( 'icon' => 'close' ) );
+        _e( 'Menu', 'twentyseventeen' );
+        ?&gt;
+    &lt;/button&gt;
+
+    &lt;?php
+    wp_nav_menu(
+        array(
+            'theme_location' => 'top',
+            'menu_id'        => 'top-menu',
+        )
+    );
+    ?&gt;
+
+    &lt;?php if ( ( twentyseventeen_is_frontpage() || ( is_home() && is_front_page() ) ) && has_custom_header() ) : ?&gt;
+        &lt;!-- 省略：スクロールダウンボタン --&gt;
+    &lt;?php endif; ?&gt;
+&lt;/nav&gt;</code></pre>
+        
+        <h4>コードの解説</h4>
+        
+        <p><strong>重要なのはこの部分：</strong></p>
+        
+        <pre><code>&lt;?php
+wp_nav_menu(
+    array(
+        'theme_location' => 'top',
+        'menu_id'        => 'top-menu',
+    )
+);
+?&gt;</code></pre>
+        
+        <p><strong><code>wp_nav_menu()</code></strong></p>
+        <ul>
+            <li>登録したメニューを表示する関数</li>
+            <li>配列で様々なオプションを指定できる</li>
+        </ul>
+        
+        <div class="reference">
+            📚 公式リファレンス: <a href="https://developer.wordpress.org/reference/functions/wp_nav_menu/" target="_blank">wp_nav_menu()</a>
+        </div>
+        
+        <p><strong>主なパラメータ：</strong></p>
+        
+        <table>
+            <tr>
+                <th>パラメータ</th>
+                <th>意味</th>
+                <th>例</th>
+            </tr>
+            <tr>
+                <td><code>theme_location</code></td>
+                <td>どの場所のメニューを表示するか（必須）</td>
+                <td><code>'top'</code></td>
+            </tr>
+            <tr>
+                <td><code>menu_id</code></td>
+                <td>メニューのul要素に付けるID</td>
+                <td><code>'top-menu'</code></td>
+            </tr>
+            <tr>
+                <td><code>menu_class</code></td>
+                <td>メニューのul要素に付けるクラス</td>
+                <td><code>'main-menu'</code></td>
+            </tr>
+            <tr>
+                <td><code>container</code></td>
+                <td>メニューを囲む要素</td>
+                <td><code>'nav'</code> / <code>false</code></td>
+            </tr>
+            <tr>
+                <td><code>container_class</code></td>
+                <td>囲む要素のクラス</td>
+                <td><code>'menu-container'</code></td>
+            </tr>
+        </table>
+        
+        <p><strong>出力されるHTML：</strong></p>
+        
+        <pre><code>&lt;nav id="site-navigation" class="main-navigation"&gt;
+    &lt;div class="menu-トップメニュー-container"&gt;
+        &lt;ul id="top-menu" class="menu"&gt;
+            &lt;li&gt;&lt;a href="#"&gt;ホーム&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#"&gt;会社概要&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#"&gt;お問い合わせ&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+        
+        <h3>メニューの流れまとめ</h3>
+        
+        <div class="flow-diagram">functions.php
+↓
+register_nav_menus( array( 'top' => 'トップメニュー' ) );
+（メニューの場所を登録）
+
+↓
+
+管理画面「外観」→「メニュー」
+（メニューを作成して、「トップメニュー」に割り当て）
+
+↓
+
+navigation-top.php
+↓
+wp_nav_menu( array( 'theme_location' => 'top' ) );
+（登録した場所のメニューを表示）</div>
+        
+        <div class="highlight">
+            <strong>ポイント：</strong>
+            <ul>
+                <li><code>register_nav_menus()</code> で登録した <code>'top'</code> というID</li>
+                <li><code>wp_nav_menu()</code> で指定する <code>'theme_location' => 'top'</code></li>
+                <li><strong>この2つが一致することで、メニューが表示される</strong></li>
+            </ul>
+        </div>
+        
+        <hr style="margin: 60px 0; border: none; border-top: 3px solid #ddd;">
+        
+        <h2>テーマでのウィジェットエリアの構築</h2>
+        
+        <p>管理画面で「ウィジェット」を追加したことがありますね。今回は、そのウィジェットエリアを<strong>テーマ側でどう実装するか</strong>を学びます。</p>
+        
+        <h3>ウィジェットエリアの仕組み（全体像）</h3>
+        
+        <div class="flow-diagram">① functions.phpでウィジェットエリアを登録
+   ↓
+② 管理画面で「ウィジェット」を追加し、エリアに配置
+   ↓
+③ テンプレートファイル（sidebar.phpなど）でウィジェットを表示</div>
+        
+        <h3>① functions.phpでウィジェットエリアを登録する</h3>
+        
+        <p>Twenty Seventeenの <code>functions.php</code> を開いて、<code>twentyseventeen_widgets_init()</code> 関数を探してください：</p>
+        
+        <pre><code>function twentyseventeen_widgets_init() {
+    register_sidebar(
+        array(
+            'name'          => __( 'Blog Sidebar', 'twentyseventeen' ),
+            'id'            => 'sidebar-1',
+            'description'   => __( 'Add widgets here to appear in your sidebar on blog posts and archive pages.', 'twentyseventeen' ),
+            'before_widget' => '&lt;section id="%1$s" class="widget %2$s"&gt;',
+            'after_widget'  => '&lt;/section&gt;',
+            'before_title'  => '&lt;h2 class="widget-title"&gt;',
+            'after_title'   => '&lt;/h2&gt;',
+        )
+    );
+
+    register_sidebar(
+        array(
+            'name'          => __( 'Footer 1', 'twentyseventeen' ),
+            'id'            => 'sidebar-2',
+            'description'   => __( 'Add widgets here to appear in your footer.', 'twentyseventeen' ),
+            'before_widget' => '&lt;section id="%1$s" class="widget %2$s"&gt;',
+            'after_widget'  => '&lt;/section&gt;',
+            'before_title'  => '&lt;h2 class="widget-title"&gt;',
+            'after_title'   => '&lt;/h2&gt;',
+        )
+    );
+
+    register_sidebar(
+        array(
+            'name'          => __( 'Footer 2', 'twentyseventeen' ),
+            'id'            => 'sidebar-3',
+            'description'   => __( 'Add widgets here to appear in your footer.', 'twentyseventeen' ),
+            'before_widget' => '&lt;section id="%1$s" class="widget %2$s"&gt;',
+            'after_widget'  => '&lt;/section&gt;',
+            'before_title'  => '&lt;h2 class="widget-title"&gt;',
+            'after_title'   => '&lt;/h2&gt;',
+        )
+    );
+}
+add_action( 'widgets_init', 'twentyseventeen_widgets_init' );</code></pre>
+        
+        <h4>コードの解説</h4>
+        
+        <p><strong><code>register_sidebar()</code></strong></p>
+        <ul>
+            <li>ウィジェットエリアを登録する関数</li>
+            <li>「サイドバー」という名前だが、フッターなどにも使える</li>
+            <li>Twenty Seventeenでは3つのウィジェットエリアを登録</li>
+        </ul>
+        
+        <div class="reference">
+            📚 公式リファレンス: <a href="https://developer.wordpress.org/reference/functions/register_sidebar/" target="_blank">register_sidebar()</a> | <a href="https://developer.wordpress.org/themes/functionality/sidebars/" target="_blank">Sidebars</a>
+        </div>
+        
+        <p><strong>主なパラメータ：</strong></p>
+        
+        <table>
+            <tr>
+                <th>パラメータ</th>
+                <th>意味</th>
+                <th>例</th>
+            </tr>
+            <tr>
+                <td><code>name</code></td>
+                <td>管理画面に表示される名前</td>
+                <td><code>'ブログサイドバー'</code></td>
+            </tr>
+            <tr>
+                <td><code>id</code></td>
+                <td>ウィジェットエリアのID（必須・重複不可）</td>
+                <td><code>'sidebar-1'</code></td>
+            </tr>
+            <tr>
+                <td><code>description</code></td>
+                <td>管理画面での説明文</td>
+                <td><code>'サイドバーに表示されます'</code></td>
+            </tr>
+            <tr>
+                <td><code>before_widget</code></td>
+                <td>各ウィジェットの前に出力するHTML</td>
+                <td><code>'&lt;section id="%1$s" class="widget %2$s"&gt;'</code></td>
+            </tr>
+            <tr>
+                <td><code>after_widget</code></td>
+                <td>各ウィジェットの後に出力するHTML</td>
+                <td><code>'&lt;/section&gt;'</code></td>
+            </tr>
+            <tr>
+                <td><code>before_title</code></td>
+                <td>ウィジェットタイトルの前</td>
+                <td><code>'&lt;h2 class="widget-title"&gt;'</code></td>
+            </tr>
+            <tr>
+                <td><code>after_title</code></td>
+                <td>ウィジェットタイトルの後</td>
+                <td><code>'&lt;/h2&gt;'</code></td>
+            </tr>
+        </table>
+        
+        <div class="note">
+            <strong><code>%1$s</code> と <code>%2$s</code> について：</strong>
+            <ul>
+                <li><code>%1$s</code> → ウィジェット固有のID（例：<code>search-2</code>）</li>
+                <li><code>%2$s</code> → ウィジェットのクラス（例：<code>widget_search</code>）</li>
+                <li>これらは自動的に置き換えられます</li>
+            </ul>
+        </div>
+        
+        <p><strong><code>add_action( 'widgets_init', '関数名' )</code></strong></p>
+        <ul>
+            <li>ウィジェット初期化のタイミングで実行</li>
+        </ul>
+        
+        <h3>② 管理画面での確認</h3>
+        
+        <p>Local で管理画面を開き、「外観」→「ウィジェット」を見てください。</p>
+        
+        <p>左側に以下のエリアが表示されているはずです：</p>
+        <ul>
+            <li>ブログサイドバー</li>
+            <li>フッター1</li>
+            <li>フッター2</li>
+        </ul>
+        
+        <p>これが <code>functions.php</code> で登録した3つのウィジェットエリアです！</p>
+        
+        <h3>③ テンプレートファイルでウィジェットを表示する</h3>
+        
+        <h4>サイドバーの表示</h4>
+        
+        <p>Twenty Seventeenの <code>sidebar.php</code> を開いてください：</p>
+        
+        <pre><code>&lt;?php
+if ( ! is_active_sidebar( 'sidebar-1' ) ) {
+    return;
+}
+?&gt;
+
+&lt;aside id="secondary" class="widget-area" role="complementary" aria-label="&lt;?php esc_attr_e( 'Blog Sidebar', 'twentyseventeen' ); ?&gt;"&gt;
+    &lt;?php dynamic_sidebar( 'sidebar-1' ); ?&gt;
+&lt;/aside&gt;</code></pre>
+        
+        <p><strong>コードの解説</strong></p>
+        
+        <p><strong><code>is_active_sidebar( 'ウィジェットエリアID' )</code></strong></p>
+        <ul>
+            <li>指定したウィジェットエリアにウィジェットが配置されているか確認</li>
+            <li><code>true</code> / <code>false</code> を返す</li>
+            <li>ウィジェットがない場合に空のエリアを表示しないため</li>
+            <li>ウィジェットがなければ <code>return;</code> で処理を終了</li>
+        </ul>
+        
+        <div class="reference">
+            📚 公式リファレンス: <a href="https://developer.wordpress.org/reference/functions/is_active_sidebar/" target="_blank">is_active_sidebar()</a>
+        </div>
+        
+        <p><strong><code>dynamic_sidebar( 'ウィジェットエリアID' )</code></strong></p>
+        <ul>
+            <li>指定したウィジェットエリアの内容を表示</li>
+            <li>管理画面で配置したウィジェットが順番に出力される</li>
+        </ul>
+        
+        <div class="reference">
+            📚 公式リファレンス: <a href="https://developer.wordpress.org/reference/functions/dynamic_sidebar/" target="_blank">dynamic_sidebar()</a>
+        </div>
+        
+        <p><strong>出力されるHTML：</strong></p>
+        
+        <pre><code>&lt;aside id="secondary" class="widget-area"&gt;
+    &lt;!-- ウィジェット1 --&gt;
+    &lt;section id="search-2" class="widget widget_search"&gt;
+        &lt;form&gt;〜検索フォーム〜&lt;/form&gt;
+    &lt;/section&gt;
+    
+    &lt;!-- ウィジェット2 --&gt;
+    &lt;section id="recent-posts-2" class="widget widget_recent_entries"&gt;
+        &lt;h2 class="widget-title"&gt;最近の投稿&lt;/h2&gt;
+        &lt;ul&gt;〜投稿リスト〜&lt;/ul&gt;
+    &lt;/section&gt;
+&lt;/aside&gt;</code></pre>
+        
+        <p><code>before_widget</code> と <code>after_widget</code> で各ウィジェットが <code>&lt;section&gt;</code> で囲まれています！</p>
+        
+        <h4>フッターウィジェットの表示</h4>
+        
+        <p>Twenty Seventeenの <code>footer.php</code> を開いて、以下のコードを探してください：</p>
+        
+        <pre><code>&lt;?php
+get_template_part( 'template-parts/footer/footer', 'widgets' );
+?&gt;</code></pre>
+        
+        <p>さらに <code>template-parts/footer/footer-widgets.php</code> を開いてください：</p>
+        
+        <pre><code>&lt;?php
+if ( is_active_sidebar( 'sidebar-2' ) ||
+     is_active_sidebar( 'sidebar-3' ) ) :
+?&gt;
+
+&lt;aside class="widget-area" role="complementary" aria-label="&lt;?php esc_attr_e( 'Footer', 'twentyseventeen' ); ?&gt;"&gt;
+    &lt;?php
+    if ( is_active_sidebar( 'sidebar-2' ) ) {
+        ?&gt;
+        &lt;div class="widget-column footer-widget-1"&gt;
+            &lt;?php dynamic_sidebar( 'sidebar-2' ); ?&gt;
+        &lt;/div&gt;
+        &lt;?php
+    }
+    if ( is_active_sidebar( 'sidebar-3' ) ) {
+        ?&gt;
+        &lt;div class="widget-column footer-widget-2"&gt;
+            &lt;?php dynamic_sidebar( 'sidebar-3' ); ?&gt;
+        &lt;/div&gt;
+        &lt;?php
+    }
+    ?&gt;
+&lt;/aside&gt;
+
+&lt;?php
+endif;
+?&gt;</code></pre>
+        
+        <div class="highlight">
+            <strong>ポイント：</strong>
+            <ul>
+                <li>複数のウィジェットエリア（<code>sidebar-2</code> と <code>sidebar-3</code>）を同時にチェック</li>
+                <li>それぞれ別の <code>&lt;div&gt;</code> で囲んで表示（レイアウト用）</li>
+                <li>どちらか1つでもウィジェットがあれば、外側の <code>&lt;aside&gt;</code> を表示</li>
+            </ul>
+        </div>
+        
+        <h3>まとめ：メニューとウィジェットの登録と表示</h3>
+        
+        <table>
+            <tr>
+                <th>機能</th>
+                <th>登録関数</th>
+                <th>表示関数</th>
+                <th>チェック関数</th>
+                <th>登録タイミング</th>
+            </tr>
+            <tr>
+                <td>メニュー</td>
+                <td><code>register_nav_menus()</code></td>
+                <td><code>wp_nav_menu()</code></td>
+                <td><code>has_nav_menu()</code></td>
+                <td><code>after_setup_theme</code></td>
+            </tr>
+            <tr>
+                <td>ウィジェット</td>
+                <td><code>register_sidebar()</code></td>
+                <td><code>dynamic_sidebar()</code></td>
+                <td><code>is_active_sidebar()</code></td>
+                <td><code>widgets_init</code></td>
+            </tr>
+        </table>
+        
+        <div class="reference">
+            📚 <a href="https://developer.wordpress.org/reference/functions/has_nav_menu/" target="_blank">has_nav_menu()</a>
+        </div>
+        
+        <div class="highlight">
+            <strong>共通パターン：</strong>
+            <ol>
+                <li><code>functions.php</code> で登録（フックで適切なタイミングに実行）</li>
+                <li>管理画面で内容を設定</li>
+                <li>テンプレートファイルで表示</li>
+                <li>チェック関数で「あるか？」を確認してから表示</li>
+            </ol>
+        </div>
+        
+        <hr style="margin: 60px 0; border: none; border-top: 3px solid #ddd;">
+        
+        <h2>フック（Hooks）</h2>
+        
+        <p>メニューとウィジェットの資料で、こんなコードを見ましたね：</p>
+        
+        <pre><code>add_action( 'after_setup_theme', 'twentyseventeen_setup' );
+add_action( 'widgets_init', 'twentyseventeen_widgets_init' );</code></pre>
+        
+        <p>この <code>add_action</code> が<strong>フック</strong>の仕組みです。今回は、このフックについて学びます。</p>
+        
+        <h3>フックとは何か</h3>
+        
+        <p><strong>フック = WordPressの「決まったタイミング」に、自分の処理を追加する仕組み</strong></p>
+        
+        <p>WordPressは、ページを表示するまでに決まった順序で処理を実行します。その処理の中に「ここで追加の処理ができますよ」という<strong>フックポイント</strong>が用意されています。</p>
+        
+        <div class="flow-diagram">WordPressの処理の流れ
+↓
+テーマを読み込む　←ここで追加処理できる（after_setup_themeフック）
+↓
+ウィジェットを初期化　←ここで追加処理できる（widgets_initフック）
+↓
+CSS/JSを読み込む　←ここで追加処理できる（wp_enqueue_scriptsフック）
+↓
+ヘッダーを出力　←ここで追加処理できる（wp_headフック）
+↓
+コンテンツを出力
+↓
+フッターを出力　←ここで追加処理できる（wp_footerフック）</div>
+        
+        <p>フックには<strong>アクションフック</strong>と<strong>フィルターフック</strong>の2種類があります。</p>
+        
+        <div class="reference">
+            📚 公式リファレンス: <a href="https://developer.wordpress.org/plugins/hooks/" target="_blank">Hooks</a> | <a href="https://developer.wordpress.org/plugins/hooks/actions/" target="_blank">Actions</a> | <a href="https://developer.wordpress.org/plugins/hooks/filters/" target="_blank">Filters</a>
+        </div>
+        
+        <h2>アクションフック（Action Hooks）</h2>
+        
+        <p><strong>「決まったタイミング」で処理を実行する</strong></p>
+        
+        <h3>基本の書き方</h3>
+        
+        <pre><code>function 自分で作る関数名() {
+    // 実行したい処理
+}
+add_action( 'フックの名前', '自分で作る関数名' );</code></pre>
+        
+        <div class="reference">
+            📚 公式リファレンス: <a href="https://developer.wordpress.org/reference/functions/add_action/" target="_blank">add_action()</a>
+        </div>
+        
+        <h3>① すでに見たアクションフック</h3>
+        
+        <p>Twenty Seventeenの <code>functions.php</code> で見た例を振り返ります。</p>
+        
+        <h4><code>after_setup_theme</code> - テーマ機能の登録</h4>
+        
+        <pre><code>function twentyseventeen_setup() {
+    // メニューの登録
+    register_nav_menus( array(
+        'top'    => __( 'Top Menu', 'twentyseventeen' ),
+        'social' => __( 'Social Links Menu', 'twentyseventeen' ),
+    ) );
+    
+    // アイキャッチ画像のサポート
+    add_theme_support( 'post-thumbnails' );
+    
+    // その他のテーマ機能の登録
+}
+add_action( 'after_setup_theme', 'twentyseventeen_setup' );</code></pre>
+        
+        <p><strong>タイミング：</strong> WordPressがテーマを読み込んだ直後<br>
+        <strong>用途：</strong> テーマの機能（メニュー、アイキャッチ画像など）を登録</p>
+        
+        <h4><code>widgets_init</code> - ウィジェットエリアの登録</h4>
+        
+        <pre><code>function twentyseventeen_widgets_init() {
+    register_sidebar( array(
+        'name' => __( 'Blog Sidebar', 'twentyseventeen' ),
+        'id'   => 'sidebar-1',
+        // 省略
+    ) );
+}
+add_action( 'widgets_init', 'twentyseventeen_widgets_init' );</code></pre>
+        
+        <p><strong>タイミング：</strong> WordPressがウィジェットを初期化するとき<br>
+        <strong>用途：</strong> ウィジェットエリアを登録</p>
+        
+        <h3>② その他の重要なアクションフック</h3>
+        
+        <p>Twenty Seventeenの <code>functions.php</code> から他の例も見てみましょう。</p>
+        
+        <h4><code>wp_enqueue_scripts</code> - CSS/JavaScriptの読み込み</h4>
+        
+        <p><code>functions.php</code> の <code>twentyseventeen_scripts()</code> 関数を探してください：</p>
+        
+        <pre><code>function twentyseventeen_scripts() {
+    // CSSの読み込み
+    wp_enqueue_style( 'twentyseventeen-style', get_stylesheet_uri() );
+    
+    // JavaScriptの読み込み
+    wp_enqueue_script( 'twentyseventeen-global', get_theme_file_uri( '/assets/js/global.js' ), array( 'jquery' ) );
+}
+add_action( 'wp_enqueue_scripts', 'twentyseventeen_scripts' );</code></pre>
+        
+        <p><strong>タイミング：</strong> CSS/JavaScriptを読み込むとき<br>
+        <strong>用途：</strong> テーマ独自のCSS/JavaScriptファイルを読み込む</p>
+        
+        <div class="warning">
+            <strong>重要：</strong> CSS/JSは必ずこのフックで読み込む（直接 <code>&lt;link&gt;</code> や <code>&lt;script&gt;</code> タグを書かない）
+        </div>
+        
+        <h4><code>wp_head</code> - headタグ内に出力</h4>
+        
+        <p><code>functions.php</code> の <code>twentyseventeen_javascript_detection()</code> 関数を探してください：</p>
+        
+        <pre><code>function twentyseventeen_javascript_detection() {
+    echo "&lt;script&gt;(function(html){html.className = html.className.replace(/\bno-js\b/,'js')})(document.documentElement);&lt;/script&gt;\n";
+}
+add_action( 'wp_head', 'twentyseventeen_javascript_detection', 0 );</code></pre>
+        
+        <p><strong>タイミング：</strong> <code>&lt;/head&gt;</code> の直前<br>
+        <strong>用途：</strong> headタグ内に独自のコードを追加</p>
+        
+        <div class="warning">
+            <strong>注意：</strong> <code>header.php</code> に <code>&lt;?php wp_head(); ?&gt;</code> がないとこのフックは動作しない
+        </div>
+        
+        <h4><code>wp_footer</code> - bodyタグの終了直前に出力</h4>
+        
+        <p><strong>タイミング：</strong> <code>&lt;/body&gt;</code> の直前<br>
+        <strong>用途：</strong> フッター部分に独自のコードを追加</p>
+        
+        <div class="warning">
+            <strong>注意：</strong> <code>footer.php</code> に <code>&lt;?php wp_footer(); ?&gt;</code> がないとこのフックは動作しない
+        </div>
+        
+        <h3>主なアクションフック一覧</h3>
+        
+        <table>
+            <tr>
+                <th>フック名</th>
+                <th>タイミング</th>
+                <th>用途</th>
+            </tr>
+            <tr>
+                <td><code>after_setup_theme</code></td>
+                <td>テーマ読み込み後</td>
+                <td>テーマ機能の登録</td>
+            </tr>
+            <tr>
+                <td><code>init</code></td>
+                <td>WordPress初期化時</td>
+                <td>カスタム投稿タイプなどの登録</td>
+            </tr>
+            <tr>
+                <td><code>widgets_init</code></td>
+                <td>ウィジェット初期化時</td>
+                <td>ウィジェットエリアの登録</td>
+            </tr>
+            <tr>
+                <td><code>wp_enqueue_scripts</code></td>
+                <td>CSS/JS読み込み時</td>
+                <td>スタイルシート・スクリプトの読み込み</td>
+            </tr>
+            <tr>
+                <td><code>wp_head</code></td>
+                <td><code>&lt;/head&gt;</code> の直前</td>
+                <td>headタグ内に追加コード</td>
+            </tr>
+            <tr>
+                <td><code>wp_footer</code></td>
+                <td><code>&lt;/body&gt;</code> の直前</td>
+                <td>フッターに追加コード</td>
+            </tr>
+        </table>
+        
+        <h2>フィルターフック（Filter Hooks）</h2>
+        
+        <p><strong>データを受け取って、変更して返す</strong></p>
+        
+        <p>アクションフックが「処理を追加」するのに対して、フィルターフックは「データを変更」します。</p>
+        
+        <h3>基本の書き方</h3>
+        
+        <pre><code>function 自分で作る関数名( $data ) {
+    // $dataを変更
+    return $data; // 変更したデータを返す
+}
+add_filter( 'フィルターの名前', '自分で作る関数名' );</code></pre>
+        
+        <div class="reference">
+            📚 公式リファレンス: <a href="https://developer.wordpress.org/reference/functions/add_filter/" target="_blank">add_filter()</a>
+        </div>
+        
+        <h3>① Twenty Seventeenでの実例</h3>
+        
+        <p><code>functions.php</code> の <code>twentyseventeen_excerpt_more()</code> 関数を探してください：</p>
+        
+        <pre><code>function twentyseventeen_excerpt_more( $link ) {
+    if ( is_admin() ) {
+        return $link;
+    }
+
+    $link = sprintf(
+        '&lt;p class="link-more"&gt;&lt;a href="%1$s" class="more-link"&gt;%2$s&lt;/a&gt;&lt;/p&gt;',
+        esc_url( get_permalink( get_the_ID() ) ),
+        sprintf( __( 'Continue reading&lt;span class="screen-reader-text"&gt; "%s"&lt;/span&gt;', 'twentyseventeen' ), get_the_title( get_the_ID() ) )
+    );
+    return ' &amp;hellip; ' . $link;
+}
+add_filter( 'excerpt_more', 'twentyseventeen_excerpt_more' );</code></pre>
+        
+        <p><strong>処理の流れ：</strong></p>
+        <ol>
+            <li>WordPress が抜粋文を生成する</li>
+            <li>抜粋の末尾のリンク部分（<code>$link</code>）がフィルターに渡される</li>
+            <li><code>twentyseventeen_excerpt_more()</code> 関数でリンクを変更</li>
+            <li>変更されたリンクが返される</li>
+        </ol>
+        
+        <p><strong>結果：</strong> デフォルトの「[...]」が「... Continue reading」に変わる</p>
+        
+        <h3>② フィルターフックの例</h3>
+        
+        <h4>抜粋の文字数を変更</h4>
+        
+        <pre><code>function my_excerpt_length( $length ) {
+    return 50; // デフォルトは55文字
+}
+add_filter( 'excerpt_length', 'my_excerpt_length' );</code></pre>
+        
+        <h4>投稿タイトルの前後に記号を追加</h4>
+        
+        <pre><code>function my_the_title( $title ) {
+    if ( is_single() && in_the_loop() ) {
+        return '★ ' . $title . ' ★';
+    }
+    return $title;
+}
+add_filter( 'the_title', 'my_the_title' );</code></pre>
+        
+        <div class="warning">
+            <strong>注意：</strong> この例は単なる説明用です。実際には条件をもっと細かく設定する必要があります。
+        </div>
+        
+        <h3>主なフィルターフック一覧</h3>
+        
+        <table>
+            <tr>
+                <th>フック名</th>
+                <th>変更対象</th>
+                <th>用途</th>
+            </tr>
+            <tr>
+                <td><code>the_title</code></td>
+                <td>投稿タイトル</td>
+                <td>タイトルの表示を変更</td>
+            </tr>
+            <tr>
+                <td><code>the_content</code></td>
+                <td>投稿本文</td>
+                <td>本文の表示を変更</td>
+            </tr>
+            <tr>
+                <td><code>excerpt_length</code></td>
+                <td>抜粋の長さ</td>
+                <td>抜粋文字数を変更</td>
+            </tr>
+            <tr>
+                <td><code>excerpt_more</code></td>
+                <td>抜粋の末尾</td>
+                <td>「続きを読む」表示を変更</td>
+            </tr>
+        </table>
+        
+        <h2>アクションとフィルターの違い</h2>
+        
+        <table>
+            <tr>
+                <th>比較項目</th>
+                <th>アクションフック</th>
+                <th>フィルターフック</th>
+            </tr>
+            <tr>
+                <td>目的</td>
+                <td><strong>処理を追加</strong></td>
+                <td><strong>データを変更</strong></td>
+            </tr>
+            <tr>
+                <td>戻り値</td>
+                <td>不要</td>
+                <td><strong>必須</strong>（変更したデータを返す）</td>
+            </tr>
+            <tr>
+                <td>例</td>
+                <td>CSS読み込み、メニュー登録</td>
+                <td>タイトル変更、抜粋文字数変更</td>
+            </tr>
+            <tr>
+                <td>書き方</td>
+                <td><code>add_action( 'フック名', '関数名' )</code></td>
+                <td><code>add_filter( 'フック名', '関数名' )</code></td>
+            </tr>
+        </table>
+        
+        <h2>フックを使う理由</h2>
+        
+        <h3>❌ 直接テーマファイルを編集する問題点</h3>
+        
+        <pre><code>&lt;!-- header.phpに直接書く --&gt;
+&lt;link rel="stylesheet" href="&lt;?php echo get_template_directory_uri(); ?&gt;/custom.css"&gt;</code></pre>
+        
+        <p><strong>問題：</strong></p>
+        <ul>
+            <li>テーマを更新すると変更が消える</li>
+            <li>プラグインと競合する可能性</li>
+        </ul>
+        
+        <h3>✅ フックを使う利点</h3>
+        
+        <pre><code>// functions.phpに書く
+function my_custom_styles() {
+    wp_enqueue_style( 'custom-style', get_template_directory_uri() . '/custom.css' );
+}
+add_action( 'wp_enqueue_scripts', 'my_custom_styles' );</code></pre>
+        
+        <p><strong>利点：</strong></p>
+        <ul>
+            <li>テーマファイルを直接編集しない</li>
+            <li>適切なタイミングで処理が実行される</li>
+            <li>プラグインとの競合が少ない</li>
+            <li>WordPressの仕組みに沿った安全な方法</li>
+        </ul>
+        
+        <p><strong>子テーマを使う場合：</strong></p>
+        <ul>
+            <li>フックを使えば、<strong>子テーマのfunctions.phpだけ</strong>でカスタマイズできる</li>
+            <li>テンプレートファイルの上書きが不要になることも多い</li>
+            <li>管理がとても楽になる</li>
+        </ul>
+        
+        <h2>コアフックとテーマ独自フック</h2>
+        
+        <p>フックには<strong>WordPressコアが用意しているフック</strong>と<strong>テーマやプラグインが独自に用意しているフック</strong>の2種類があります。</p>
+        
+        <h3>コアフック</h3>
+        
+        <p>WordPress本体が用意しているフックで、どのテーマ・プラグインでも使用できます。</p>
+        
+        <pre><code>// WordPressコアが用意しているフック
+add_action( 'wp_head', 'my_function' );
+add_action( 'wp_footer', 'my_function' );
+add_action( 'init', 'my_function' );
+add_filter( 'the_title', 'my_function' );
+add_filter( 'the_content', 'my_function' );</code></pre>
+        
+        <h3>テーマ独自フック</h3>
+        
+        <p>特定のテーマが独自に用意しているフックで、そのテーマでしか使用できません。</p>
+        
+        <pre><code>// Twenty Seventeen が独自に用意しているフック
+do_action( 'twentyseventeen_credits' );
+apply_filters( 'twentyseventeen_custom_colors_css', $css );</code></pre>
+        
+        <div class="note">
+            <strong>見分け方：</strong>
+            <ul>
+                <li>コアフック：プレフィックス（接頭語）なし、または <code>wp_</code> で始まる</li>
+                <li>テーマ独自フック：テーマ名がプレフィックスになっている（例：<code>twentyseventeen_</code>）</li>
+                <li>プラグイン独自フック：プラグイン名がプレフィックスになっている（例：<code>woocommerce_</code>）</li>
+            </ul>
+        </div>
+        
+        <h3>コアフックのリファレンス</h3>
+        
+        <p>WordPressコアのフックは公式ドキュメントで確認できます：</p>
+        
+        <div class="reference">
+            📚 <strong>公式リファレンス：</strong>
+            <ul style="margin-top: 10px;">
+                <li><a href="https://developer.wordpress.org/reference/hooks/" target="_blank">WordPress Developer Resources - Hooks</a> - すべてのコアフックの一覧（検索可能）</li>
+                <li><a href="https://developer.wordpress.org/apis/hooks/action-reference/" target="_blank">Action Reference</a> - アクションフックのガイド</li>
+                <li><a href="https://developer.wordpress.org/apis/hooks/filter-reference/" target="_blank">Filter Reference</a> - フィルターフックのガイド</li>
+            </ul>
+        </div>
+        
+        <h3>よく使うコアフック一覧</h3>
+        
+        <p><strong>アクションフック（頻出）：</strong></p>
+        
+        <table>
+            <tr>
+                <th>フック名</th>
+                <th>タイミング</th>
+                <th>用途</th>
+            </tr>
+            <tr>
+                <td><code>after_setup_theme</code></td>
+                <td>テーマ読み込み後</td>
+                <td>テーマ機能の登録</td>
+            </tr>
+            <tr>
+                <td><code>init</code></td>
+                <td>WordPress初期化時</td>
+                <td>カスタム投稿タイプなどの登録</td>
+            </tr>
+            <tr>
+                <td><code>widgets_init</code></td>
+                <td>ウィジェット初期化時</td>
+                <td>ウィジェットエリアの登録</td>
+            </tr>
+            <tr>
+                <td><code>wp_enqueue_scripts</code></td>
+                <td>CSS/JS読み込み時</td>
+                <td>スタイルシート・スクリプトの読み込み</td>
+            </tr>
+            <tr>
+                <td><code>wp_head</code></td>
+                <td><code>&lt;/head&gt;</code> の直前</td>
+                <td>headタグ内に追加コード</td>
+            </tr>
+            <tr>
+                <td><code>wp_footer</code></td>
+                <td><code>&lt;/body&gt;</code> の直前</td>
+                <td>フッターに追加コード</td>
+            </tr>
+            <tr>
+                <td><code>wp_body_open</code></td>
+                <td><code>&lt;body&gt;</code> の直後</td>
+                <td>bodyタグ直後に追加コード（WP 5.2以降）</td>
+            </tr>
+            <tr>
+                <td><code>save_post</code></td>
+                <td>投稿保存時</td>
+                <td>投稿保存時の処理</td>
+            </tr>
+        </table>
+        
+        <p><strong>フィルターフック（頻出）：</strong></p>
+        
+        <table>
+            <tr>
+                <th>フック名</th>
+                <th>変更対象</th>
+                <th>用途</th>
+            </tr>
+            <tr>
+                <td><code>the_title</code></td>
+                <td>投稿タイトル</td>
+                <td>タイトルの表示を変更</td>
+            </tr>
+            <tr>
+                <td><code>the_content</code></td>
+                <td>投稿本文</td>
+                <td>本文の表示を変更</td>
+            </tr>
+            <tr>
+                <td><code>the_excerpt</code></td>
+                <td>抜粋</td>
+                <td>抜粋の表示を変更</td>
+            </tr>
+            <tr>
+                <td><code>excerpt_length</code></td>
+                <td>抜粋の長さ</td>
+                <td>抜粋文字数を変更</td>
+            </tr>
+            <tr>
+                <td><code>excerpt_more</code></td>
+                <td>抜粋の末尾</td>
+                <td>「続きを読む」表示を変更</td>
+            </tr>
+            <tr>
+                <td><code>body_class</code></td>
+                <td>bodyタグのクラス</td>
+                <td>bodyタグのクラスを追加・変更</td>
+            </tr>
+            <tr>
+                <td><code>post_class</code></td>
+                <td>投稿のクラス</td>
+                <td>投稿要素のクラスを追加・変更</td>
+            </tr>
+        </table>
+        
+        <h3>テーマ独自フックの見つけ方</h3>
+        
+        <p>テーマやプラグインが独自に用意しているフックを見つけるには：</p>
+        
+        <ol>
+            <li><strong>テーマのコードを検索</strong>
+                <ul>
+                    <li>VS Codeなどで <code>do_action(</code> や <code>apply_filters(</code> を検索</li>
+                    <li>テーマ名がプレフィックスになっているものが独自フック</li>
+                </ul>
+            </li>
+            <li><strong>テーマのドキュメントを確認</strong>
+                <ul>
+                    <li>有料テーマは独自フックのドキュメントを用意していることが多い</li>
+                </ul>
+            </li>
+            <li><strong>ソースコードを読む</strong>
+                <ul>
+                    <li>Twenty Seventeenの場合、<code>template-parts</code> フォルダ内のファイルを確認</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <hr style="margin: 60px 0; border: none; border-top: 3px solid #ddd;">
+        
+        <h2>まとめ</h2>
+        
+        <h3>フックの基本</h3>
+        
+        <div class="flow-diagram">アクションフック = 決まったタイミングで処理を追加
+↓
+add_action( 'タイミング', '実行する関数' );
+
+フィルターフック = データを受け取って変更して返す
+↓
+add_filter( '変更対象', '変更する関数' );</div>
+        
+        <h3>Twenty Seventeenで見たフック</h3>
+        
+        <p>すでに見たコードの意味が分かりましたね：</p>
+        
+        <pre><code>// メニューを登録 = after_setup_themeのタイミングで実行
+add_action( 'after_setup_theme', 'twentyseventeen_setup' );
+
+// ウィジェットエリアを登録 = widgets_initのタイミングで実行
+add_action( 'widgets_init', 'twentyseventeen_widgets_init' );
+
+// CSS/JSを読み込む = wp_enqueue_scriptsのタイミングで実行
+add_action( 'wp_enqueue_scripts', 'twentyseventeen_scripts' );
+
+// 抜粋の末尾を変更 = excerpt_moreの内容を変更
+add_filter( 'excerpt_more', 'twentyseventeen_excerpt_more' );</code></pre>
+        
+        <div class="highlight">
+            <strong>ポイント：</strong>
+            <ul>
+                <li>フックを使えば、テーマファイルを直接編集せずに機能を追加・変更できる</li>
+                <li>子テーマのfunctions.phpでフックを使えば、テンプレートファイルの上書きが不要になることが多い</li>
+                <li>WordPressが推奨する安全なカスタマイズ方法</li>
+                <li><code>functions.php</code> でフックを使って機能を追加するのが基本</li>
+            </ul>
+        </div>
+        
+    </div>
+</body>
+</html>
