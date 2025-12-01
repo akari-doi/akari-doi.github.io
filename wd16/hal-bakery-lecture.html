@@ -324,8 +324,15 @@
 				</ul>
 			</div>
 
-			<h3>ハンバーガーメニューの実装（button vs div）</h3>
-			<pre><code class="html">&lt;<span class="tag">button</span> <span class="attr">type</span>=<span class="val">"button"</span> <span class="attr">class</span>=<span class="val">"sp-menu"</span> <span class="attr">aria-label</span>=<span class="val">"メニュー"</span>...&gt;</code></pre>
+			<h3>ハンバーガーメニューの実装（button🆗　div🆖）</h3>
+			<pre><code class="html">&lt;<span class="tag">button</span> <span class="attr">type</span>=<span class="val">"button"</span> <span class="attr">class</span>=<span class="val">"sp-menu"</span> <span class="attr">aria-label</span>=<span class="val">"メニュー"</span> <span class="attr">aria-controls</span>=<span class="val">"header-nav"</span> <span class="attr">aria-expanded</span>=<span class="val">"false"</span>&gt;
+  &lt;<span class="tag">span</span>&gt;&lt;/<span class="tag">span</span>&gt;
+  &lt;<span class="tag">span</span>&gt;&lt;/<span class="tag">span</span>&gt;
+  &lt;<span class="tag">span</span>&gt;&lt;/<span class="tag">span</span>&gt;
+&lt;/<span class="tag">button</span>&gt;
+&lt;<span class="tag">nav</span> <span class="attr">class</span>=<span class="val">"header-nav"</span> <span class="attr">id</span>=<span class="val">"header-nav"</span> <span class="attr">aria-hidden</span>=<span class="val">"true"</span>&gt;
+  ...
+&lt;/<span class="tag">nav</span>&gt;</code></pre>
 			<p>ハンバーガーメニューの実装に <code>div</code> や <code>a</code> ではなく <code>button</code> を使用しています。</p>
 			<ul>
 				<li><strong>なぜ button なのか:</strong> このパーツは「別のページへの移動」ではなく、「メニューを開閉する機能」を持つスイッチだからです。<code>button</code>
@@ -333,6 +340,14 @@
 				<li><strong>aria-label="メニュー":</strong> ボタンの中身が「三本線」などの図形のみの場合、音声読み上げソフトには内容が伝わりません。<code>aria-label</code>
 					を使って、これが「メニューボタンである」と明示します。</li>
 			</ul>
+
+			<!-- ★追加した補足エリア -->
+			<p style="font-size: 0.9em; border-top: 1px dashed #ccc; margin-top: 20px; padding-top: 10px;">
+				<strong>※補足（WAI-ARIAについて）:</strong><br>
+				今回は <code>aria-controls</code>（どの要素を操作するか）、<code>aria-expanded</code>（開いているか）、<code>aria-hidden</code>（隠されているか）という属性も記述しています。<br>
+				これらは「スクリーンリーダー」などの支援技術に対して、メニューの開閉状態を正確に伝えるためのものです。JavaScriptで状態に合わせて値を書き換えますが、現段階では「アクセシビリティのための記述」という認識で十分です。
+			</p>
+
 			<div class="reference-links">
 				<div class="reference-links-title">📚 参考リンク</div>
 				<ul>
@@ -379,8 +394,8 @@
 				</ul>
 			</div>
 
-			<h3>カード型レイアウトのマークアップ（li vs div）</h3>
-			<p>今回のデザインでは、同じカード型レイアウトでも場所によってタグを使い分けています。</p>
+			<h3>カード型レイアウトのマークアップ（li？ div？）</h3>
+			<p>今回のデザインでは、Pick UpとNews、どちらも一般的にリスト形式がよく使われるデザインになっています。今回はそれぞれ明確にタグを使い分けています。</p>
 			<ul>
 				<li><strong>News（お知らせ）: <code>ul &gt; li</code> を使用</strong><br>
 					お知らせは情報の並列な羅列であり、順序や一覧性に意味があるため、リスト構造が適しています。</li>
