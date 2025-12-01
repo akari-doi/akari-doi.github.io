@@ -100,6 +100,7 @@
 
 		code {
 			font-family: monospace;
+			font-size: 1rem;
 		}
 
 		.tag {
@@ -122,6 +123,41 @@
 			color: #61afef;
 		}
 
+		/* 参考リンク */
+		.reference-links {
+			margin-top: 15px;
+			padding: 15px;
+			background: #f5f5f5;
+			border-left: 4px solid #61afef;
+			border-radius: 4px;
+			font-size: 0.9rem;
+		}
+
+		.reference-links-title {
+			font-weight: bold;
+			margin-bottom: 8px;
+			color: #333;
+		}
+
+		.reference-links ul {
+			margin: 0;
+			padding-left: 1.2em;
+			list-style: disc;
+		}
+
+		.reference-links li {
+			margin-bottom: 5px;
+		}
+
+		.reference-links a {
+			color: #0066cc;
+			text-decoration: underline;
+		}
+
+		.reference-links a:hover {
+			color: #0052a3;
+		}
+
 		/* --- 図解アニメーション用スタイル --- */
 		.diagram-box {
 			background: #eee;
@@ -131,6 +167,7 @@
 			border-radius: 8px;
 			overflow: hidden;
 			position: relative;
+			min-height: 320px; /* 高さを固定してガタガタを防ぐ */
 		}
 
 		.diagram-label {
@@ -155,6 +192,8 @@
 			max-width: 500px;
 			/* 最大幅 */
 			margin: 0 auto;
+			min-height: 150px; /* 高さを固定してガタガタを防ぐ */
+			align-content: start; /* グリッドアイテムを上揃え */
 		}
 
 		.demo-grid-item {
@@ -170,28 +209,15 @@
 		}
 
 		@keyframes resizeWidth {
-			0% {
-				width: 120px;
-			}
-
-			/* 1カラムになる幅 */
-			50% {
-				width: 250px;
-			}
-
-			/* 2カラムになる幅 */
-			100% {
-				width: 400px;
-			}
-
-			/* 3カラム以上になる幅 */
+			0% { width: 120px; } /* 1カラムになる幅 */
+			50% { width: 250px; } /* 2カラムになる幅 */
+			100% { width: 400px; } /* 3カラム以上になる幅 */
 		}
 
 		/* Full Width アニメーション */
 		.demo-fullwidth-wrapper {
 			width: 100%;
-			max-width: 300px;
-			/* 疑似的なコンテナ幅 */
+			max-width: 300px; /* 疑似的なコンテナ幅 */
 			margin: 0 auto;
 			background: #fff;
 			border: 1px solid #ccc;
@@ -217,13 +243,13 @@
 			align-items: center;
 			justify-content: center;
 			opacity: 0.8;
-			margin: 0 auto;
-			/* 最初は中央 */
-			width: 100%;
-			/* 親要素に収まっている */
+			margin: 0 auto; /* 最初は中央 */
+			width: 100%; /* 親要素に収まっている */
 			animation: expandFull 4s infinite ease-in-out;
 			position: relative;
 			font-size: 0.8rem;
+			box-sizing: border-box; /* パディングを含める */
+			white-space: nowrap; /* 文字が折り返されないようにする */
 		}
 
 		/* 画面幅（viewport）を疑似的に表現する枠 */
@@ -233,34 +259,41 @@
 			width: 100%;
 			position: relative;
 			background: #e0e0e0;
+			/* ★修正: はみ出した部分を隠す */
+			overflow: hidden; 
 		}
 
-		.demo-viewport::after {
-			content: "ブラウザ画面幅 (100vw)";
-			position: absolute;
-			top: -25px;
-			right: 0;
+		/* ★修正: ラベルをボックスの外に出す */
+		.demo-viewport-label {
+			text-align: right;
 			font-size: 12px;
 			font-weight: bold;
+			margin-bottom: 5px;
 		}
 
 		@keyframes expandFull {
-
-			0%,
-			20% {
+			0%, 20% {
 				width: 100%;
 				margin-left: 0;
+				padding-left: 0;
+				padding-right: 0;
 			}
 
-			40%,
-			80% {
-				width: 160%;
-				margin-left: -30%;
+			40%, 80% {
+				/* ★修正: 親要素を大きく突き抜けるように調整 */
+				/* 幅500% - 左右パディング200%ずつ = コンテンツ幅100% */
+				/* マージン-200%で左端へ移動 */
+				width: 500%;
+				margin-left: -200%;
+				padding-left: 200%; 
+				padding-right: 200%;
 			}
 
 			100% {
 				width: 100%;
 				margin-left: 0;
+				padding-left: 0;
+				padding-right: 0;
 			}
 		}
 	</style>
@@ -283,6 +316,13 @@
 				属性をつけて記述するのが主流です。</p>
 			<p><strong>メリット:</strong>
 				HTMLの解析（パース）を止めずにJavaScriptファイルを裏側で読み込み、HTMLの解析が終わった直後に実行されます。これにより、ページの表示速度（体感速度）が向上します。</p>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://html.spec.whatwg.org/multipage/scripting.html#attr-script-defer" target="_blank" rel="noopener">HTML Standard: script要素のdefer属性</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/HTML/Element/script#defer" target="_blank" rel="noopener">MDN: &lt;script&gt; - defer属性</a></li>
+				</ul>
+			</div>
 
 			<h3>ハンバーガーメニューの実装（button vs div）</h3>
 			<pre><code class="html">&lt;<span class="tag">button</span> <span class="attr">type</span>=<span class="val">"button"</span> <span class="attr">class</span>=<span class="val">"sp-menu"</span> <span class="attr">aria-label</span>=<span class="val">"メニュー"</span>...&gt;</code></pre>
@@ -293,6 +333,15 @@
 				<li><strong>aria-label="メニュー":</strong> ボタンの中身が「三本線」などの図形のみの場合、音声読み上げソフトには内容が伝わりません。<code>aria-label</code>
 					を使って、これが「メニューボタンである」と明示します。</li>
 			</ul>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://html.spec.whatwg.org/multipage/form-elements.html#the-button-element" target="_blank" rel="noopener">HTML Standard: button要素</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/HTML/Element/button" target="_blank" rel="noopener">MDN: &lt;button&gt;</a></li>
+					<li><a href="https://www.w3.org/WAI/WCAG21/Understanding/label-in-name.html" target="_blank" rel="noopener">W3C: ARIA label (アクセシビリティ)</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/Accessibility/ARIA/Attributes/aria-label" target="_blank" rel="noopener">MDN: aria-label属性</a></li>
+				</ul>
+			</div>
 
 			<h3>画像の出し分け（&lt;picture&gt;要素）</h3>
 			<pre><code class="html">&lt;<span class="tag">picture</span> <span class="attr">class</span>=<span class="val">"mv"</span>&gt;
@@ -305,6 +354,14 @@
 					単なる縮小ではなく、スマホ用には「被写体をより大きくトリミングした縦長の画像」、PC用には「横長の広角画像」といったように、画面サイズに合わせて最適な構図の画像を出し分けることができます。</li>
 				<li><strong>パフォーマンス:</strong> スマホで閲覧しているユーザーには、PC用の巨大な画像データをダウンロードさせずに済みます。</li>
 			</ul>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://html.spec.whatwg.org/multipage/embedded-content.html#the-picture-element" target="_blank" rel="noopener">HTML Standard: picture要素</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/HTML/Element/picture" target="_blank" rel="noopener">MDN: &lt;picture&gt;</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images" target="_blank" rel="noopener">MDN: レスポンシブ画像</a></li>
+				</ul>
+			</div>
 
 			<h3>セクションと見出し（&lt;section&gt;のルール）</h3>
 			<pre><code class="html">&lt;<span class="tag">section</span> <span class="attr">class</span>=<span class="val">"section"</span>&gt;
@@ -313,6 +370,14 @@
 				要素は文書の「章」や「節」を表します。仕様上、セクションには通常、その内容を表す<strong>見出し（h1〜h6）</strong>が存在するべきとされています。</p>
 			<p>単に「ここを囲って背景色をつけたい」というデザイン上の理由だけで、見出しのない範囲に <code>section</code> を使うことは推奨されません。その場合は意味を持たない <code>div</code>
 				を使用します。</p>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://html.spec.whatwg.org/multipage/sections.html#the-section-element" target="_blank" rel="noopener">HTML Standard: section要素</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/HTML/Element/section" target="_blank" rel="noopener">MDN: &lt;section&gt;</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/HTML/Element/Heading_Elements" target="_blank" rel="noopener">MDN: 見出し要素 (h1-h6)</a></li>
+				</ul>
+			</div>
 
 			<h3>カード型レイアウトのマークアップ（li vs div）</h3>
 			<p>今回のデザインでは、同じカード型レイアウトでも場所によってタグを使い分けています。</p>
@@ -320,24 +385,46 @@
 				<li><strong>News（お知らせ）: <code>ul &gt; li</code> を使用</strong><br>
 					お知らせは情報の並列な羅列であり、順序や一覧性に意味があるため、リスト構造が適しています。</li>
 				<li><strong>Pick Up（商品紹介）: <code>div</code> を使用</strong><br>
-					ここでは商品一つひとつが「画像・見出し・説明・価格・ボタン」を含む独立したコンテンツ（フロー・コンテンツ）です。これらを <code>li</code>
-					の中に入れると、文書構造（アウトライン）が複雑になりすぎる場合があります。<br>
-					HTML Standardでは、リスト項目（li）はあくまで「リストの一要素」であるべきです。今回のように各カードが強い独立性を持つ場合、無理にリスト化せず <code>div</code>
-					でグルーピングする手法を採用しました。</li>
+					商品一つひとつに見出し（<code>h3</code>）が含まれています。<br>
+					HTML Standardでは、<code>li</code>要素の中に見出し要素を入れることは文法的には適合しているものの、意図したセマンティクスを伝えられない可能性があると指摘されています。見出しは新しいセクションを開始するため、リスト内に見出しがあるとリストが暗黙的に複数のセクションに分割されてしまいます。<br>
+					今回のPick Upセクションでは、各商品カードが見出しを持つ独立したコンテンツであるため、リスト構造ではなく<code>div</code>でグルーピングする手法を採用しました。</li>
 			</ul>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://html.spec.whatwg.org/#the-li-element" target="_blank" rel="noopener">HTML Standard: li要素（Noteに見出しを含む場合の説明あり）</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/HTML/Element/li" target="_blank" rel="noopener">MDN: &lt;li&gt;</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/HTML/Element/ul" target="_blank" rel="noopener">MDN: &lt;ul&gt;</a></li>
+				</ul>
+			</div>
 
 			<h3>フッターのナビゲーション</h3>
 			<p>フッターにあるリンク集には <code>nav</code> 要素を使っていません。</p>
 			<p><code>nav</code> 要素は「主要なナビゲーション」を表すために使われます。ページ内に複数の <code>nav</code>
 				があると、スクリーンリーダーの利用者が「メインのメニュー」にたどり着くのを妨げる可能性があります。</p>
-			<p>もしフッターにも使う場合は <code>&lt;nav aria-label="フッターナビゲーション"&gt;</code> のように名前をつけて区別する必要がありますが、今回はシンプルなリンク集のため
+			<p>もしフッターにも使う場合は <code>&lt;nav aria-labelledby="footer-nav-title"&gt;</code> のように、見出しのIDを参照して区別する方法が推奨されます（<code>aria-label</code>属性で直接ラベルを指定することも可能です）。今回はシンプルなリンク集のため
 				<code>div</code>（または <code>ul</code>）で十分です。</p>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://html.spec.whatwg.org/multipage/sections.html#the-nav-element" target="_blank" rel="noopener">HTML Standard: nav要素</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/HTML/Element/nav" target="_blank" rel="noopener">MDN: &lt;nav&gt;</a></li>
+					<li><a href="https://www.w3.org/WAI/ARIA/apg/patterns/landmarks/examples/navigation.html" target="_blank" rel="noopener">W3C WAI: Navigation Landmark Pattern（複数のnavにaria-labelledbyを使用する例）</a></li>
+				</ul>
+			</div>
 
 			<h3>&lt;small&gt; の本来の意味</h3>
 			<pre><code class="html">&lt;<span class="tag">small</span>&gt;© 2025 HAL BAKERY & CAFE&lt;/<span class="tag">small</span>&gt;</code></pre>
 			<p>HTML5以降、<code>small</code> は「文字を小さくする装飾タグ」ではありません。<strong>「免責事項、警告、法的制約、著作権表示」</strong>などの注釈を表すタグとして定義されています。
 			</p>
 			<p>見た目の文字サイズはCSSで制御しますが、コピーライト表記は意味的に <code>small</code> が最も適切です。</p>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-small-element" target="_blank" rel="noopener">HTML Standard: small要素</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/HTML/Element/small" target="_blank" rel="noopener">MDN: &lt;small&gt;</a></li>
+				</ul>
+			</div>
 		</section>
 
 		<section class="module">
@@ -353,43 +440,112 @@
 }</code></pre>
 			<p>サイト内で繰り返し使う色や数値を「変数」として定義しています。<code>:root</code>（文書の根幹）で定義することで、サイト全体から参照できます。</p>
 			<p><strong>メリット:</strong> 後から「メインカラーを少し変更したい」となった場合、変数の値を1箇所書き換えるだけで全ページの該当箇所が一括で更新されます。</p>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-variables-1/" target="_blank" rel="noopener">W3C: CSS Custom Properties for Cascading Variables</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/Using_CSS_custom_properties" target="_blank" rel="noopener">MDN: CSS カスタムプロパティ (変数) の使用</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/var" target="_blank" rel="noopener">MDN: var()</a></li>
+				</ul>
+			</div>
 
-			<h3>レスポンシブ対応での「値の初期化」と「継承」</h3>
-			<p>レスポンシブデザイン（特にPCのスタイルをSPで打ち消したい時）では、以下のキーワードを活用してスタイルを制御します。</p>
+			<h3>CSSのネスト（CSS Nesting）</h3>
+			<pre><code class="css"><span class="tag">.card</span> {
+  <span class="prop">background-color</span>: <span class="val">#fff</span>;
 
-			<h4>1. initial（初期値に戻す）</h4>
-			<pre><code class="css"><span class="tag">.box</span> {
-  <span class="comment">/* プロパティをCSS仕様上の初期値に戻す */</span>
-  <span class="prop">min-width</span>: <span class="val">initial</span>;
+  <span class="comment">/* ネスト（入れ子）の書き方 */</span>
+  <span class="tag">.card-title</span> {
+    <span class="prop">font-weight</span>: <span class="val">bold</span>;
+  }
+
+  <span class="comment">/* &（アンパサンド）が必要な場合 */</span>
+  <span class="tag">&</span><span class="tag">:hover</span> {
+    <span class="prop">opacity</span>: <span class="val">0.8</span>;
+  }
 }</code></pre>
-			<p>そのプロパティが本来持っている「CSS仕様としての初期値」に戻します。例えば、<code>color</code> の初期値は（環境によりますが）通常黒になり、<code>display</code>
-				の初期値は（要素によりますが）<code>inline</code> になります。<br>
-				※注意：ブラウザが持っている「デフォルトのスタイル（User Agent Stylesheet）」に戻るわけではないため、予期せぬ崩れ方をすることがあります。基本的には <code>width: auto</code> や
-				<code>display: block</code> のように、具体的な値で上書き（打ち消し）をする方が安全です。</p>
+			<p>これまでSassなどのプリプロセッサが必要だった「入れ子構造（ネスト）」の記述が、CSS標準で使えるようになりました。</p>
+			<p><strong>ポイント:</strong></p>
+			<ul>
+				<li>単純な子孫セレクタ（例：<code>.card .card-title</code>）の場合、<code>&</code> を省略してそのまま入れ子にできます（リラックス構文）。</li>
+				<li><code>:hover</code> などの疑似クラスや、クラスをつなげて記述する場合（例：<code>.card.active</code>）は、Sassと同様に <code>&</code>（親セレクタ自身）を使って記述します。</li>
+			</ul>
+			<p class="comment">※注意：SassのBEM記法でよく使われる「文字列結合」（例：<code>&__element</code> と書いて <code>.block__element</code> を生成する機能）は、標準CSSのネストでは<strong>使用できません</strong>。</p>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-nesting-1/" target="_blank" rel="noopener">W3C: CSS Nesting Module</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/CSS_nesting" target="_blank" rel="noopener">MDN: CSS の入れ子</a></li>
+				</ul>
+			</div>
 
-			<h4>2. inherit（親の値を強制的に継承）</h4>
-			<pre><code class="css"><span class="tag">a</span> {
-  <span class="comment">/* 親要素の色と同じにする */</span>
-  <span class="prop">color</span>: <span class="val">inherit</span>;
-  <span class="comment">/* 親要素の下線をそのまま引き継ぐ */</span>
-  <span class="prop">text-decoration</span>: <span class="val">inherit</span>;
+			<h3>レスポンシブ対応でのスタイルの打ち消し</h3>
+			<p>レスポンシブデザインでは、「PC用のスタイルをSP表示で打ち消したい（元に戻したい）」といった場面がよくあります。その際、CSSの適用順序を理解しておくことが重要です。</p>
+
+			<h4>CSSの適用順序</h4>
+			<p>CSSは以下の順序で適用されます（後のものほど優先度が高い）:</p>
+			<ol>
+				<li><strong>初期値（Initial Value）</strong>: CSS仕様で定義されている各プロパティの初期値</li>
+				<li><strong>ユーザーエージェントスタイルシート</strong>: ブラウザが提供するデフォルトスタイル（例: <code>div</code>は<code>display: block</code>、<code>h1</code>の文字サイズ、<code>ul</code>の左余白など）</li>
+				<li><strong>サイト制作者が記述したCSS</strong>: 私たちが書くスタイル</li>
+			</ol>
+
+			<h4>スタイルを打ち消す方法</h4>
+			<p>設定したスタイルを打ち消すには、主に2つの方法があります:</p>
+
+			<p><strong>1. ユーザーエージェントスタイルシートの値を明示的に指定する</strong></p>
+			<pre><code class="css"><span class="comment">/* PCで設定したスタイル */</span>
+<span class="tag">div</span> {
+  <span class="prop">display</span>: <span class="val">flex</span>;
+}
+
+<span class="comment">/* SPで打ち消す場合 */</span>
+<span class="tag">@media</span> (<span class="prop">width</span> < <span class="val">769px</span>) {
+  <span class="tag">div</span> {
+    <span class="prop">display</span>: <span class="val">block</span>; <span class="comment">/* divのユーザーエージェントスタイルシート値 */</span>
+  }
 }</code></pre>
-			<p>
-				通常は継承されないプロパティ（<code>border</code>や<code>padding</code>など）や、ブラウザのデフォルトスタイル（<code>a</code>タグの青色など）を無視して、親要素のスタイルを強制的に引き継がせたい場合に使います。
-			</p>
+			<p>この例では、<code>display</code>プロパティの初期値は<code>inline</code>ですが、<code>div</code>要素はユーザーエージェントスタイルシートで<code>block</code>に設定されています。そのため、元に戻すには<code>display: block</code>と明示的に指定します。</p>
 
+			<p><strong>2. <code>revert</code>を使用する</strong></p>
+			<pre><code class="css"><span class="comment">/* PCで設定したスタイル */</span>
+<span class="tag">div</span> {
+  <span class="prop">display</span>: <span class="val">flex</span>;
+}
 
-			<h3>overflow-x: clip; と sticky の関係</h3>
-			<p>横スクロールバーを消すために <code>overflow-x: hidden;</code> を <code>body</code> などに設定すると、子要素の <code>position:
-					sticky;</code>（スクロール追従）が効かなくなるという仕様上の問題がありました。</p>
-			<p><code>overflow-x: clip;</code> は、要素を「スクロールコンテナ」に変化させずに、はみ出した部分を単に切り取ります。これにより、<code>sticky</code>
-				の機能を維持したまま、不要なスクロールバーを削除することができます。</p>
+<span class="comment">/* SPで打ち消す場合: revertを使うとユーザーエージェントスタイルシートまで巻き戻る */</span>
+<span class="tag">@media</span> (<span class="prop">width</span> < <span class="val">769px</span>) {
+  <span class="tag">div</span> {
+    <span class="prop">display</span>: <span class="val">revert</span>; <span class="comment">/* 結果: block（divのユーザーエージェントスタイルシート値）になる */</span>
+  }
+}</code></pre>
+
+			<p><code>revert</code>は、そのプロパティを「サイト制作者が記述したCSS」より前の段階（ユーザーエージェントスタイルシート）まで巻き戻します。ただし、ユーザーエージェントスタイルシートに定義がない場合は初期値まで戻ります。</p>
+
+			<p><strong>重要:</strong> 各プロパティの初期値とユーザーエージェントスタイルシートの値を把握しておくことで、適切にスタイルを打ち消すことができます。例えば、<code>display</code>の初期値は<code>inline</code>ですが、<code>div</code>はユーザーエージェントスタイルシートで<code>block</code>になっています。</p>
+
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-cascade-5/#defaulting" target="_blank" rel="noopener">W3C: CSS Cascading - Defaulting</a></li>
+					<li><a href="https://www.w3.org/TR/css-cascade-4/#default" target="_blank" rel="noopener">W3C: CSS Cascading - revert</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/revert" target="_blank" rel="noopener">MDN: revert</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/Cascade" target="_blank" rel="noopener">MDN: カスケードと継承</a></li>
+				</ul>
+			</div>
+
 
 			<h3>color-mix による色の透明化</h3>
 			<pre><code class="css"><span class="prop">background-color</span>: <span class="val">color-mix(in srgb, var(--bg) 95%, transparent)</span>;</code></pre>
 			<p>最新のCSS関数です。異なる2つの色を指定した割合で混ぜ合わせます。</p>
 			<p>ここでは「定義済みの背景色変数（--bg）」に「透明（transparent）」を5%混ぜることで、少しだけ透けた色を作っています。これにより、<code>rgba()</code> で色コードを打ち直す手間が省けます。
 			</p>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-color-5/#color-mix" target="_blank" rel="noopener">W3C: CSS Color Module Level 5 - color-mix()</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/color_value/color-mix" target="_blank" rel="noopener">MDN: color-mix()</a></li>
+				</ul>
+			</div>
 
 			<h3>グリッドレイアウトの自動調整（auto-fit と minmax）</h3>
 			<pre><code class="css"><span class="prop">grid-template-columns</span>: <span class="val">repeat(auto-fit, minmax(min(100%, 228px), 1fr))</span>;</code></pre>
@@ -404,27 +560,56 @@
 				<p style="text-align: center; font-size: 0.8rem; margin-top: 10px; color: #666;">※このボックスの幅が変化しています</p>
 			</div>
 			<ul>
-				<li><strong>minmax(A, B):</strong> 最低でもAの幅を確保し、余裕があればB（1fr＝均等割り）まで広がる、という指定です。</li>
-				<li><strong>auto-fit:</strong> 親要素の幅に合わせて、計算されたカラムが何個入るかを自動計算して折り返します。</li>
+				<li><strong>min(A, B):</strong> AとBを比較して、小さい方の値を返すCSS関数です。今回の<code>min(100%, 228px)</code>は、100%（親要素の幅）と228pxを比べて小さい方になります。通常は228pxが最小値になりますが、現在のSPデバイスではありえないものの極小画面では100%に収まる（はみ出し防止）仕組みです。今回228pxにしたのは、タブレット768pxのときに3カラムにしたかったからです。</li>
+				<li><strong>minmax(A, B):</strong> 最低でもAの幅を確保し、余裕があればB（1fr＝余ったスペースを均等に分配）まで広がる、という指定です。各カラムが同じ幅になります。</li>
+				<li><strong>auto-fit:</strong> 画面幅に応じて自動的にカラム数を調整します。結果として、画面幅に応じて1〜3カラムに自動調整され、各カラムは等幅になります。</li>
 			</ul>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-grid-2/#auto-repeat" target="_blank" rel="noopener">W3C: CSS Grid Layout - auto-fit</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/grid-template-columns" target="_blank" rel="noopener">MDN: grid-template-columns</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/minmax" target="_blank" rel="noopener">MDN: minmax()</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/repeat" target="_blank" rel="noopener">MDN: repeat()</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/min" target="_blank" rel="noopener">MDN: min()</a></li>
+				</ul>
+			</div>
 
 			<h3>視覚的な順序の変更（Flexbox column-reverse）</h3>
 			<pre><code class="css"><span class="prop">display</span>: <span class="val">flex</span>;
 <span class="prop">flex-direction</span>: <span class="val">column-reverse</span>;</code></pre>
 			<p>Pick Upセクションでは、HTML上は「タイトル → 画像」の順で記述されています。これはスクリーンリーダーなどの支援技術が、画像の内容よりも先に「何の商品か（タイトル）」を読み上げられるようにするためです。</p>
 			<p>CSSで <code>column-reverse</code>（下から上へ並べる）を指定することで、見た目上は「画像 → タイトル」のデザインを実現しています。</p>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-flexbox-1/#flex-direction-property" target="_blank" rel="noopener">W3C: CSS Flexbox - flex-direction</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/flex-direction" target="_blank" rel="noopener">MDN: flex-direction</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/CSS_flexible_box_layout" target="_blank" rel="noopener">MDN: CSS フレックスボックスレイアウト</a></li>
+				</ul>
+			</div>
 
 			<h3>width: fit-content;</h3>
 			<p><code>width: fit-content;</code> は、要素の幅を「中身（コンテンツ）の幅」にぴったり合わせます。</p>
 			<p><code>display: inline-block</code> に似ていますが、ブロックレベル要素の性質（<code>margin: auto</code>
 				で中央寄せできるなど）を保ったまま、幅だけをコンテンツにフィットさせたい場合に便利です。</p>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-sizing-3/#valdef-width-fit-content" target="_blank" rel="noopener">W3C: CSS Box Sizing - fit-content</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/fit-content" target="_blank" rel="noopener">MDN: fit-content</a></li>
+				</ul>
+			</div>
 
 			<h3>画面幅いっぱいに広げる計算（Full Width）</h3>
 			<pre><code class="css"><span class="prop">width</span>: <span class="val">100vw</span>;
-<span class="prop">margin-left</span>: <span class="val">calc(50% - 50vw)</span>;</code></pre>
+<span class="prop">margin</span>: <span class="val">0 calc(50% - 50vw)</span>;  <span class="comment">/* 左右のネガティブマージン */</span>
+<span class="prop">padding</span>: <span class="val">0 calc(50vw - 50%)</span>; <span class="comment">/* 中身をコンテナ幅に戻す */</span></code></pre>
 			<p>親要素（コンテナ）の幅制限を無視して、背景や画像などを画面の左端から右端まで（全幅）広げるための計算式です。</p>
 			<div class="diagram-box">
 				<span class="diagram-label">▼ 図解：コンテナの中から画面幅(100vw)まで突き抜けるイメージ</span>
+				<!-- ラベルを外に出しました -->
+				<div class="demo-viewport-label">ブラウザ画面幅 (100vw)</div>
 				<div class="demo-viewport">
 					<div class="demo-fullwidth-wrapper">
 						<div class="demo-fullwidth-item">
@@ -437,23 +622,73 @@
 			<ol>
 				<li>親要素の中心（50%）を基準にします。</li>
 				<li>そこから画面の半分（50vw）を引くことで、要素の左端を画面の左端に強制的に合わせます（ネガティブマージン）。</li>
+				<li>これを左右（<code>margin-left</code>と<code>margin-right</code>）に適用することで、両側に広がります。</li>
 				<li>幅を <code>100vw</code> に指定することで、画面いっぱいまで広がります。</li>
+				<li><strong>補足（padding）:</strong> 背景だけを広げて、中のテキストなどは元のコンテナ幅（中央）に収めたい場合は、<code>padding</code> に逆の計算式 <code>calc(50vw - 50%)</code> を指定して内側に押し戻します。</li>
 			</ol>
+			<img src="full-width-img.png" alt="仮にウインドウ幅が1200pxだった場合の解説図" style="max-width: 100%; border: 1px solid #ccc;">
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-values-4/#viewport-relative-lengths" target="_blank" rel="noopener">W3C: CSS Values - Viewport-percentage lengths (vw, vh)</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/length#vw" target="_blank" rel="noopener">MDN: length - vw</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/calc" target="_blank" rel="noopener">MDN: calc()</a></li>
+				</ul>
+			</div>
+
+			<h3>overflow-x: clip; と sticky の関係</h3>
+			<p>横スクロールバーを消すために <code>overflow-x: hidden;</code> を <code>body</code> などに設定すると、子要素の <code>position:
+					sticky;</code>（スクロール追従）が効かなくなるという仕様上の問題がありました。</p>
+			<p><code>overflow-x: clip;</code> は、要素を「スクロールコンテナ」に変化させずに、はみ出した部分を単に切り取ります。これにより、<code>sticky</code>
+				の機能を維持したまま、不要なスクロールバーを削除することができます。</p>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-overflow-3/#overflow-properties" target="_blank" rel="noopener">W3C: CSS Overflow - overflow-x</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/overflow" target="_blank" rel="noopener">MDN: overflow</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/position#sticky" target="_blank" rel="noopener">MDN: position - sticky</a></li>
+				</ul>
+			</div>
 
 			<h3>Gridによる自由な配置（Newsセクション）</h3>
 			<p>Newsセクションでは、<code>display: grid</code> を使い、<code>grid-column</code>（列）と <code>grid-row</code>（行）を指定しています。</p>
 			<p>これにより、HTMLの記述順（日付→タイトル→本文）を変更することなく、PC表示時だけ「1行目の左に日付、右にタイトル、2行目全体に本文」といった複雑なレイアウト変更を実現しています。</p>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-grid-2/" target="_blank" rel="noopener">W3C: CSS Grid Layout Module Level 2</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/CSS_grid_layout" target="_blank" rel="noopener">MDN: CSS グリッドレイアウト</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/grid-column" target="_blank" rel="noopener">MDN: grid-column</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/grid-row" target="_blank" rel="noopener">MDN: grid-row</a></li>
+				</ul>
+			</div>
 
 			<h3>フォントサイズの計算（calc）</h3>
 			<pre><code class="css"><span class="prop">font-size</span>: <span class="val">calc(26 / 16 * 1rem)</span>;</code></pre>
 			<p>デザインカンプが「26px」で作られている場合、それをレスポンシブ対応しやすい <code>rem</code> 単位に変換する必要があります。</p>
 			<p>電卓で計算して <code>1.625rem</code> と直接書く代わりに、CSSに <code>calc(デザイン値 / ルート文字サイズ * 1rem)</code>
 				という計算式を書くことで、「元が何pxのデザインだったか」がコード上で明確になり、修正も容易になります。</p>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-values-4/#calc-notation" target="_blank" rel="noopener">W3C: CSS Values - calc()</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/calc" target="_blank" rel="noopener">MDN: calc()</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Learn/CSS/Building_blocks/Values_and_units#%E9%95%B7%E3%81%95" target="_blank" rel="noopener">MDN: CSS の値と単位 - rem</a></li>
+				</ul>
+			</div>
 
 			<h3>モダンなメディアクエリ記法</h3>
 			<pre><code class="css"><span class="tag">@media</span> (<span class="prop">width</span> >= <span class="val">769px</span>) { ... }</code></pre>
 			<p>従来の <code>@media (min-width: 769px)</code> という書き方の新しい構文です。</p>
 			<p>「幅が769px <strong>以上（>=）</strong>」という条件が、数学の不等号を使って直感的に書けるようになりました。逆に「以下」の場合は <code>&lt;=</code> を使用します。</p>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/mediaqueries-4/#mq-range-context" target="_blank" rel="noopener">W3C: Media Queries Level 4 - Range Context</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/CSS_media_queries/Using_media_queries" target="_blank" rel="noopener">MDN: メディアクエリの使用</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/@media#%E7%AF%84%E5%9B%B2%E6%A7%8B%E6%96%87" target="_blank" rel="noopener">MDN: @media - 範囲構文</a></li>
+				</ul>
+			</div>
 		</section>
 
 	</div>
