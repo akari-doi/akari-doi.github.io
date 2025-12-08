@@ -296,10 +296,117 @@
 				padding-right: 0;
 			}
 		}
+
+		/* スムーズスクロール */
+		html {
+			scroll-behavior: smooth;
+		}
+
+		/* 目次 */
+		.table-of-contents {
+			background: #f0f4f2;
+			border: 2px solid var(--accent);
+			border-radius: 8px;
+			padding: 30px;
+			margin-bottom: 40px;
+		}
+
+		.table-of-contents h2 {
+			margin-top: 0;
+			margin-bottom: 20px;
+			font-size: 1.5rem;
+			border-bottom: none;
+			padding-bottom: 0;
+		}
+
+		.table-of-contents ol {
+			counter-reset: section;
+			list-style: none;
+			padding-left: 0;
+		}
+
+		.table-of-contents li {
+			counter-increment: section;
+			margin-bottom: 8px;
+		}
+
+		.table-of-contents li::before {
+			content: counter(section) ". ";
+			font-weight: bold;
+			color: var(--accent);
+		}
+
+		.table-of-contents a {
+			color: var(--text-main);
+			text-decoration: none;
+			transition: color 0.3s;
+		}
+
+		.table-of-contents a:hover {
+			color: var(--accent);
+			text-decoration: underline;
+		}
+
+		.table-of-contents ul {
+			list-style: none;
+			padding-left: 2em;
+			margin-top: 8px;
+		}
+
+		.table-of-contents ul li {
+			counter-increment: none;
+			margin-bottom: 6px;
+			font-size: 0.95rem;
+		}
+
+		.table-of-contents ul li::before {
+			content: "・";
+			font-weight: normal;
+			color: var(--accent);
+		}
+
+		/* ページトップへ戻るボタン */
+		.page-top {
+			position: fixed;
+			right: 20px;
+			bottom: 20px;
+			width: 50px;
+			height: 50px;
+			background-color: var(--accent);
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+			cursor: pointer;
+			opacity: 0;
+			visibility: hidden;
+			transition: opacity 0.3s, visibility 0.3s, background-color 0.3s;
+			z-index: 1000;
+		}
+
+		.page-top.show {
+			opacity: 1;
+			visibility: visible;
+		}
+
+		.page-top:hover {
+			background-color: #3d4e47;
+		}
+
+		.page-top::before {
+			content: "";
+			width: 12px;
+			height: 12px;
+			border-top: 3px solid white;
+			border-right: 3px solid white;
+			transform: rotate(-45deg);
+			margin-top: 6px;
+		}
 	</style>
 </head>
 
-<body>
+<body id="top">
 
 	<div class="container">
 
@@ -307,24 +414,61 @@
 
 		<p>このドキュメントでは、今回のWebサイト制作で使用されているHTML/CSSの技術的な意図と、仕様に基づいた背景を解説します。</p>
 
+		<!-- 目次 -->
+		<nav class="table-of-contents">
+			<h2>📑 目次</h2>
+			<ol>
+				<li>
+					<a href="#html-semantics">HTMLの構造と意味（Semantics）</a>
+					<ul>
+						<li><a href="#hamburger-menu">ハンバーガーメニューの実装（button🆗　div🆖）</a></li>
+						<li><a href="#picture-element">画像の出し分け（&lt;picture&gt;要素）</a></li>
+						<li><a href="#section-heading">セクションと見出し（&lt;section&gt;のルール）</a></li>
+						<li><a href="#card-layout">カード型レイアウトのマークアップ（li？ div？）</a></li>
+						<li><a href="#footer-nav">フッターのナビゲーション</a></li>
+						<li><a href="#small-element">&lt;small&gt; の本来の意味</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="#css">CSS</a>
+					<ul>
+						<li><a href="#css-variables">CSS変数(Custom Properties)</a></li>
+						<li><a href="#css-nesting">CSSのネスト（CSS Nesting）</a></li>
+						<li><a href="#overflow-sticky">overflow-x: clip; と sticky の関係</a></li>
+						<li><a href="#position-sticky">position: sticky によるヘッダー固定</a></li>
+						<li><a href="#nth-child">nth-child による要素の選択</a></li>
+						<li><a href="#transform-center">transform による中央配置</a></li>
+						<li><a href="#transition">transition によるアニメーション</a></li>
+						<li><a href="#color-mix">color-mix による色の透明化</a></li>
+						<li><a href="#flexbox-basics">Flexbox の基礎</a></li>
+						<li><a href="#calc-font-size">フォントサイズの計算（calc）</a></li>
+						<li><a href="#grid-auto-fit">グリッドレイアウトの自動調整（auto-fit と minmax）</a></li>
+						<li><a href="#flex-column-reverse">視覚的な順序の変更（Flexbox column-reverse）</a></li>
+						<li><a href="#box-shadow">box-shadow による影の表現</a></li>
+						<li><a href="#pseudo-elements">疑似要素 (::after) による装飾</a></li>
+						<li><a href="#fit-content">width: fit-content;</a></li>
+						<li><a href="#full-width">画面幅いっぱいに広げる計算（Full Width）</a></li>
+						<li><a href="#grid-placement">Gridによる自由な配置（Newsセクション）</a></li>
+						<li><a href="#currentcolor">currentcolor キーワード</a></li>
+						<li><a href="#responsive-reset">レスポンシブ対応でのスタイルの打ち消し</a></li>
+						<li><a href="#media-query-range">モダンなメディアクエリ記法</a></li>
+						<li><a href="#css-property-order">プロパティを書く順序</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="#javascript">JavaScriptとの連携</a>
+					<ul>
+						<li><a href="#script-defer">&lt;script&gt; の読み込み位置と defer 属性</a></li>
+						<li><a href="#js-class-toggle">クラスの追加/削除による状態管理</a></li>
+					</ul>
+				</li>
+			</ol>
+		</nav>
+
 		<section class="module">
-			<h2>HTMLの構造と意味（Semantics）</h2>
+			<h2 id="html-semantics">HTMLの構造と意味（Semantics）</h2>
 
-			<h3>&lt;script&gt; の読み込み位置と defer 属性</h3>
-			<pre><code class="html">&lt;<span class="tag">script</span> <span class="attr">src</span>=<span class="val">"js/main.js"</span> <span class="attr">defer</span>&gt;&lt;/<span class="tag">script</span>&gt;</code></pre>
-			<p>従来は <code>&lt;/body&gt;</code> の直前に書くことが多かったスクリプトですが、現在は <code>&lt;head&gt;</code> 内に <code>defer</code>
-				属性をつけて記述するのが主流です。</p>
-			<p><strong>メリット:</strong>
-				HTMLの解析（パース）を止めずにJavaScriptファイルを裏側で読み込み、HTMLの解析が終わった直後に実行されます。これにより、ページの表示速度（体感速度）が向上します。</p>
-			<div class="reference-links">
-				<div class="reference-links-title">📚 参考リンク</div>
-				<ul>
-					<li><a href="https://html.spec.whatwg.org/multipage/scripting.html#attr-script-defer" target="_blank" rel="noopener">HTML Standard: script要素のdefer属性</a></li>
-					<li><a href="https://developer.mozilla.org/ja/docs/Web/HTML/Element/script#defer" target="_blank" rel="noopener">MDN: &lt;script&gt; - defer属性</a></li>
-				</ul>
-			</div>
-
-			<h3>ハンバーガーメニューの実装（button🆗　div🆖）</h3>
+			<h3 id="hamburger-menu">ハンバーガーメニューの実装（button🆗　div🆖）</h3>
 			<pre><code class="html">&lt;<span class="tag">button</span> <span class="attr">type</span>=<span class="val">"button"</span> <span class="attr">class</span>=<span class="val">"sp-menu"</span> <span class="attr">aria-label</span>=<span class="val">"メニュー"</span> <span class="attr">aria-controls</span>=<span class="val">"header-nav"</span> <span class="attr">aria-expanded</span>=<span class="val">"false"</span>&gt;
   &lt;<span class="tag">span</span>&gt;&lt;/<span class="tag">span</span>&gt;
   &lt;<span class="tag">span</span>&gt;&lt;/<span class="tag">span</span>&gt;
@@ -358,7 +502,7 @@
 				</ul>
 			</div>
 
-			<h3>画像の出し分け（&lt;picture&gt;要素）</h3>
+			<h3 id="picture-element">画像の出し分け（&lt;picture&gt;要素）</h3>
 			<pre><code class="html">&lt;<span class="tag">picture</span> <span class="attr">class</span>=<span class="val">"mv"</span>&gt;
   &lt;<span class="tag">source</span> <span class="attr">media</span>=<span class="val">"(min-width: 768px)"</span> <span class="attr">srcset</span>=<span class="val">"images/mv-pc.jpg"</span>&gt;
   &lt;<span class="tag">img</span> <span class="attr">src</span>=<span class="val">"images/mv-sp.jpg"</span> <span class="attr">alt</span>=<span class="val">"..."</span>&gt;
@@ -378,7 +522,7 @@
 				</ul>
 			</div>
 
-			<h3>セクションと見出し（&lt;section&gt;のルール）</h3>
+			<h3 id="section-heading">セクションと見出し（&lt;section&gt;のルール）</h3>
 			<pre><code class="html">&lt;<span class="tag">section</span> <span class="attr">class</span>=<span class="val">"section"</span>&gt;
   &lt;<span class="tag">h2</span> <span class="attr">class</span>=<span class="val">"section-title"</span>&gt;...&lt;/<span class="tag">h2</span>&gt;</code></pre>
 			<p>HTML Standardにおいて、<code>section</code>
@@ -394,7 +538,7 @@
 				</ul>
 			</div>
 
-			<h3>カード型レイアウトのマークアップ（li？ div？）</h3>
+			<h3 id="card-layout">カード型レイアウトのマークアップ（li？ div？）</h3>
 			<p>今回のデザインでは、Pick UpとNews、どちらも一般的にリスト形式がよく使われるデザインになっています。今回はそれぞれ明確にタグを使い分けています。</p>
 			<ul>
 				<li><strong>News（お知らせ）: <code>ul &gt; li</code> を使用</strong><br>
@@ -413,7 +557,7 @@
 				</ul>
 			</div>
 
-			<h3>フッターのナビゲーション</h3>
+			<h3 id="footer-nav">フッターのナビゲーション</h3>
 			<p>フッターにあるリンク集には <code>nav</code> 要素を使っていません。</p>
 			<p><code>nav</code> 要素は「主要なナビゲーション」を表すために使われます。ページ内に複数の <code>nav</code>
 				があると、スクリーンリーダーの利用者が「メインのメニュー」にたどり着くのを妨げる可能性があります。</p>
@@ -428,7 +572,7 @@
 				</ul>
 			</div>
 
-			<h3>&lt;small&gt; の本来の意味</h3>
+			<h3 id="small-element">&lt;small&gt; の本来の意味</h3>
 			<pre><code class="html">&lt;<span class="tag">small</span>&gt;© 2025 HAL BAKERY & CAFE&lt;/<span class="tag">small</span>&gt;</code></pre>
 			<p>HTML5以降、<code>small</code> は「文字を小さくする装飾タグ」ではありません。<strong>「免責事項、警告、法的制約、著作権表示」</strong>などの注釈を表すタグとして定義されています。
 			</p>
@@ -443,9 +587,9 @@
 		</section>
 
 		<section class="module">
-			<h2>CSSのモダンなレイアウトと計算</h2>
+					<h2 id="css">CSS</h2>
 
-			<h3>CSS変数(Custom Properties)</h3>
+			<h3 id="css-variables">CSS変数(Custom Properties)</h3>
 			<pre><code class="css"><span class="tag">:root</span> {
   <span class="prop">--main</span>: <span class="val">#4C310D</span>;
 }
@@ -464,7 +608,8 @@
 				</ul>
 			</div>
 
-			<h3>CSSのネスト（CSS Nesting）</h3>
+
+			<h3 id="css-nesting">CSSのネスト（CSS Nesting）</h3>
 			<pre><code class="css"><span class="tag">.card</span> {
   <span class="prop">background-color</span>: <span class="val">#fff</span>;
 
@@ -493,7 +638,684 @@
 				</ul>
 			</div>
 
-			<h3>レスポンシブ対応でのスタイルの打ち消し</h3>
+
+			<h3 id="overflow-sticky">overflow-x: clip; と sticky の関係</h3>
+			<p>横スクロールバーを消すために <code>overflow-x: hidden;</code> を <code>body</code> などに設定すると、子要素の <code>position:
+					sticky;</code>（スクロール追従）が効かなくなるという仕様上の問題がありました。</p>
+			<p><code>overflow-x: clip;</code> は、要素を「スクロールコンテナ」に変化させずに、はみ出した部分を単に切り取ります。これにより、<code>sticky</code>
+				の機能を維持したまま、不要なスクロールバーを削除することができます。</p>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-overflow-3/#overflow-properties" target="_blank" rel="noopener">W3C: CSS Overflow - overflow-x</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/overflow" target="_blank" rel="noopener">MDN: overflow</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/position#sticky" target="_blank" rel="noopener">MDN: position - sticky</a></li>
+				</ul>
+			</div>
+
+
+			<h3 id="position-sticky">position: sticky によるヘッダー固定</h3>
+			<p>今回のプロジェクトでは、ヘッダーを<code>position: sticky</code>で固定しています。スクロールしても画面上部に表示され続けます。</p>
+			
+			<pre><code class="css"><span class="selector">.header</span> {
+  <span class="prop">position</span>: <span class="val">sticky</span>;
+  <span class="prop">top</span>: <span class="val">0</span>;
+  <span class="prop">z-index</span>: <span class="val">2</span>;
+}</code></pre>
+			
+			<h4>sticky の動作</h4>
+			<ul>
+				<li>通常は<code>position: relative</code>のように配置される</li>
+				<li>スクロールして指定位置（<code>top: 0</code>）に達すると、その位置に固定される</li>
+				<li><code>position: fixed</code>と違い、親要素の範囲内でのみ有効</li>
+			</ul>
+			
+			<h4>z-index の役割</h4>
+			<p><code>z-index: 2</code>は、重なり順（奥行き）を制御します。数値が大きいほど手前に表示されます。ヘッダーが他のコンテンツの上に表示されるように設定しています。</p>
+			
+			<p><strong>今回の重なり順:</strong></p>
+			<ul>
+				<li>ヘッダー: <code>z-index: 2</code></li>
+				<li>ナビゲーション: <code>z-index: 10</code></li>
+				<li>その他のコンテンツ: デフォルト（<code>z-index: auto</code>）</li>
+			</ul>
+			
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-position-3/#sticky-pos" target="_blank" rel="noopener">W3C: CSS Positioned Layout - sticky</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/position" target="_blank" rel="noopener">MDN: position</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/z-index" target="_blank" rel="noopener">MDN: z-index</a></li>
+					<li><a href="https://ics.media/entry/200609/" target="_blank" rel="noopener">君は真に理解しているか？z-indexとスタッキングコンテキストの関係</a></li>
+				</ul>
+			</div>
+
+
+			<h3 id="nth-child">nth-child による要素の選択</h3>
+			<p><code>:nth-child()</code> は、親要素の中で何番目の子要素かを指定してスタイルを適用できる擬似クラスです。</p>
+			
+			<h4>基本的な使い方</h4>
+			<pre><code class="css"><span class="comment">/* 3番目の要素 */</span>
+<span class="selector">li:nth-child(3)</span> { ... }
+
+<span class="comment">/* 偶数番目の要素 */</span>
+<span class="selector">li:nth-child(even)</span> { ... }
+
+<span class="comment">/* 奇数番目の要素 */</span>
+<span class="selector">li:nth-child(odd)</span> { ... }
+
+<span class="comment">/* 3の倍数番目の要素（3, 6, 9...） */</span>
+<span class="selector">li:nth-child(3n)</span> { ... }</code></pre>
+			
+			<h4>重要："of S" 構文（最もわかりやすい方法）</h4>
+			<p>従来の<code>:nth-child()</code>は「すべての子要素」の中から数えるため、途中に異なる要素が混ざっていると意図しない結果になることがありました。</p>
+			<p><strong>"of S" 構文</strong>を使うと、「特定のセレクタに一致する要素だけ」を数えることができ、より直感的に書けます。</p>
+			
+			<pre><code class="css"><span class="comment">/* 従来の方法：すべての子要素の中から2番目の li */</span>
+<span class="selector">li:nth-child(2)</span> { ... }
+
+<span class="comment">/* "of S" 構文：li要素だけを数えて2番目 */</span>
+<span class="selector">:nth-child(2 of li)</span> { ... }
+
+<span class="comment">/* クラス名で絞り込み：.item クラスを持つ要素だけを数えて3番目 */</span>
+<span class="selector">:nth-child(3 of .item)</span> { ... }
+
+<span class="comment">/* 偶数番目の.card要素 */</span>
+<span class="selector">:nth-child(even of .card)</span> { ... }</code></pre>
+			
+			<h4>実例での違い</h4>
+			<pre><code class="html"><span class="tag">&lt;div&gt;</span>
+  <span class="tag">&lt;h2&gt;</span>見出し<span class="tag">&lt;/h2&gt;</span>
+  <span class="tag">&lt;p class="item"&gt;</span>アイテム1<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;p class="item"&gt;</span>アイテム2<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;p class="item"&gt;</span>アイテム3<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/div&gt;</span></code></pre>
+			
+			<pre><code class="css"><span class="comment">/* ❌ 従来の方法：「すべての子要素の2番目」= h2 が選択されてしまう */</span>
+<span class="selector">.item:nth-child(2)</span> { <span class="prop">color</span>: <span class="val">red</span>; }
+
+<span class="comment">/* ✅ "of S" 構文：「.itemの中で2番目」= 正しくアイテム2が選択される */</span>
+<span class="selector">:nth-child(2 of .item)</span> { <span class="prop">color</span>: <span class="val">red</span>; }</code></pre>
+			
+			<p><strong>"of S" 構文を使うことで、HTMLの構造に左右されず、意図した要素を確実に選択できます。</strong>これが現在最もわかりやすい方法です。</p>
+			
+			<h4>今回のハンバーガーメニューでの応用例</h4>
+			<p>今回のハンバーガーメニューの3本線も、"of S" 構文を使うことでより明示的に書けます。</p>
+			
+			<pre><code class="css"><span class="comment">/* 従来の書き方 */</span>
+<span class="selector">span:nth-child(1)</span> { <span class="prop">top</span>: <span class="val">8px</span>; }
+<span class="selector">span:nth-child(2)</span> { 
+  <span class="prop">top</span>: <span class="val">50%</span>; 
+  <span class="prop">transform</span>: <span class="val">translateY(-50%)</span>; 
+}
+<span class="selector">span:nth-child(3)</span> { <span class="prop">bottom</span>: <span class="val">8px</span>; }
+
+<span class="comment">/* "of S" 構文を使った書き方（より明示的） */</span>
+<span class="selector">:nth-child(1 of span)</span> { <span class="prop">top</span>: <span class="val">8px</span>; }
+<span class="selector">:nth-child(2 of span)</span> { 
+  <span class="prop">top</span>: <span class="val">50%</span>; 
+  <span class="prop">transform</span>: <span class="val">translateY(-50%)</span>; 
+}
+<span class="selector">:nth-child(3 of span)</span> { <span class="prop">bottom</span>: <span class="val">8px</span>; }</code></pre>
+			
+			<p>今回のケースでは <code>button</code> の直下に <code>span</code> しかないため結果は同じですが、"of S" 構文を使うことで「spanだけを数える」という意図が明確になり、<strong>より保守性の高いコード</strong>になります。</p>
+			
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/selectors-4/#the-nth-child-pseudo" target="_blank" rel="noopener">W3C: Selectors Level 4 - :nth-child()</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/:nth-child" target="_blank" rel="noopener">MDN: :nth-child()</a></li>
+					<li><a href="https://qiita.com/ituki_b/items/62a752389385de7ba4a2" target="_blank" rel="noopener">何番目系の便利なCSSまとめ</a></li>
+					<li><a href="https://qiita.com/debiru/items/c91185ddb15ce28b8cee" target="_blank" rel="noopener">:nth-child() の "of S" 構文が最強な件について - Qiita</a></li>
+				</ul>
+			</div>
+
+
+			<h3 id="transform-center">transform による中央配置（ハンバーガーメニューの実装）</h3>
+			<p>ハンバーガーメニューの3本線を実装する際、真ん中の線を正確に垂直中央に配置する方法として、<code>transform: translateY(-50%)</code> を使用しています。</p>
+			
+			<pre><code class="css"><span class="comment">/* 1本目の線 */</span>
+<span class="selector">span:nth-child(1)</span> {
+  <span class="prop">top</span>: <span class="val">8px</span>;       <span class="comment">/* 上から8pxの位置 */</span>
+}
+
+<span class="comment">/* 2本目の線（真ん中） */</span>
+<span class="selector">span:nth-child(2)</span> {
+  <span class="prop">top</span>: <span class="val">50%</span>;       <span class="comment">/* 上から50%の位置（中央） */</span>
+  <span class="prop">transform</span>: <span class="val">translateY(-50%)</span>; <span class="comment">/* 線の太さの半分だけ上にずらして、完全に垂直中央に */</span>
+}
+
+<span class="comment">/* 3本目の線 */</span>
+<span class="selector">span:nth-child(3)</span> {
+  <span class="prop">bottom</span>: <span class="val">8px</span>;    <span class="comment">/* 下から8pxの位置 */</span>
+}</code></pre>
+			
+			<h4>なぜ transform: translateY(-50%) が必要なのか？</h4>
+			<p><code>top: 50%</code> だけを指定すると、要素の**上端**が親要素の中央に配置されます。しかし、これでは要素自体は中央より下にずれてしまいます。</p>
+			
+			<div class="diagram-box" style="background: #f5f5f5; padding: 30px 20px; margin: 20px 0; border-radius: 8px;">
+				<div style="text-align: center; margin-bottom: 20px; font-weight: bold;">▼ top: 50% だけの場合（ずれている）</div>
+				<div style="position: relative; width: 300px; height: 100px; margin: 0 auto 40px;">
+					<!-- グレーの枠 -->
+					<div style="position: absolute; left: 50%; top: 0; width: 220px; height: 100px; background: #e0e0e0; border: 2px solid #999; transform: translateX(-50%);"></div>
+					
+					<!-- 配置される要素 -->
+					<div style="position: absolute; left: 50%; top: 50%; width: 80px; height: 20px; background: var(--accent); transform: translateX(-50%); z-index: 3;"></div>
+					
+					<!-- 中央線（枠の外まで伸びる） -->
+					<div style="position: absolute; left: 0; top: 50%; width: 100%; height: 2px; background: red; z-index: 5;"></div>
+					
+					<!-- 説明文 -->
+					<div style="position: absolute; left: 50%; top: 75px; transform: translateX(-50%); color: #333; font-size: 12px; white-space: nowrap;">要素が下にずれている</div>
+				</div>
+				
+				<div style="text-align: center; margin-bottom: 20px; font-weight: bold;">▼ top: 50% + translateY(-50%) の場合（正確に中央）</div>
+				<div style="position: relative; width: 300px; height: 100px; margin: 0 auto;">
+					<!-- グレーの枠 -->
+					<div style="position: absolute; left: 50%; top: 0; width: 220px; height: 100px; background: #e0e0e0; border: 2px solid #999; transform: translateX(-50%);"></div>
+					
+					<!-- 配置される要素（transform適用） -->
+					<div style="position: absolute; left: 50%; top: 50%; width: 80px; height: 20px; background: var(--accent); transform: translate(-50%, -50%); z-index: 3;"></div>
+					
+					<!-- 中央線（枠の外まで伸びる） -->
+					<div style="position: absolute; left: 0; top: 50%; width: 100%; height: 2px; background: red; z-index: 5;"></div>
+					
+					<!-- 説明文 -->
+					<div style="position: absolute; left: 50%; top: 75px; transform: translateX(-50%); color: #090; font-size: 12px; white-space: nowrap;">✓ 完全に中央</div>
+				</div>
+			</div>
+			
+			<p><code>transform: translateY(-50%)</code> は、<strong>要素自身の高さの50%分だけ上方向（Y軸のマイナス方向）に移動</strong>させます。これにより、要素の中心が親要素の中央に正確に配置されます。</p>
+			
+			<ul>
+				<li><strong>top: 50%:</strong> 要素の上端を親の中央に配置</li>
+				<li><strong>translateY(-50%):</strong> 要素を自身の高さの半分だけ上に移動</li>
+				<li><strong>結果:</strong> 要素の中心が親の中央に配置される</li>
+			</ul>
+			
+			<p>この手法は、高さが可変の要素でも確実に中央配置できるため、非常に実用的です。水平方向も同様に <code>left: 50%; transform: translateX(-50%);</code> で中央配置できます。両方を組み合わせて <code>transform: translate(-50%, -50%);</code> とすれば、上下左右完全に中央配置できます。</p>
+			
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-transforms-1/" target="_blank" rel="noopener">W3C: CSS Transforms Module Level 1</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/transform" target="_blank" rel="noopener">MDN: transform</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/transform-function/translateY" target="_blank" rel="noopener">MDN: translateY()</a></li>
+				</ul>
+			</div>
+
+
+			<h3 id="transition">transition によるアニメーション</h3>
+			<p>CSSの<code>transition</code>プロパティを使うと、プロパティの値が変化する際にアニメーションを追加できます。今回のプロジェクトでは複数箇所で使用しています。</p>
+			
+			<h4>1. ハンバーガーメニューの開閉</h4>
+			<pre><code class="css"><span class="selector">.header-nav</span> {
+  <span class="prop">transform</span>: <span class="val">translateX(-120%)</span>;
+  <span class="prop">transition</span>: <span class="val">transform 0.3s ease-in-out</span>;
+}
+
+<span class="selector">.header-nav.active</span> {
+  <span class="prop">transform</span>: <span class="val">translateX(0)</span>;
+}</code></pre>
+			
+			<h4>2. ハンバーガーボタンの3本線が✗マークに変化</h4>
+			<pre><code class="css"><span class="selector">.sp-menu span</span> {
+  <span class="prop">transition</span>: <span class="val">all 0.3s ease-in-out</span>;
+}
+
+<span class="comment">/* 1本目：上から中央へ移動して45度回転 */</span>
+<span class="selector">.sp-menu.active span:nth-child(1)</span> {
+  <span class="prop">top</span>: <span class="val">50%</span>;
+  <span class="prop">transform</span>: <span class="val">translateY(-50%) rotate(45deg)</span>;
+}
+
+<span class="comment">/* 2本目：透明になる */</span>
+<span class="selector">.sp-menu.active span:nth-child(2)</span> {
+  <span class="prop">opacity</span>: <span class="val">0</span>;
+}
+
+<span class="comment">/* 3本目：下から中央へ移動して-45度回転 */</span>
+<span class="selector">.sp-menu.active span:nth-child(3)</span> {
+  <span class="prop">bottom</span>: <span class="val">50%</span>;
+  <span class="prop">transform</span>: <span class="val">translateY(50%) rotate(-45deg)</span>;
+}</code></pre>
+			
+			<p>この例では、<code>transition: all 0.3s</code> としているため、<code>top</code>, <code>bottom</code>, <code>transform</code>, <code>opacity</code> のすべての変化がアニメーションします。</p>
+			
+			<h4>3. ボタンのホバー効果</h4>
+			<pre><code class="css"><span class="selector">.pick-up-item-button</span> {
+  <span class="prop">transition</span>: <span class="val">opacity 0.3s</span>;
+}
+
+<span class="selector">.pick-up-item-button:hover</span> {
+  <span class="prop">opacity</span>: <span class="val">0.8</span>;
+}</code></pre>
+			
+			<h4>4. 下線アニメーション</h4>
+			<pre><code class="css"><span class="selector">.footer-menu a::after</span> {
+  <span class="prop">transform</span>: <span class="val">scaleX(0)</span>;
+  <span class="prop">transition</span>: <span class="val">transform 0.3s ease-out</span>;
+}
+
+<span class="selector">.footer-menu a:hover::after</span> {
+  <span class="prop">transform</span>: <span class="val">scaleX(1)</span>;
+}</code></pre>
+			
+			<h4>transform プロパティについて</h4>
+			<p><code>transform</code>は要素を変形させるプロパティです。今回のプロジェクトで使用している主な変形:</p>
+			<ul>
+				<li><strong>translateX() / translateY():</strong> 移動（X軸/Y軸方向）</li>
+				<li><strong>rotate():</strong> 回転（角度で指定）</li>
+				<li><strong>scaleX():</strong> 横方向の拡大縮小（1 = 等倍、0 = 非表示）</li>
+			</ul>
+			
+			<p>複数の変形を同時に適用する場合は、スペースで区切って記述します:<br>
+			<code>transform: translateY(-50%) rotate(45deg);</code></p>
+			
+			<h4>構文のまとめ</h4>
+			<p><strong>transition:</strong> <code>プロパティ名 時間 イージング関数;</code></p>
+			<ul>
+				<li><strong>プロパティ名:</strong> アニメーションさせたいプロパティ（<code>transform</code>, <code>opacity</code>, <code>all</code> など）</li>
+				<li><strong>時間:</strong> アニメーションの長さ（<code>0.3s</code> = 0.3秒）</li>
+				<li><strong>イージング関数:</strong> アニメーションの加速度（<code>ease-in-out</code>, <code>ease-out</code> など）</li>
+			</ul>
+			
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-transitions-1/" target="_blank" rel="noopener">W3C: CSS Transitions</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/transition" target="_blank" rel="noopener">MDN: transition</a></li>
+					<li><a href="https://www.w3.org/TR/css-transforms-1/" target="_blank" rel="noopener">W3C: CSS Transforms</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/transform" target="_blank" rel="noopener">MDN: transform</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/easing-function" target="_blank" rel="noopener">MDN: イージング関数</a></li>
+				</ul>
+			</div>
+
+
+			<h3 id="color-mix">color-mix による色の透明化</h3>
+			<pre><code class="css"><span class="prop">background-color</span>: <span class="val">color-mix(in srgb, var(--bg) 95%, transparent)</span>;</code></pre>
+			<p>最新のCSS関数です。異なる2つの色を指定した割合で混ぜ合わせます。</p>
+			<p>ここでは「定義済みの背景色変数（--bg）」に「透明（transparent）」を5%混ぜることで、少しだけ透けた色を作っています。これにより、<code>rgba()</code> で色コードを打ち直す手間が省けます。
+			</p>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-color-5/#color-mix" target="_blank" rel="noopener">W3C: CSS Color Module Level 5 - color-mix()</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/color_value/color-mix" target="_blank" rel="noopener">MDN: color-mix()</a></li>
+				</ul>
+			</div>
+
+
+			<h3 id="flexbox-basics">Flexbox の基礎</h3>
+			<p>Flexbox（フレキシブルボックスレイアウト）は、現代的なCSSレイアウトの基礎です。今回のプロジェクトでも多くの箇所で使用しています。</p>
+			
+			<h4>基本的な使い方</h4>
+			<pre><code class="css"><span class="selector">.header-inner</span> {
+  <span class="prop">display</span>: <span class="val">flex</span>;
+  <span class="prop">justify-content</span>: <span class="val">space-between</span>; <span class="comment">/* 両端揃え */</span>
+  <span class="prop">align-items</span>: <span class="val">center</span>; <span class="comment">/* 垂直中央揃え */</span>
+}</code></pre>
+			
+			<h4>今回のプロジェクトでの使用例</h4>
+			
+			<p><strong>1. ヘッダーのレイアウト</strong></p>
+			<pre><code class="css"><span class="selector">.header</span> {
+  <span class="prop">display</span>: <span class="val">flex</span>;
+  <span class="prop">justify-content</span>: <span class="val">center</span>; <span class="comment">/* 水平中央揃え */</span>
+  <span class="prop">align-items</span>: <span class="val">center</span>; <span class="comment">/* 垂直中央揃え */</span>
+}</code></pre>
+			
+			<p><strong>2. ナビゲーションメニュー（PC表示）</strong></p>
+			<pre><code class="css"><span class="selector">.header-nav-list</span> {
+  <span class="prop">display</span>: <span class="val">flex</span>;
+  <span class="prop">column-gap</span>: <span class="val">30px</span>; <span class="comment">/* 列の間隔 */</span>
+}</code></pre>
+			
+			<p><strong>3. ニュースコンテンツ</strong></p>
+			<pre><code class="css"><span class="selector">.news-contents</span> {
+  <span class="prop">display</span>: <span class="val">flex</span>;
+  <span class="prop">flex-direction</span>: <span class="val">column</span>; <span class="comment">/* 縦方向に配置 */</span>
+  <span class="prop">row-gap</span>: <span class="val">30px</span>; <span class="comment">/* 行の間隔 */</span>
+}</code></pre>
+			
+			<h4>主なプロパティ</h4>
+			<ul>
+				<li><strong>display: flex;</strong> Flexboxを有効化</li>
+				<li><strong>flex-direction:</strong> 配置方向（<code>row</code> = 横、<code>column</code> = 縦）</li>
+				<li><strong>justify-content:</strong> 主軸方向の配置（<code>center</code>, <code>space-between</code> など）</li>
+				<li><strong>align-items:</strong> 交差軸方向の配置（<code>center</code>, <code>flex-start</code> など）</li>
+				<li><strong>gap / column-gap / row-gap:</strong> 要素間の間隔</li>
+			</ul>
+			
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-flexbox-1/" target="_blank" rel="noopener">W3C: CSS Flexible Box Layout</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/CSS_flexible_box_layout" target="_blank" rel="noopener">MDN: CSS フレックスボックスレイアウト</a></li>
+					<li><a href="https://css-tricks.com/snippets/css/a-guide-to-flexbox/" target="_blank" rel="noopener">CSS-Tricks: A Complete Guide to Flexbox</a></li>
+					<li><a href="https://www.webcreatorbox.com/blog/css-flexbox-cheat-sheet" target="_blank" rel="noopener">日本語対応！CSS Flexboxのチートシートを作ったので配布します</a></li>
+				</ul>
+			</div>
+
+
+			<h3 id="calc-font-size">フォントサイズの計算（calc）</h3>
+			<pre><code class="css"><span class="prop">font-size</span>: <span class="val">calc(26 / 16 * 1rem)</span>;</code></pre>
+			<p>デザインカンプが「26px」で作られている場合、それをレスポンシブ対応しやすい <code>rem</code> 単位に変換する必要があります。</p>
+			<p>電卓で計算して <code>1.625rem</code> と直接書く代わりに、CSSに <code>calc(デザイン値 / ルート文字サイズ * 1rem)</code>
+				という計算式を書くことで、「元が何pxのデザインだったか」がコード上で明確になり、修正も容易になります。</p>
+			
+			<h4>補足：html { font-size: 62.5%; } を使う方法について</h4>
+			<p>一部のサイトでは、<code>html</code>に対して<code>font-size: 62.5%;</code>（10px相当）を設定し、フォントサイズを28pxなら<code>2.8rem</code>とするやり方が見られます。この方法には以下のようなデメリットがあります：</p>
+			<ul>
+				<li><strong>アクセシビリティの問題：</strong> ブラウザのデフォルトフォントサイズ（通常16px）をユーザーが変更している場合、その設定を上書きしてしまいます。</li>
+				<li><strong>サードパーティライブラリとの不整合：</strong> 外部CSSライブラリが16pxベースを前提にしている場合、デザインが崩れる可能性があります。</li>
+			</ul>
+			<p>今回のように<code>html</code>のフォントサイズはデフォルト（16px）のままにしておき、各要素で<code>calc()</code>を使って変換する方が、アクセシビリティとメンテナンス性の観点から望ましい方法です。</p>
+			
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-values-4/#calc-notation" target="_blank" rel="noopener">W3C: CSS Values - calc()</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/calc" target="_blank" rel="noopener">MDN: calc()</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Learn/CSS/Building_blocks/Values_and_units#%E9%95%B7%E3%81%95" target="_blank" rel="noopener">MDN: CSS の値と単位 - rem</a></li>
+				</ul>
+			</div>
+
+
+			<h3 id="grid-auto-fit">グリッドレイアウトの自動調整（auto-fit と minmax）</h3>
+			<pre><code class="css"><span class="prop">grid-template-columns</span>: <span class="val">repeat(auto-fit, minmax(min(100%, 228px), 1fr))</span>;</code></pre>
+			<p>メディアクエリを使わずに、画面幅に応じてカラム数（1列〜3列）を自動で調整するテクニックです。</p>
+			<div class="diagram-box">
+				<span class="diagram-label">▼ 図解：幅が広がると自動でカラムが増え、各アイテムも伸び縮みする様子</span>
+				<div class="demo-grid-container">
+					<div class="demo-grid-item">Card 1</div>
+					<div class="demo-grid-item">Card 2</div>
+					<div class="demo-grid-item">Card 3</div>
+				</div>
+				<p style="text-align: center; font-size: 0.8rem; margin-top: 10px; color: #666;">※このボックスの幅が変化しています</p>
+			</div>
+			<ul>
+				<li><strong>min(A, B):</strong> AとBを比較して、小さい方の値を返すCSS関数です。今回の<code>min(100%, 228px)</code>は、100%（親要素の幅）と228pxを比べて小さい方になります。通常は228pxが最小値になりますが、現在のSPデバイスではありえないものの極小画面では100%に収まる（はみ出し防止）仕組みです。今回228pxにしたのは、タブレット768pxのときに3カラムにしたかったからです。</li>
+				<li><strong>minmax(A, B):</strong> 最低でもAの幅を確保し、余裕があればB（1fr＝余ったスペースを均等に分配）まで広がる、という指定です。各カラムが同じ幅になります。</li>
+				<li><strong>auto-fit:</strong> 画面幅に応じて自動的にカラム数を調整します。結果として、画面幅に応じて1〜3カラムに自動調整され、各カラムは等幅になります。</li>
+			</ul>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-grid-2/#auto-repeat" target="_blank" rel="noopener">W3C: CSS Grid Layout - auto-fit</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/grid-template-columns" target="_blank" rel="noopener">MDN: grid-template-columns</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/minmax" target="_blank" rel="noopener">MDN: minmax()</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/repeat" target="_blank" rel="noopener">MDN: repeat()</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/min" target="_blank" rel="noopener">MDN: min()</a></li>
+					<li><a href="https://ascii.jp/elem/000/001/659/1659899/" target="_blank" rel="noopener">これは便利！CSS Gridのauto-fillとauto-fitの使い分けでRWDが捗る</a></li>
+				</ul>
+			</div>
+
+
+			<h3 id="flex-column-reverse">視覚的な順序の変更（Flexbox column-reverse）</h3>
+			<pre><code class="css"><span class="prop">display</span>: <span class="val">flex</span>;
+<span class="prop">flex-direction</span>: <span class="val">column-reverse</span>;</code></pre>
+			<p>Pick Upセクションでは、HTML上は「タイトル → 画像」の順で記述されています。<br>これはセマンティックなコーディングによりコードの可読性をあげたり、スクリーンリーダーなどの支援技術が、画像の内容よりも先に「何の商品か（タイトル）」を読み上げられるようにするためです。</p>
+			<p>CSSで <code>column-reverse</code>（下から上へ並べる）を指定することで、見た目上は「画像 → タイトル」のデザインを実現しています。</p>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-flexbox-1/#flex-direction-property" target="_blank" rel="noopener">W3C: CSS Flexbox - flex-direction</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/flex-direction" target="_blank" rel="noopener">MDN: flex-direction</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/CSS_flexible_box_layout" target="_blank" rel="noopener">MDN: CSS フレックスボックスレイアウト</a></li>
+				</ul>
+			</div>
+
+
+			<h3 id="box-shadow">box-shadow による影の表現</h3>
+			<p>今回のプロジェクトでは、カードやナビゲーションに影を付けて立体感を出しています。<code>box-shadow</code>で影を作る際に、RGBのスラッシュ記法を使って透明度を指定しています。</p>
+			
+			<pre><code class="css"><span class="selector">.pick-up-item</span> {
+  <span class="prop">box-shadow</span>: <span class="val">2px 2px 4px rgb(76 49 13 / 10%)</span>;
+}
+
+<span class="selector">.header-nav</span> {
+  <span class="prop">box-shadow</span>: <span class="val">2px 0 4px rgb(76 49 13 / 10%)</span>;
+}</code></pre>
+			
+			<h4>box-shadow の構文</h4>
+			<p><code>box-shadow: x軸 y軸 ぼかし 色;</code></p>
+			<ul>
+				<li><strong>x軸:</strong> 横方向の影の位置（正の値で右へ）</li>
+				<li><strong>y軸:</strong> 縦方向の影の位置（正の値で下へ）</li>
+				<li><strong>ぼかし:</strong> 影のぼかし具合（数値が大きいほどぼける）</li>
+				<li><strong>色:</strong> 影の色</li>
+			</ul>
+			
+			<h4>RGB スラッシュ記法による透明度指定</h4>
+			<p><code>rgb(76 49 13 / 10%)</code> の意味:</p>
+			<ul>
+				<li><code>76 49 13</code>: RGB値（今回は --main の色 #4C310D）</li>
+				<li><code>/ 10%</code>: 透明度10%（アルファ値）</li>
+			</ul>
+			
+			<p>この記法を使うことで、影を薄く柔らかく表現できます。影に透明度を持たせることで、背景が透けて見え、より自然な立体感を演出できます。</p>
+			
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-backgrounds-3/#box-shadow" target="_blank" rel="noopener">W3C: CSS Backgrounds - box-shadow</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/box-shadow" target="_blank" rel="noopener">MDN: box-shadow</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/color_value/rgb" target="_blank" rel="noopener">MDN: rgb()</a></li>
+				</ul>
+			</div>
+
+
+			<h3 id="pseudo-elements">疑似要素 (::after) による装飾</h3>
+			<p>疑似要素を使うと、HTMLに要素を追加せずに、CSSだけで装飾を追加できます。今回のプロジェクトでは<code>::after</code>を2箇所で使用しています。</p>
+			
+			<h4>1. ボタンの矢印アイコン</h4>
+			<pre><code class="css"><span class="selector">.pick-up-item-button::after</span> {
+  <span class="prop">content</span>: <span class="val">""</span>; <span class="comment">/* 疑似要素を表示するために必須 */</span>
+  <span class="prop">display</span>: <span class="val">inline-block</span>; <span class="comment">/* widthとheightを指定するためインラインレベルから変更 */</span>
+  <span class="prop">width</span>: <span class="val">9px</span>; <span class="comment">/* アイコンサイズ */</span>
+  <span class="prop">height</span>: <span class="val">15px</span>; <span class="comment">/* アイコンサイズ */</span>
+  <span class="prop">margin-left</span>: <span class="val">8px</span>; <span class="comment">/* ボタンテキストとの間隔 */</span>
+  <span class="prop">background-image</span>: <span class="val">url('../images/icon-arrow-white.svg')</span>; <span class="comment">/* 矢印画像を背景として配置 */</span>
+  <span class="prop">background-size</span>: <span class="val">contain</span>; <span class="comment">/* 背景に画像を切り取ったり縦横比を崩したりすることなく配置 */</span>
+  <span class="prop">background-repeat</span>: <span class="val">no-repeat</span>; <span class="comment">/* 画像の繰り返しを防ぐ */</span>
+}</code></pre>
+			
+			<h4>2. フッターリンクのホバー時下線アニメーション</h4>
+			<pre><code class="css"><span class="selector">.footer-menu a::after</span> {
+  <span class="prop">content</span>: <span class="val">""</span>; <span class="comment">/* 疑似要素を表示するために必須 */</span>
+  <span class="prop">position</span>: <span class="val">absolute</span>; <span class="comment">/* 親要素を基準に配置 */</span>
+  <span class="prop">left</span>: <span class="val">0</span>; <span class="comment">/* 左端から配置 */</span>
+  <span class="prop">bottom</span>: <span class="val">0</span>; <span class="comment">/* 下端に配置 */</span>
+  <span class="prop">width</span>: <span class="val">100%</span>; <span class="comment">/* リンクの幅いっぱいに下線を表示 */</span>
+  <span class="prop">height</span>: <span class="val">1px</span>; <span class="comment">/* 下線の太さ */</span>
+  <span class="prop">background-color</span>: <span class="val">currentcolor</span>; <span class="comment">/* テキストと同じ色を自動的に適用 */</span>
+  <span class="prop">transform</span>: <span class="val">scaleX(0)</span>; <span class="comment">/* 初期状態：横幅を0にして非表示 */</span>
+  <span class="prop">transform-origin</span>: <span class="val">bottom left</span>; <span class="comment">/* 左端を基準に拡大 */</span>
+  <span class="prop">transition</span>: <span class="val">transform 0.3s ease-out</span>; <span class="comment">/* なめらかなアニメーション */</span>
+}
+
+<span class="selector">.footer-menu a:hover::after</span> {
+  <span class="prop">transform</span>: <span class="val">scaleX(1)</span>; <span class="comment">/* ホバー時：横幅を100%に拡大して下線を表示 */</span>
+}</code></pre>
+			
+			<p><strong>メリット:</strong> HTMLに余計な要素を追加せず、CSSだけで装飾を完結できます。アイコンや区切り線など、装飾的な要素に最適です。</p>
+			
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-pseudo-4/#generated-content" target="_blank" rel="noopener">W3C: CSS Pseudo-Elements - Generated Content</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/::after" target="_blank" rel="noopener">MDN: ::after</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/::before" target="_blank" rel="noopener">MDN: ::before</a></li>
+				</ul>
+			</div>
+
+
+			<h3 id="fit-content">width: fit-content;</h3>
+			<p><code>width: fit-content;</code> は、要素の幅を「中身（コンテンツ）の幅」にぴったり合わせます。</p>
+			<p><code>display: inline-block</code> に似ていますが、ブロックレベル要素の性質（<code>margin: auto</code>
+				で中央寄せできるなど）を保ったまま、幅だけをコンテンツにフィットさせたい場合に便利です。</p>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-sizing-3/#valdef-width-fit-content" target="_blank" rel="noopener">W3C: CSS Box Sizing - fit-content</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/fit-content" target="_blank" rel="noopener">MDN: fit-content</a></li>
+				</ul>
+			</div>
+
+
+			<h3 id="full-width">画面幅いっぱいに広げる計算（Full Width）</h3>
+			<pre><code class="css"><span class="prop">width</span>: <span class="val">100vw</span>;
+<span class="prop">margin</span>: <span class="val">0 calc(50% - 50vw)</span>;  <span class="comment">/* 左右のネガティブマージン */</span>
+<span class="prop">padding</span>: <span class="val">0 calc(50vw - 50%)</span>; <span class="comment">/* 中身をコンテナ幅に戻す */</span></code></pre>
+			<p>親要素（コンテナ）の幅制限を無視して、背景や画像などを画面の左端から右端まで（全幅）広げるための計算式です。</p>
+			<div class="diagram-box">
+				<span class="diagram-label">▼ 図解：コンテナの中から画面幅(100vw)まで突き抜けるイメージ</span>
+				<!-- ラベルを外に出しました -->
+				<div class="demo-viewport-label">ブラウザ画面幅 (100vw)</div>
+				<div class="demo-viewport">
+					<div class="demo-fullwidth-wrapper">
+						<div class="demo-fullwidth-item">
+							100vwに広がる
+						</div>
+					</div>
+				</div>
+			</div>
+			<p><strong>仕組み:</strong></p>
+			<ol>
+				<li>親要素の中心（50%）を基準にします。</li>
+				<li>そこから画面の半分（50vw）を引くことで、要素の左端を画面の左端に強制的に合わせます（ネガティブマージン）。</li>
+				<li>これを左右（<code>margin-left</code>と<code>margin-right</code>）に適用することで、両側に広がります。</li>
+				<li>幅を <code>100vw</code> に指定することで、画面いっぱいまで広がります。</li>
+				<li><strong>補足（padding）:</strong> 背景だけを広げて、中のテキストなどは元のコンテナ幅（中央）に収めたい場合は、<code>padding</code> に逆の計算式 <code>calc(50vw - 50%)</code> を指定して内側に押し戻します。</li>
+			</ol>
+			<img src="full-width-img.png" alt="仮にウインドウ幅が1200pxだった場合の解説図" style="max-width: 100%; border: 1px solid #ccc;">
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-values-4/#viewport-relative-lengths" target="_blank" rel="noopener">W3C: CSS Values - Viewport-percentage lengths (vw, vh)</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/length#vw" target="_blank" rel="noopener">MDN: length - vw</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/calc" target="_blank" rel="noopener">MDN: calc()</a></li>
+				</ul>
+			</div>
+
+
+			<h3 id="grid-placement">Gridによる自由な配置（Newsセクション）</h3>
+			<p>Newsセクションでは、<code>display: grid</code> を使い、<code>grid-column</code>（列）と <code>grid-row</code>（行）を指定しています。</p>
+			<p>これにより、HTMLの記述順（日付→タイトル→本文）を変更することなく、PC表示時だけ「1行目の左に日付、右にタイトル、2行目全体に本文」といった複雑なレイアウト変更を実現しています。</p>
+			
+			<h4>Grid の構造：トラック（Track）とライン（Line）</h4>
+			<p>CSS Gridの配置を理解するには、<strong>トラック</strong>と<strong>ライン</strong>の概念が重要です。</p>
+			
+			<div class="diagram-box">
+				<svg viewBox="0 0 480 200" style="max-width: 480px; margin: 20px auto; display: block;">
+					<!-- グリッドの背景 -->
+					<rect x="50" y="30" width="300" height="140" fill="#f0f0f0" stroke="#999" stroke-width="2"/>
+					
+					<!-- 列のトラック（Track） -->
+					<rect x="50" y="30" width="100" height="140" fill="#e3f2fd" stroke="none"/>
+					<rect x="150" y="30" width="200" height="140" fill="#fff3e0" stroke="none"/>
+					
+					<!-- グリッドライン -->
+					<line x1="50" y1="30" x2="50" y2="170" stroke="#d32f2f" stroke-width="2"/>
+					<line x1="150" y1="30" x2="150" y2="170" stroke="#d32f2f" stroke-width="2"/>
+					<line x1="350" y1="30" x2="350" y2="170" stroke="#d32f2f" stroke-width="2"/>
+					
+					<line x1="50" y1="30" x2="350" y2="30" stroke="#1976d2" stroke-width="2"/>
+					<line x1="50" y1="100" x2="350" y2="100" stroke="#1976d2" stroke-width="2"/>
+					<line x1="50" y1="170" x2="350" y2="170" stroke="#1976d2" stroke-width="2"/>
+					
+					<!-- 行のトラック（Track）を破線で強調 ※少し内側に配置 -->
+					<rect x="55" y="35" width="290" height="60" fill="none" stroke="#666" stroke-width="2" stroke-dasharray="6,4"/>
+					<rect x="55" y="105" width="290" height="60" fill="none" stroke="#666" stroke-width="2" stroke-dasharray="6,4"/>
+					
+					<!-- ライン番号（縦） -->
+					<text x="50" y="20" font-size="12" fill="#d32f2f" font-weight="bold" text-anchor="middle">1</text>
+					<text x="150" y="20" font-size="12" fill="#d32f2f" font-weight="bold" text-anchor="middle">2</text>
+					<text x="370" y="20" font-size="12" fill="#d32f2f" font-weight="bold" text-anchor="middle">3 (= -1)</text>
+					
+					<!-- ライン番号（横） -->
+					<text x="35" y="35" font-size="12" fill="#1976d2" font-weight="bold" text-anchor="middle">1</text>
+					<text x="35" y="105" font-size="12" fill="#1976d2" font-weight="bold" text-anchor="middle">2</text>
+					<text x="20" y="175" font-size="12" fill="#1976d2" font-weight="bold" text-anchor="middle">3 (= -1)</text>
+					
+					<!-- トラックラベル -->
+					<text x="100" y="195" font-size="11" fill="#333" text-anchor="middle">列トラック1</text>
+					<text x="250" y="195" font-size="11" fill="#333" text-anchor="middle">列トラック2</text>
+					
+					<text x="360" y="65" font-size="11" fill="#333" text-anchor="start">行トラック1</text>
+					<text x="360" y="135" font-size="11" fill="#333" text-anchor="start">行トラック2</text>
+				</svg>
+			</div>
+			
+			<ul>
+				<li><strong>トラック（Track）：</strong> グリッドの行または列そのもの。上の図では、青い領域とオレンジの領域が「列トラック」、グレーの破線で囲まれた領域が「行トラック」です。</li>
+				<li><strong>ライン（Line）：</strong> グリッドを区切る線。番号で指定します。<strong>赤い縦線</strong>が列ライン（1, 2, 3）、<strong>青い横線</strong>が行ライン（1, 2, 3）です。最後のラインは <code>-1</code> でも指定できます。</li>
+			</ul>
+			
+			<h4>実際の使用例（Newsセクション）</h4>
+			<pre><code class="css"><span class="comment">/* 日付 */</span>
+<span class="selector">.news-item-date</span> {
+  <span class="prop">grid-row</span>: <span class="val">1</span>;      <span class="comment">/* 行ライン1から2の間（1行目） */</span>
+  <span class="prop">grid-column</span>: <span class="val">1</span>;   <span class="comment">/* 列ライン1から2の間（1列目） */</span>
+}
+
+<span class="comment">/* タイトル */</span>
+<span class="selector">.news-item-title</span> {
+  <span class="prop">grid-row</span>: <span class="val">1</span>;      <span class="comment">/* 行ライン1から2の間（1行目） */</span>
+  <span class="prop">grid-column</span>: <span class="val">2</span>;   <span class="comment">/* 列ライン2から3の間（2列目） */</span>
+}
+
+<span class="comment">/* 本文 */</span>
+<span class="selector">.news-item-text</span> {
+  <span class="prop">grid-row</span>: <span class="val">2</span>;      <span class="comment">/* 行ライン2から3の間（2行目） */</span>
+  <span class="prop">grid-column</span>: <span class="val">1 / -1</span>; <span class="comment">/* 列ライン1から最後まで（全列） */</span>
+}</code></pre>
+			
+			<p><code>grid-column: 1 / -1</code> の <code>-1</code> は「最後のライン」を意味します。つまり「1列目から最後の列まで」という指定になります。</p>
+			
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-grid-2/" target="_blank" rel="noopener">W3C: CSS Grid Layout Module Level 2</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/CSS_grid_layout" target="_blank" rel="noopener">MDN: CSS グリッドレイアウト</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/CSS_grid_layout/Grid_layout_using_line-based_placement" target="_blank" rel="noopener">MDN: ライン配置を使用したグリッドレイアウト</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/grid-column" target="_blank" rel="noopener">MDN: grid-column</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/grid-row" target="_blank" rel="noopener">MDN: grid-row</a></li>
+				</ul>
+			</div>
+
+
+			<h3 id="currentcolor">currentcolor キーワード</h3>
+			<p><code>currentcolor</code>は、その要素の<code>color</code>プロパティの値を参照できる便利なキーワードです。フッターリンクの下線アニメーションで使用しています。</p>
+			
+			<pre><code class="css"><span class="selector">.footer-menu a</span> {
+  <span class="prop">color</span>: <span class="val">var(--black)</span>; <span class="comment">/* テキストの色 */</span>
+}
+
+<span class="selector">.footer-menu a::after</span> {
+  <span class="prop">background-color</span>: <span class="val">currentcolor</span>; <span class="comment">/* テキストと同じ色 */</span>
+}</code></pre>
+			
+			<p><strong>メリット:</strong> テキストの色を変更すると、自動的に下線の色も追従します。色の指定を2箇所に書く必要がありません。</p>
+			
+			<p><strong>使用例:</strong></p>
+			<ul>
+				<li>疑似要素の背景色や罫線</li>
+				<li>SVGアイコンの色</li>
+				<li>ボーダーの色</li>
+			</ul>
+			
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-color-4/#currentcolor-color" target="_blank" rel="noopener">W3C: CSS Color - currentcolor</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/color_value#currentcolor_keyword" target="_blank" rel="noopener">MDN: currentcolor</a></li>
+				</ul>
+			</div>
+
+
+			<h3 id="responsive-reset">レスポンシブ対応でのスタイルの打ち消し</h3>
 			<p>レスポンシブデザインでは、「PC用のスタイルをSP表示で打ち消したい（元に戻したい）」といった場面がよくあります。その際、CSSの適用順序を理解しておくことが重要です。</p>
 
 			<h4>CSSの適用順序</h4>
@@ -545,154 +1367,13 @@
 					<li><a href="https://www.w3.org/TR/css-cascade-4/#default" target="_blank" rel="noopener">W3C: CSS Cascading - revert</a></li>
 					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/revert" target="_blank" rel="noopener">MDN: revert</a></li>
 					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/Cascade" target="_blank" rel="noopener">MDN: カスケードと継承</a></li>
+					<li><a href="https://kojika17.com/2022/11/world-of-css.html" target="_blank" rel="noopener">脳内フィルターで見るCSSレイアウト - kojika17</a></li>
+					<li><a href="https://kojika17.com/2023/02/inital-value-and-UA-of-style-sheet.html" target="_blank" rel="noopener">UAスタイルシートとリセットCSSとは - 2023 - kojika17</a></li>
 				</ul>
 			</div>
 
 
-			<h3>color-mix による色の透明化</h3>
-			<pre><code class="css"><span class="prop">background-color</span>: <span class="val">color-mix(in srgb, var(--bg) 95%, transparent)</span>;</code></pre>
-			<p>最新のCSS関数です。異なる2つの色を指定した割合で混ぜ合わせます。</p>
-			<p>ここでは「定義済みの背景色変数（--bg）」に「透明（transparent）」を5%混ぜることで、少しだけ透けた色を作っています。これにより、<code>rgba()</code> で色コードを打ち直す手間が省けます。
-			</p>
-			<div class="reference-links">
-				<div class="reference-links-title">📚 参考リンク</div>
-				<ul>
-					<li><a href="https://www.w3.org/TR/css-color-5/#color-mix" target="_blank" rel="noopener">W3C: CSS Color Module Level 5 - color-mix()</a></li>
-					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/color_value/color-mix" target="_blank" rel="noopener">MDN: color-mix()</a></li>
-				</ul>
-			</div>
-
-			<h3>グリッドレイアウトの自動調整（auto-fit と minmax）</h3>
-			<pre><code class="css"><span class="prop">grid-template-columns</span>: <span class="val">repeat(auto-fit, minmax(min(100%, 228px), 1fr))</span>;</code></pre>
-			<p>メディアクエリを使わずに、画面幅に応じてカラム数（1列〜3列）を自動で調整するテクニックです。</p>
-			<div class="diagram-box">
-				<span class="diagram-label">▼ 図解：幅が広がると自動でカラムが増え、各アイテムも伸び縮みする様子</span>
-				<div class="demo-grid-container">
-					<div class="demo-grid-item">Card 1</div>
-					<div class="demo-grid-item">Card 2</div>
-					<div class="demo-grid-item">Card 3</div>
-				</div>
-				<p style="text-align: center; font-size: 0.8rem; margin-top: 10px; color: #666;">※このボックスの幅が変化しています</p>
-			</div>
-			<ul>
-				<li><strong>min(A, B):</strong> AとBを比較して、小さい方の値を返すCSS関数です。今回の<code>min(100%, 228px)</code>は、100%（親要素の幅）と228pxを比べて小さい方になります。通常は228pxが最小値になりますが、現在のSPデバイスではありえないものの極小画面では100%に収まる（はみ出し防止）仕組みです。今回228pxにしたのは、タブレット768pxのときに3カラムにしたかったからです。</li>
-				<li><strong>minmax(A, B):</strong> 最低でもAの幅を確保し、余裕があればB（1fr＝余ったスペースを均等に分配）まで広がる、という指定です。各カラムが同じ幅になります。</li>
-				<li><strong>auto-fit:</strong> 画面幅に応じて自動的にカラム数を調整します。結果として、画面幅に応じて1〜3カラムに自動調整され、各カラムは等幅になります。</li>
-			</ul>
-			<div class="reference-links">
-				<div class="reference-links-title">📚 参考リンク</div>
-				<ul>
-					<li><a href="https://www.w3.org/TR/css-grid-2/#auto-repeat" target="_blank" rel="noopener">W3C: CSS Grid Layout - auto-fit</a></li>
-					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/grid-template-columns" target="_blank" rel="noopener">MDN: grid-template-columns</a></li>
-					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/minmax" target="_blank" rel="noopener">MDN: minmax()</a></li>
-					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/repeat" target="_blank" rel="noopener">MDN: repeat()</a></li>
-					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/min" target="_blank" rel="noopener">MDN: min()</a></li>
-				</ul>
-			</div>
-
-			<h3>視覚的な順序の変更（Flexbox column-reverse）</h3>
-			<pre><code class="css"><span class="prop">display</span>: <span class="val">flex</span>;
-<span class="prop">flex-direction</span>: <span class="val">column-reverse</span>;</code></pre>
-			<p>Pick Upセクションでは、HTML上は「タイトル → 画像」の順で記述されています。これはスクリーンリーダーなどの支援技術が、画像の内容よりも先に「何の商品か（タイトル）」を読み上げられるようにするためです。</p>
-			<p>CSSで <code>column-reverse</code>（下から上へ並べる）を指定することで、見た目上は「画像 → タイトル」のデザインを実現しています。</p>
-			<div class="reference-links">
-				<div class="reference-links-title">📚 参考リンク</div>
-				<ul>
-					<li><a href="https://www.w3.org/TR/css-flexbox-1/#flex-direction-property" target="_blank" rel="noopener">W3C: CSS Flexbox - flex-direction</a></li>
-					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/flex-direction" target="_blank" rel="noopener">MDN: flex-direction</a></li>
-					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/CSS_flexible_box_layout" target="_blank" rel="noopener">MDN: CSS フレックスボックスレイアウト</a></li>
-				</ul>
-			</div>
-
-			<h3>width: fit-content;</h3>
-			<p><code>width: fit-content;</code> は、要素の幅を「中身（コンテンツ）の幅」にぴったり合わせます。</p>
-			<p><code>display: inline-block</code> に似ていますが、ブロックレベル要素の性質（<code>margin: auto</code>
-				で中央寄せできるなど）を保ったまま、幅だけをコンテンツにフィットさせたい場合に便利です。</p>
-			<div class="reference-links">
-				<div class="reference-links-title">📚 参考リンク</div>
-				<ul>
-					<li><a href="https://www.w3.org/TR/css-sizing-3/#valdef-width-fit-content" target="_blank" rel="noopener">W3C: CSS Box Sizing - fit-content</a></li>
-					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/fit-content" target="_blank" rel="noopener">MDN: fit-content</a></li>
-				</ul>
-			</div>
-
-			<h3>画面幅いっぱいに広げる計算（Full Width）</h3>
-			<pre><code class="css"><span class="prop">width</span>: <span class="val">100vw</span>;
-<span class="prop">margin</span>: <span class="val">0 calc(50% - 50vw)</span>;  <span class="comment">/* 左右のネガティブマージン */</span>
-<span class="prop">padding</span>: <span class="val">0 calc(50vw - 50%)</span>; <span class="comment">/* 中身をコンテナ幅に戻す */</span></code></pre>
-			<p>親要素（コンテナ）の幅制限を無視して、背景や画像などを画面の左端から右端まで（全幅）広げるための計算式です。</p>
-			<div class="diagram-box">
-				<span class="diagram-label">▼ 図解：コンテナの中から画面幅(100vw)まで突き抜けるイメージ</span>
-				<!-- ラベルを外に出しました -->
-				<div class="demo-viewport-label">ブラウザ画面幅 (100vw)</div>
-				<div class="demo-viewport">
-					<div class="demo-fullwidth-wrapper">
-						<div class="demo-fullwidth-item">
-							100vwに広がる
-						</div>
-					</div>
-				</div>
-			</div>
-			<p><strong>仕組み:</strong></p>
-			<ol>
-				<li>親要素の中心（50%）を基準にします。</li>
-				<li>そこから画面の半分（50vw）を引くことで、要素の左端を画面の左端に強制的に合わせます（ネガティブマージン）。</li>
-				<li>これを左右（<code>margin-left</code>と<code>margin-right</code>）に適用することで、両側に広がります。</li>
-				<li>幅を <code>100vw</code> に指定することで、画面いっぱいまで広がります。</li>
-				<li><strong>補足（padding）:</strong> 背景だけを広げて、中のテキストなどは元のコンテナ幅（中央）に収めたい場合は、<code>padding</code> に逆の計算式 <code>calc(50vw - 50%)</code> を指定して内側に押し戻します。</li>
-			</ol>
-			<img src="full-width-img.png" alt="仮にウインドウ幅が1200pxだった場合の解説図" style="max-width: 100%; border: 1px solid #ccc;">
-			<div class="reference-links">
-				<div class="reference-links-title">📚 参考リンク</div>
-				<ul>
-					<li><a href="https://www.w3.org/TR/css-values-4/#viewport-relative-lengths" target="_blank" rel="noopener">W3C: CSS Values - Viewport-percentage lengths (vw, vh)</a></li>
-					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/length#vw" target="_blank" rel="noopener">MDN: length - vw</a></li>
-					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/calc" target="_blank" rel="noopener">MDN: calc()</a></li>
-				</ul>
-			</div>
-
-			<h3>overflow-x: clip; と sticky の関係</h3>
-			<p>横スクロールバーを消すために <code>overflow-x: hidden;</code> を <code>body</code> などに設定すると、子要素の <code>position:
-					sticky;</code>（スクロール追従）が効かなくなるという仕様上の問題がありました。</p>
-			<p><code>overflow-x: clip;</code> は、要素を「スクロールコンテナ」に変化させずに、はみ出した部分を単に切り取ります。これにより、<code>sticky</code>
-				の機能を維持したまま、不要なスクロールバーを削除することができます。</p>
-			<div class="reference-links">
-				<div class="reference-links-title">📚 参考リンク</div>
-				<ul>
-					<li><a href="https://www.w3.org/TR/css-overflow-3/#overflow-properties" target="_blank" rel="noopener">W3C: CSS Overflow - overflow-x</a></li>
-					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/overflow" target="_blank" rel="noopener">MDN: overflow</a></li>
-					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/position#sticky" target="_blank" rel="noopener">MDN: position - sticky</a></li>
-				</ul>
-			</div>
-
-			<h3>Gridによる自由な配置（Newsセクション）</h3>
-			<p>Newsセクションでは、<code>display: grid</code> を使い、<code>grid-column</code>（列）と <code>grid-row</code>（行）を指定しています。</p>
-			<p>これにより、HTMLの記述順（日付→タイトル→本文）を変更することなく、PC表示時だけ「1行目の左に日付、右にタイトル、2行目全体に本文」といった複雑なレイアウト変更を実現しています。</p>
-			<div class="reference-links">
-				<div class="reference-links-title">📚 参考リンク</div>
-				<ul>
-					<li><a href="https://www.w3.org/TR/css-grid-2/" target="_blank" rel="noopener">W3C: CSS Grid Layout Module Level 2</a></li>
-					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/CSS_grid_layout" target="_blank" rel="noopener">MDN: CSS グリッドレイアウト</a></li>
-					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/grid-column" target="_blank" rel="noopener">MDN: grid-column</a></li>
-					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/grid-row" target="_blank" rel="noopener">MDN: grid-row</a></li>
-				</ul>
-			</div>
-
-			<h3>フォントサイズの計算（calc）</h3>
-			<pre><code class="css"><span class="prop">font-size</span>: <span class="val">calc(26 / 16 * 1rem)</span>;</code></pre>
-			<p>デザインカンプが「26px」で作られている場合、それをレスポンシブ対応しやすい <code>rem</code> 単位に変換する必要があります。</p>
-			<p>電卓で計算して <code>1.625rem</code> と直接書く代わりに、CSSに <code>calc(デザイン値 / ルート文字サイズ * 1rem)</code>
-				という計算式を書くことで、「元が何pxのデザインだったか」がコード上で明確になり、修正も容易になります。</p>
-			<div class="reference-links">
-				<div class="reference-links-title">📚 参考リンク</div>
-				<ul>
-					<li><a href="https://www.w3.org/TR/css-values-4/#calc-notation" target="_blank" rel="noopener">W3C: CSS Values - calc()</a></li>
-					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/calc" target="_blank" rel="noopener">MDN: calc()</a></li>
-					<li><a href="https://developer.mozilla.org/ja/docs/Learn/CSS/Building_blocks/Values_and_units#%E9%95%B7%E3%81%95" target="_blank" rel="noopener">MDN: CSS の値と単位 - rem</a></li>
-				</ul>
-			</div>
-
-			<h3>モダンなメディアクエリ記法</h3>
+			<h3 id="media-query-range">モダンなメディアクエリ記法</h3>
 			<pre><code class="css"><span class="tag">@media</span> (<span class="prop">width</span> >= <span class="val">769px</span>) { ... }</code></pre>
 			<p>従来の <code>@media (min-width: 769px)</code> という書き方の新しい構文です。</p>
 			<p>「幅が769px <strong>以上（>=）</strong>」という条件が、数学の不等号を使って直感的に書けるようになりました。逆に「以下」の場合は <code>&lt;=</code> を使用します。</p>
@@ -704,9 +1385,185 @@
 					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/@media#%E7%AF%84%E5%9B%B2%E6%A7%8B%E6%96%87" target="_blank" rel="noopener">MDN: @media - 範囲構文</a></li>
 				</ul>
 			</div>
+
+
+			<h3 id="css-property-order">プロパティを書く順序</h3>
+			<p>今回の授業では説明しながらプロパティを記述していったため、順番がバラバラになっていますが、実際の制作現場では一定のルールに従って記述することが推奨されます。</p>
+			
+			<h4>WordPress CSSコーディング規約の順序</h4>
+			<p>私はWordPress CSSコーディング規約に沿ってプロパティを記述しています：</p>
+			
+			<ol>
+				<li><strong>画面（Display &amp; Visibility）</strong><br>
+					<code>display</code>, <code>visibility</code>, <code>opacity</code> など</li>
+				<li><strong>位置（Positioning）</strong><br>
+					<code>position</code>, <code>top</code>, <code>right</code>, <code>bottom</code>, <code>left</code>, <code>z-index</code> など</li>
+				<li><strong>ボックスモデル（Box Model）</strong><br>
+					<code>width</code>, <code>height</code>, <code>margin</code>, <code>padding</code>, <code>border</code> など</li>
+				<li><strong>色とフォント（Colors &amp; Typography）</strong><br>
+					<code>color</code>, <code>font-family</code>, <code>font-size</code>, <code>line-height</code>, <code>background</code> など</li>
+				<li><strong>その他（Other）</strong><br>
+					<code>transform</code>, <code>transition</code>, <code>animation</code> など</li>
+			</ol>
+			
+			<h4>記述例</h4>
+			<pre><code class="css"><span class="selector">.header</span> {
+  <span class="comment">/* 画面 */</span>
+  <span class="prop">display</span>: <span class="val">flex</span>;
+  
+  <span class="comment">/* 位置 */</span>
+  <span class="prop">position</span>: <span class="val">sticky</span>;
+  <span class="prop">top</span>: <span class="val">0</span>;
+  <span class="prop">z-index</span>: <span class="val">100</span>;
+  
+  <span class="comment">/* ボックスモデル */</span>
+  <span class="prop">width</span>: <span class="val">100%</span>;
+  <span class="prop">padding</span>: <span class="val">10px 20px</span>;
+  
+  <span class="comment">/* 色とフォント */</span>
+  <span class="prop">background-color</span>: <span class="val">var(--bg)</span>;
+  
+  <span class="comment">/* その他 */</span>
+  <span class="prop">transition</span>: <span class="val">box-shadow 0.3s</span>;
+}</code></pre>
+			
+			<h4>他の方法</h4>
+			<p><strong>これが唯一の正解というわけではありません。</strong>他にも様々な方法があります：</p>
+			
+			<ul>
+				<li><strong>アルファベット順</strong>に並べる</li>
+				<li><strong>CSS Comb</strong>などのツールで自動整形する</li>
+				<li><strong>Stylelint</strong>などのLinterで統一ルールを適用する</li>
+				<li><strong>Prettier</strong>で自動フォーマットする</li>
+			</ul>
+			
+			<h4>VSCode拡張機能</h4>
+			<ul>
+				<li><a href="https://marketplace.visualstudio.com/items?itemName=mrmlnc.vscode-csscomb" target="_blank" rel="noopener">CSS Comb</a> - プロパティを指定した順序に自動整列</li>
+				<li><a href="https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint" target="_blank" rel="noopener">Stylelint</a> - CSSのルールチェックと自動修正</li>
+				<li><a href="https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode" target="_blank" rel="noopener">Prettier</a> - コード全体の自動フォーマット</li>
+			</ul>
+			
+			<p><strong>重要なのは：</strong></p>
+			<ul>
+				<li>チーム内で統一されたルールを決めること</li>
+				<li>そのルールに一貫して従うこと</li>
+				<li>後から見ても理解しやすいコードにすること</li>
+			</ul>
+			
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://ja.wordpress.org/team/handbook/coding-standards/wordpress-coding-standards/css/" target="_blank" rel="noopener">WordPress CSS Coding Standards</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Learn/CSS/Building_blocks/Organizing" target="_blank" rel="noopener">MDN: CSSの整理</a></li>
+				</ul>
+			</div>
+		</section>
+
+		<section class="module">
+			<h2 id="javascript">JavaScriptとの連携</h2>
+
+			<h3 id="script-defer">&lt;script&gt; の読み込み位置と defer 属性</h3>
+			<pre><code class="html">&lt;<span class="tag">script</span> <span class="attr">src</span>=<span class="val">"js/main.js"</span> <span class="attr">defer</span>&gt;&lt;/<span class="tag">script</span>&gt;</code></pre>
+			<p>従来は <code>&lt;/body&gt;</code> の直前に書くことが多かったスクリプトですが、現在は <code>&lt;head&gt;</code> 内に <code>defer</code> 属性をつけて記述するのが主流です。</p>
+			<p><strong>メリット:</strong> HTMLの解析（パース）を止めずにJavaScriptファイルを裏側で読み込み、HTMLの解析が終わった直後に実行されます。これにより、ページの表示速度（体感速度）が向上します。</p>
+			
+			<h4>defer の動作</h4>
+			<ul>
+				<li>スクリプトファイルの読み込みをバックグラウンドで実行</li>
+				<li>HTMLの解析を妨げない</li>
+				<li>HTMLの解析完了後、DOMContentLoadedイベントの前に実行</li>
+				<li>複数のdeferスクリプトは記述順に実行される</li>
+			</ul>
+			
+			<p><strong>今回のプロジェクトでは:</strong> JavaScriptがDOM（HTML要素）を操作するため、HTMLが完全に読み込まれた後に実行される必要があります。<code>defer</code>を使うことで、この順序が保証されます。</p>
+			
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://html.spec.whatwg.org/multipage/scripting.html#attr-script-defer" target="_blank" rel="noopener">HTML Standard: script要素のdefer属性</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/HTML/Element/script#defer" target="_blank" rel="noopener">MDN: &lt;script&gt; - defer属性</a></li>
+				</ul>
+			</div>
+
+			<h3 id="js-class-toggle">クラスの追加/削除による状態管理</h3>
+			<p>今回のプロジェクトでは、JavaScriptでクラスを追加・削除することで、CSSのスタイルを動的に切り替えています。これは現代的なWeb開発の基本パターンです。</p>
+			
+			<h4>ハンバーガーメニューの開閉</h4>
+			<pre><code class="js"><span class="comment">// JavaScriptでクラスをトグル（追加/削除を切り替え）</span>
+menuButton.addEventListener(<span class="val">'click'</span>, () => {
+  menuButton.classList.<span class="method">toggle</span>(<span class="val">'active'</span>);
+  headerNav.classList.<span class="method">toggle</span>(<span class="val">'active'</span>);
+});</code></pre>
+			
+			<pre><code class="css"><span class="comment">/* CSS側：activeクラスがある時のスタイル */</span>
+<span class="selector">.header-nav</span> {
+  <span class="prop">transform</span>: <span class="val">translateX(-120%)</span>; <span class="comment">/* 初期状態：画面外 */</span>
+  <span class="prop">transition</span>: <span class="val">transform 0.3s ease-in-out</span>;
+}
+
+<span class="selector">.header-nav.active</span> {
+  <span class="prop">transform</span>: <span class="val">translateX(0)</span>; <span class="comment">/* active時：画面内 */</span>
+}</code></pre>
+			
+			<h4>スクロール時のヘッダー影追加</h4>
+			<pre><code class="js"><span class="comment">// スクロール位置に応じてクラスを追加/削除</span>
+<span class="keyword">function</span> <span class="method">updateHeaderShadow</span>() {
+  <span class="keyword">if</span> (window.scrollY > <span class="val">0</span>) {
+    header.classList.<span class="method">add</span>(<span class="val">'scrolled'</span>);
+  } <span class="keyword">else</span> {
+    header.classList.<span class="method">remove</span>(<span class="val">'scrolled'</span>);
+  }
+}
+
+window.addEventListener(<span class="val">'scroll'</span>, updateHeaderShadow);</code></pre>
+			
+			<pre><code class="css"><span class="comment">/* CSS側：scrolledクラスがある時のスタイル */</span>
+<span class="selector">.header.scrolled</span> {
+  <span class="prop">box-shadow</span>: <span class="val">0 2px 8px rgb(76 49 13 / 10%)</span>;
+}</code></pre>
+			
+			<h4>このパターンの利点</h4>
+			<ul>
+				<li><strong>関心の分離:</strong> JavaScriptは「状態管理」、CSSは「見た目」に専念できる</li>
+				<li><strong>保守性:</strong> スタイルの変更はCSSだけで完結、ロジックの変更はJSだけで完結</li>
+				<li><strong>再利用性:</strong> 同じクラス名を使えば、他の要素でも同じ動作を実現できる</li>
+				<li><strong>デバッグしやすい:</strong> 開発者ツールでクラスの有無を確認できる</li>
+			</ul>
+			
+			<h4>classList の主なメソッド</h4>
+			<ul>
+				<li><strong>.add('className'):</strong> クラスを追加</li>
+				<li><strong>.remove('className'):</strong> クラスを削除</li>
+				<li><strong>.toggle('className'):</strong> クラスがあれば削除、なければ追加</li>
+				<li><strong>.contains('className'):</strong> クラスがあるか確認（true/false を返す）</li>
+			</ul>
+			
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/API/Element/classList" target="_blank" rel="noopener">MDN: Element.classList</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/API/DOMTokenList" target="_blank" rel="noopener">MDN: DOMTokenList</a></li>
+				</ul>
+			</div>
 		</section>
 
 	</div>
+	<!-- ページトップへ戻るボタン -->
+	<a href="#top" class="page-top" id="pageTop"></a>
+
+	<script>
+		// ページトップへ戻るボタンの表示/非表示
+		const pageTop = document.getElementById('pageTop');
+		
+		window.addEventListener('scroll', () => {
+			if (window.scrollY > 300) {
+				pageTop.classList.add('show');
+			} else {
+				pageTop.classList.remove('show');
+			}
+		});
+	</script>
 
 </body>
 
