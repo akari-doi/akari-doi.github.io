@@ -427,6 +427,7 @@
 						<li><a href="#card-layout">カード型レイアウトのマークアップ（li？ div？）</a></li>
 						<li><a href="#footer-nav">フッターのナビゲーション</a></li>
 						<li><a href="#small-element">&lt;small&gt; の本来の意味</a></li>
+						<li><a href="#anchor-links">ページ内リンク（アンカーリンク）</a></li>
 					</ul>
 				</li>
 				<li>
@@ -583,6 +584,84 @@
 				<ul>
 					<li><a href="https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-small-element" target="_blank" rel="noopener">HTML Standard: small要素</a></li>
 					<li><a href="https://developer.mozilla.org/ja/docs/Web/HTML/Element/small" target="_blank" rel="noopener">MDN: &lt;small&gt;</a></li>
+				</ul>
+			</div>
+
+
+			<h3 id="anchor-links">ページ内リンク（アンカーリンク）</h3>
+			<p>今回のサイトでは、ヘッダーとフッターのメニューから各セクションへジャンプできるように、ページ内リンク（アンカーリンク）を実装しています。</p>
+			
+			<h4>実装に必要な2つの作業</h4>
+			<p>ページ内リンクを機能させるためには、<strong>リンク元</strong>と<strong>リンク先</strong>の両方を設定する必要があります。</p>
+			
+			<h4>1. リンク元：メニューの href 属性</h4>
+			<p>ヘッダーとフッターのメニューに、ジャンプ先のIDを指定します。<code>#</code>（ハッシュ）の後にID名を記述します。</p>
+			
+			<pre><code class="html"><span class="comment">&lt;!-- ヘッダーのナビゲーション --&gt;</span>
+&lt;<span class="tag">nav</span> <span class="attr">class</span>=<span class="val">"header-nav"</span>&gt;
+  &lt;<span class="tag">ul</span> <span class="attr">class</span>=<span class="val">"header-nav-list"</span>&gt;
+    &lt;<span class="tag">li</span>&gt;&lt;<span class="tag">a</span> <span class="attr">href</span>=<span class="val">"#pick-up"</span>&gt;Pick Up&lt;/<span class="tag">a</span>&gt;&lt;/<span class="tag">li</span>&gt;
+    &lt;<span class="tag">li</span>&gt;&lt;<span class="tag">a</span> <span class="attr">href</span>=<span class="val">"#information"</span>&gt;Information&lt;/<span class="tag">a</span>&gt;&lt;/<span class="tag">li</span>&gt;
+    &lt;<span class="tag">li</span>&gt;&lt;<span class="tag">a</span> <span class="attr">href</span>=<span class="val">"#news"</span>&gt;News&lt;/<span class="tag">a</span>&gt;&lt;/<span class="tag">li</span>&gt;
+  &lt;/<span class="tag">ul</span>&gt;
+&lt;/<span class="tag">nav</span>&gt;
+
+<span class="comment">&lt;!-- フッターのナビゲーション --&gt;</span>
+&lt;<span class="tag">ul</span> <span class="attr">class</span>=<span class="val">"footer-menu"</span>&gt;
+  &lt;<span class="tag">li</span>&gt;&lt;<span class="tag">a</span> <span class="attr">href</span>=<span class="val">"#pick-up"</span>&gt;Pick Up&lt;/<span class="tag">a</span>&gt;&lt;/<span class="tag">li</span>&gt;
+  &lt;<span class="tag">li</span>&gt;&lt;<span class="tag">a</span> <span class="attr">href</span>=<span class="val">"#information"</span>&gt;Information&lt;/<span class="tag">a</span>&gt;&lt;/<span class="tag">li</span>&gt;
+  &lt;<span class="tag">li</span>&gt;&lt;<span class="tag">a</span> <span class="attr">href</span>=<span class="val">"#news"</span>&gt;News&lt;/<span class="tag">a</span>&gt;&lt;/<span class="tag">li</span>&gt;
+&lt;/<span class="tag">ul</span>&gt;</code></pre>
+			
+			<h4>2. リンク先：各セクションの id 属性</h4>
+			<p>ジャンプ先となる各セクションに、<code>id</code>属性を設定します。この<code>id</code>名は、リンク元の<code>#</code>以降の文字列と一致させる必要があります。</p>
+			
+			<pre><code class="html">&lt;<span class="tag">section</span> <span class="attr">class</span>=<span class="val">"section section-pick-up"</span> <span class="attr">id</span>=<span class="val">"pick-up"</span>&gt;
+  &lt;<span class="tag">div</span> <span class="attr">class</span>=<span class="val">"section-inner"</span>&gt;
+    &lt;<span class="tag">h2</span> <span class="attr">class</span>=<span class="val">"section-title"</span>&gt;Pick Up&lt;/<span class="tag">h2</span>&gt;
+    ...
+  &lt;/<span class="tag">div</span>&gt;
+&lt;/<span class="tag">section</span>&gt;
+
+&lt;<span class="tag">section</span> <span class="attr">class</span>=<span class="val">"section section-information"</span> <span class="attr">id</span>=<span class="val">"information"</span>&gt;
+  &lt;<span class="tag">div</span> <span class="attr">class</span>=<span class="val">"section-inner"</span>&gt;
+    &lt;<span class="tag">h2</span> <span class="attr">class</span>=<span class="val">"section-title"</span>&gt;Information&lt;/<span class="tag">h2</span>&gt;
+    ...
+  &lt;/<span class="tag">div</span>&gt;
+&lt;/<span class="tag">section</span>&gt;
+
+&lt;<span class="tag">section</span> <span class="attr">class</span>=<span class="val">"section section-news"</span> <span class="attr">id</span>=<span class="val">"news"</span>&gt;
+  &lt;<span class="tag">div</span> <span class="attr">class</span>=<span class="val">"section-inner"</span>&gt;
+    &lt;<span class="tag">h2</span> <span class="attr">class</span>=<span class="val">"section-title"</span>&gt;News&lt;/<span class="tag">h2</span>&gt;
+    ...
+  &lt;/<span class="tag">div</span>&gt;
+&lt;/<span class="tag">section</span>&gt;</code></pre>
+			
+			<h4>ページ内リンクの動作</h4>
+			<p>この設定により、以下のような動作が実現できます：</p>
+			
+			<ul>
+				<li><code>&lt;a href="#pick-up"&gt;</code>をクリック → <code>id="pick-up"</code>のセクションへスクロール</li>
+				<li><code>&lt;a href="#information"&gt;</code>をクリック → <code>id="information"</code>のセクションへスクロール</li>
+				<li><code>&lt;a href="#news"&gt;</code>をクリック → <code>id="news"</code>のセクションへスクロール</li>
+			</ul>
+			
+			<h4>重要なポイント</h4>
+			<ul>
+				<li><strong>id属性の値は一意である必要があります</strong> - 同じページ内で同じid名を複数使用することはできません</li>
+				<li><strong>id名は大文字小文字を区別します</strong> - <code>#Pick-Up</code>と<code>#pick-up</code>は別物です</li>
+				<li><strong>href属性には必ず # を付けます</strong> - <code>href="pick-up"</code>ではなく<code>href="#pick-up"</code></li>
+				<li><strong>id名は英数字とハイフン、アンダースコアが使えます</strong> - 数字から始めることはできません</li>
+			</ul>
+			
+			<p><strong>今回のプロジェクトでは：</strong>授業中にリンクを空（<code>href=""</code>）のままにして、各セクションにもid属性を設定していませんでした。実際にサイトを完成させるには、上記の2つの作業を行う必要があります。</p>
+			
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid" target="_blank" rel="noopener">HTML Standard: Navigating to a fragment</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/HTML/Global_attributes/id" target="_blank" rel="noopener">MDN: id属性</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Learn/HTML/Introduction_to_HTML/Creating_hyperlinks#%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88%E3%83%95%E3%83%A9%E3%82%B0%E3%83%A1%E3%83%B3%E3%83%88" target="_blank" rel="noopener">MDN: ページ内リンク（ドキュメントフラグメント）</a></li>
 				</ul>
 			</div>
 		</section>
