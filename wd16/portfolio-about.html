@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ポートフォリオ設計講義資料</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+        body { font-family: 'Noto Sans JP', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+    <div class="max-w-4xl mx-auto px-6 py-12">
+        <!-- Header -->
+        <header class="mb-16 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 mb-4">
+                採用担当者の心を動かすポートフォリオ設計
+            </h1>
+            <p class="text-slate-500 text-lg">就職活動を成功させるためのIA（情報設計）と戦略</p>
+        </header>
+
+        <!-- Section 1: Purpose -->
+        <section class="bg-white rounded-2xl shadow-sm p-8 mb-10 border border-slate-200">
+            <h2 class="text-xl font-bold border-l-4 border-blue-500 pl-4 mb-6">1. ポートフォリオの「真の目的」を再定義する</h2>
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div class="bg-red-50 p-6 rounded-xl">
+                    <h3 class="font-bold text-red-700 mb-2">❌ よくある誤解</h3>
+                    <p class="text-sm text-red-600 leading-relaxed">
+                        「自分の作品をきれいに並べたアルバム」だと思っている。<br>
+                        → 自分が「見せたいもの」だけを並べてしまう。
+                    </p>
+                </div>
+                <div class="bg-green-50 p-6 rounded-xl">
+                    <h3 class="font-bold text-green-700 mb-2">✅ プロの視点</h3>
+                    <p class="text-sm text-green-700 leading-relaxed">
+                        「入社後に成長し、活躍できる人材である」と証明するためのプレゼン道具。<br>
+                        → 相手が「知りたいこと」を整理して伝える。
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                <h3 class="font-bold mb-3 text-slate-700 text-sm italic">採用担当者の30秒スキャン：</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    採用担当者は何百人ものポートフォリオを見ます。最初の30秒で<strong>「この人の思考プロセス（考え方）をもっと詳しく見たいか」</strong>を判断します。装飾の派手さよりも、「情報の探しやすさ」と「論理的な構成」が信頼に直結します。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: Important Points -->
+        <section class="bg-white rounded-2xl shadow-sm p-8 mb-10 border border-slate-200">
+            <h2 class="text-xl font-bold border-l-4 border-purple-500 pl-4 mb-6">2. 評価を分ける3つの重要ポイント</h2>
+            <div class="space-y-8">
+                <div class="flex items-start gap-4">
+                    <div class="bg-purple-100 text-purple-600 font-bold rounded-full w-8 h-8 flex items-center justify-center shrink-0">1</div>
+                    <div>
+                        <h3 class="font-bold mb-2 text-lg">「何を学んだか」が書かれているか</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            作品の完成度も大切ですが、未経験の学生に求められるのは<strong>「学習の姿勢」</strong>です。制作中にどんな技術に挑戦し、失敗から何を学び、それを次の制作にどう活かしたか。この「改善のサイクル」を回せる人が、企業にとって最も魅力的な人材です。
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4">
+                    <div class="bg-purple-100 text-purple-600 font-bold rounded-full w-8 h-8 flex items-center justify-center shrink-0">2</div>
+                    <div>
+                        <h3 class="font-bold mb-2 text-lg">「読み手」への思いやり（UI/UX）</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            ポートフォリオ自体がWebサイトのデザイン実績です。「どこに何があるか一瞬でわかるか」「文字は読みやすいか」「作品詳細から一覧にスムーズに戻れるか」。これらができていないと、「UIをデザインする能力が低い」とみなされてしまいます。
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4">
+                    <div class="bg-purple-100 text-purple-600 font-bold rounded-full w-8 h-8 flex items-center justify-center shrink-0">3</div>
+                    <div>
+                        <h3 class="font-bold mb-2 text-lg">具体性と納得感のあるタイトル</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            「架空のポートフォリオサイト」という抽象的な名前ではなく、<strong>「作品の魅力を引き出すために余白を活かした、ミニマルなポートフォリオ」</strong>のように、サイト全体のトーン（雰囲気）や狙いが伝わるタイトルをつけましょう。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Elements for Works -->
+        <section class="bg-slate-900 text-white rounded-2xl shadow-lg p-8 mb-10">
+            <h2 class="text-xl font-bold text-blue-400 mb-6 italic">★ 作品解説の構成（ねらい / 工夫 / 学び）</h2>
+            <p class="mb-8 text-slate-300">
+                実務経験がなくても大丈夫です。授業課題での「自分なりの試行錯誤」を言語化しましょう。
+            </p>
+            <div class="space-y-6">
+                <div class="border-l-2 border-slate-700 pl-6 py-2">
+                    <span class="text-blue-400 font-bold">① 制作のねらい（コンセプト）</span> 
+                    <p class="text-sm mt-1 text-slate-400">
+                        「誰に、どんな体験や印象を届けるために作ったか？」<br>
+                        <span class="text-xs italic">例：1人暮らしの学生が、週末に少し贅沢をしたくなるパン屋のWebサイト</span>
+                    </p>
+                </div>
+                <div class="border-l-2 border-slate-700 pl-6 py-2 text-slate-400">
+                    <span class="text-blue-400 font-bold">② 工夫した点・プロセス</span> 
+                    <p class="text-sm mt-1">
+                        「ねらいを実現するために、技術的に何を工夫したか？」<br>
+                        <span class="text-xs italic">例：焼きたての質感を伝えるため、写真は暖色系で統一し、あえて大きな余白で高級感を演出した。</span>
+                    </p>
+                </div>
+                <div class="border-l-2 border-slate-700 pl-6 py-2 bg-blue-900/30 rounded-r-lg">
+                    <span class="text-pink-400 font-bold">③ 学んだこと（次へのステップ）</span> 
+                    <p class="text-sm mt-1">
+                        「この制作を通じて、新しく得た気づきや技術は？」<br>
+                        <span class="text-xs italic font-bold">例：複雑なレイアウトをFigmaのオートレイアウトで効率的に組む方法を学び、修正に強いデータ制作の重要性を実感した。</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Visual Hierarchy -->
+        <section class="bg-white rounded-2xl shadow-sm p-8 mb-10 border border-slate-200">
+            <h2 class="text-xl font-bold border-l-4 border-orange-500 pl-4 mb-6">3. トップページの「視覚的優先順位」を考える</h2>
+            <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                トップページを開いた瞬間、読み手は上から下へ視線を動かします。情報をどの順番で見せるべきか整理しましょう。
+            </p>
+            <div class="space-y-4">
+                <div class="flex gap-4 items-center p-3 bg-orange-50 rounded-lg">
+                    <div class="font-bold text-orange-600">1. メインビジュアル</div>
+                    <div class="text-xs text-slate-500">あなたが「何者か」を5秒で伝える場所（名前 ＋ 短いキャッチコピー ＋ 印象的な画像）。</div>
+                </div>
+                <div class="flex gap-4 items-center p-3 bg-orange-50 rounded-lg">
+                    <div class="font-bold text-orange-600">2. 最新・代表作の一覧</div>
+                    <div class="text-xs text-slate-500">最も見せたい自信作を3〜4点。詳細ボタンを押しやすく配置。</div>
+                </div>
+                <div class="flex gap-4 items-center p-3 bg-orange-50 rounded-lg">
+                    <div class="font-bold text-orange-600">3. あなたについて</div>
+                    <div class="text-xs text-slate-500">顔写真やイラスト、簡単な経歴。親しみやすさと信頼感を出す。</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Common Mistakes -->
+        <section class="bg-white rounded-2xl shadow-sm p-8 mb-10 border border-slate-200">
+            <h2 class="text-xl font-bold border-l-4 border-red-500 pl-4 mb-6">4. やってしまいがちな「残念な」ポートフォリオの特徴</h2>
+            <p class="text-sm text-slate-600 mb-6">以下の点に当てはまっていないか、セルフチェックしてみましょう。</p>
+            <ul class="space-y-4 text-sm">
+                <li class="flex gap-3">
+                    <span class="text-red-500 font-bold">●</span>
+                    <span><strong>画像の書き出しが荒い：</strong> デザインが良くても、画像がボケているだけで「細部へのこだわりがない」と思われます。</span>
+                </li>
+                <li class="flex gap-3">
+                    <span class="text-red-500 font-bold">●</span>
+                    <span><strong>リンクがどこにあるかわからない：</strong> ボタンがボタンに見えない、ホバーアクションがないなど、操作性が悪い。</span>
+                </li>
+                <li class="flex gap-3">
+                    <span class="text-red-500 font-bold">●</span>
+                    <span><strong>感想しか書いていない：</strong> 「楽しく作れました」「大変でした」は日記です。プロを目指すなら「技術的な気づき」を書きましょう。</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Section 6: Self-Check Checklist -->
+        <section class="bg-white rounded-2xl shadow-sm p-8 mb-10 border border-slate-200">
+            <h2 class="text-xl font-bold border-l-4 border-yellow-500 pl-4 mb-6">5. 質の高いポートフォリオにするためのチェックリスト</h2>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="p-4 bg-slate-50 rounded-lg">
+                    <h3 class="font-bold text-sm mb-2">構成・IA面</h3>
+                    <ul class="text-xs space-y-2 text-slate-600">
+                        <li>□ 自分の「強み」や「得意分野」がトップページでわかるか？</li>
+                        <li>□ 自己紹介ページに、これからの意気込みや学びへの姿勢があるか？</li>
+                        <li>□ サイトの導線に問題はないか？（使いやすいか）</li>
+                    </ul>
+                </div>
+                <div class="p-4 bg-slate-50 rounded-lg">
+                    <h3 class="font-bold text-sm mb-2">作品紹介面</h3>
+                    <ul class="text-xs space-y-2 text-slate-600">
+                        <li>□ 制作期間や使用したツール、担当範囲が明記されているか？</li>
+                        <li>□ 作品画像だけでなく、工夫した部分の「拡大図」などがあるか？</li>
+                        <li>□ 単なる感想ではなく、客観的な「学び」が言語化されているか？</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7: Case Study -->
+        <section class="bg-white rounded-2xl shadow-sm p-8 mb-10 border border-slate-200">
+            <h2 class="text-xl font-bold border-l-4 border-green-500 pl-4 mb-6">6. 学生のポートフォリオ例を見てみよう</h2>
+            <p class="text-slate-600 mb-6 text-sm">
+                実際に就職活動で使用されている事例を分析しましょう。以下は記載している方が多い内容です。
+            </p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="text-center p-3 border border-slate-100 rounded-lg">
+                    <span class="block text-blue-600 font-bold text-lg">About</span>
+                    <span class="text-[10px] text-slate-500">自己紹介・強み</span>
+                </div>
+                <div class="text-center p-3 border border-slate-100 rounded-lg">
+                    <span class="block text-blue-600 font-bold text-lg">Works</span>
+                    <span class="text-[10px] text-slate-500">実績・学び</span>
+                </div>
+                <div class="text-center p-3 border border-slate-100 rounded-lg">
+                    <span class="block text-blue-600 font-bold text-lg">Skills</span>
+                    <span class="text-[10px] text-slate-500">ツール・技術</span>
+                </div>
+                <div class="text-center p-3 border border-slate-100 rounded-lg">
+                    <span class="block text-blue-600 font-bold text-lg">Contact</span>
+                    <span class="text-[10px] text-slate-500">連絡先</span>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 p-4 rounded-lg flex items-center justify-between">
+                <span class="text-sm font-medium italic text-slate-600">参考事例：学生ポートフォリオ一覧</span>
+                <a href="https://www.mdweb777.site/list.html" target="_blank" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition shadow-sm">事例を見る</a>
+            </div>
+            <div class="mt-4">
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    ※他校の事例ですが、トップページから各作品の詳細ページへスムーズに移動できるか、作品ごとの解説にどんな工夫があるかなど、実装のヒントを探してみましょう。
+                </p>
+            </div>
+        </section>
+
+        <footer class="mt-12 text-center text-slate-400 text-xs">
+        </footer>
+    </div>
+
+</body>
+</html>
