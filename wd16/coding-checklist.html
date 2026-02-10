@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>コーディングチェックリスト</title>
+<style>
+:root {
+  --primary-color: #2c3e50;
+  --secondary-color: #3498db;
+  --bg-color: #ecf0f1;
+  --card-bg: #ffffff;
+  --border-color: #bdc3c7;
+  --success-color: #27ae60;
+  --warning-color: #e74c3c;
+  --code-bg: #f8f9fa;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+  line-height: 1.8;
+  color: var(--primary-color);
+  background-color: var(--bg-color);
+  padding: 20px;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: var(--card-bg);
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-size: 2rem;
+  color: var(--primary-color);
+  border-bottom: 3px solid var(--secondary-color);
+  padding-bottom: 15px;
+  margin-bottom: 30px;
+}
+
+h2 {
+  font-size: 1.5rem;
+  color: var(--secondary-color);
+  margin-top: 40px;
+  margin-bottom: 20px;
+  padding-left: 10px;
+  border-left: 4px solid var(--secondary-color);
+}
+
+h3 {
+  font-size: 1.2rem;
+  color: var(--primary-color);
+  margin-top: 30px;
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: var(--code-bg);
+  border-radius: 4px;
+}
+
+.checklist-item {
+  margin-bottom: 25px;
+  padding: 15px;
+  background-color: var(--code-bg);
+  border-radius: 6px;
+  border-left: 4px solid var(--border-color);
+}
+
+.checklist-item:hover {
+  border-left-color: var(--secondary-color);
+  background-color: #f0f4f8;
+}
+
+.checklist-item label {
+  display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.checklist-item input[type="checkbox"] {
+  margin-right: 12px;
+  margin-top: 4px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.description {
+  margin-top: 10px;
+  padding-left: 30px;
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.7;
+}
+
+.example {
+  margin-top: 12px;
+  padding: 12px;
+  background-color: var(--card-bg);
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+}
+
+.example-title {
+  font-weight: bold;
+  color: var(--success-color);
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.example-title.bad {
+  color: var(--warning-color);
+}
+
+code {
+  background-color: var(--card-bg);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.9em;
+  color: #d63384;
+}
+
+pre {
+  background-color: var(--card-bg);
+  padding: 12px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  border: 1px solid var(--border-color);
+}
+
+pre code {
+  background-color: transparent;
+  padding: 0;
+  color: var(--primary-color);
+}
+
+.note {
+  background-color: #fff3cd;
+  border-left: 4px solid #ffc107;
+  padding: 12px;
+  margin-top: 15px;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.note strong {
+  color: #856404;
+}
+
+.important {
+  background-color: #f8d7da;
+  border-left: 4px solid var(--warning-color);
+  padding: 12px;
+  margin-top: 15px;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.important strong {
+  color: var(--warning-color);
+}
+
+@media print {
+  body {
+    background-color: white;
+  }
+  
+  .container {
+    box-shadow: none;
+    padding: 20px;
+  }
+  
+  .checklist-item {
+    page-break-inside: avoid;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>コーディングチェックリスト</h1>
+  
+  <p style="margin-bottom: 30px; font-size: 1.05rem; line-height: 1.8;">
+    このチェックリストは、HTMLとCSSコーディングで陥りやすいミスや、見落としがちなポイントをまとめたものです。<br>
+    コーディング後、必ず確認してください。
+  </p>
+
+  <!-- HTML Section -->
+  <h2>HTMLコーディング時に気をつけること</h2>
+
+  <h3>1. HTML基本構造</h3>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span><code>lang</code>属性は正しいか（日本語コンテンツなら<code>lang="ja"</code>）</span>
+    </label>
+    <div class="description">
+      <code>&lt;html&gt;</code>タグの<code>lang</code>属性は、ページの主要言語を示します。日本語サイトの場合は必ず<code>lang="ja"</code>を指定してください。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例</div>
+        <pre><code>&lt;html lang="en"&gt;  &lt;!-- 日本語コンテンツなのに英語指定 --&gt;</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>&lt;html lang="ja"&gt;</code></pre>
+      </div>
+      
+      <div class="note">
+        <strong>なぜ重要？</strong> スクリーンリーダーが正しい発音で読み上げるため、検索エンジンが言語を正しく認識するために必要です。
+      </div>
+    </div>
+  </div>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>リセットCSSは最初に読み込んでいるか（独自CSSより前）</span>
+    </label>
+    <div class="description">
+      リセットCSS（destyle.css、normalize.cssなど）は、ブラウザごとのデフォルトスタイルの違いをなくすためのものです。必ず独自のCSSより先に読み込んでください。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例</div>
+        <pre><code>&lt;link rel="stylesheet" href="css/style.css"&gt;
+&lt;link rel="stylesheet" href="css/destyle.css"&gt;</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>&lt;link rel="stylesheet" href="css/destyle.css"&gt;
+&lt;link rel="stylesheet" href="css/style.css"&gt;</code></pre>
+      </div>
+      
+      <div class="note">
+        <strong>理由：</strong> 後に読み込まれたCSSが優先されます。リセットCSSを後に読み込むと、独自スタイルが上書きされてしまいます。
+      </div>
+    </div>
+  </div>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>タグの閉じ忘れはないか</span>
+    </label>
+    <div class="description">
+      開始タグと終了タグのペアが正しく対応しているか確認してください。特に<code>&lt;section&gt;</code>、<code>&lt;div&gt;</code>、<code>&lt;ul&gt;</code>などのネストが深い場合は注意が必要です。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例</div>
+        <pre><code>&lt;section class="menu"&gt;
+  &lt;h2&gt;クロワッサン&lt;/h2&gt;
+  &lt;p&gt;¥380&lt;/p&gt;
+&lt;!-- &lt;/section&gt;の閉じタグがない --&gt;</code></pre>
+      </div>
+      
+      <div class="important">
+        <strong>確認方法：</strong> ブラウザの開発者ツールでHTML構造を確認する、<a href="https://validator.w3.org/" target="_blank" style="color: var(--secondary-color);">HTMLバリデーター</a>でチェックする、エディタのシンタックスハイライトを確認する。
+      </div>
+    </div>
+  </div>
+
+  <h3>2. 見出しタグ（最重要）</h3>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>ページに<code>&lt;h1&gt;</code>タグが1つあるか</span>
+    </label>
+    <div class="description">
+      <code>&lt;h1&gt;</code>はページの最上位の見出しで、1ページに必ず1つだけ配置します。通常はサイトロゴやページタイトルに使用します。
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>&lt;header&gt;
+  &lt;h1&gt;&lt;img src="logo.svg" alt="Boulangerie HAL"&gt;&lt;/h1&gt;
+  &lt;nav&gt;...&lt;/nav&gt;
+&lt;/header&gt;</code></pre>
+      </div>
+      
+      <div class="important">
+        <strong>重要：</strong> <code>&lt;h1&gt;</code>が0個、または2個以上あるのはNGです。SEOとアクセシビリティの観点から必須です。
+      </div>
+    </div>
+  </div>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>見出しレベルを飛ばしていないか（h2→h4など）</span>
+    </label>
+    <div class="description">
+      見出しは階層構造を表します。h2の次にh4を使うなど、レベルを飛ばしてはいけません。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例</div>
+        <pre><code>&lt;h2&gt;メニュー&lt;/h2&gt;
+&lt;h4&gt;パンの種類&lt;/h4&gt;  &lt;!-- h3を飛ばしている --&gt;</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>&lt;h2&gt;メニュー&lt;/h2&gt;
+&lt;h3&gt;パンの種類&lt;/h3&gt;</code></pre>
+      </div>
+      
+      <div class="note">
+        <strong>補足：</strong> 見出しのサイズ（見た目）はCSSで調整します。HTML構造は論理的な階層を表現します。
+      </div>
+    </div>
+  </div>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>すべての<code>&lt;section&gt;</code>に見出しタグがあるか</span>
+    </label>
+    <div class="description">
+      <code>&lt;section&gt;</code>は独立したコンテンツのまとまりを表します。必ず見出し（h2〜h6）が必要です。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例</div>
+        <pre><code>&lt;section class="about"&gt;
+  &lt;p&gt;私たちについて&lt;/p&gt;  &lt;!-- 見出しがない --&gt;
+&lt;/section&gt;</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>&lt;section class="about"&gt;
+  &lt;h2&gt;私たちについて&lt;/h2&gt;
+  &lt;p&gt;説明文...&lt;/p&gt;
+&lt;/section&gt;</code></pre>
+      </div>
+      
+      <div class="note">
+        <strong>見出しが不要な場合：</strong> 見出しが必要ない場合は<code>&lt;section&gt;</code>ではなく<code>&lt;div&gt;</code>を使用してください。
+      </div>
+    </div>
+  </div>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>見出しにあたるものは<code>&lt;h1&gt;</code>〜<code>&lt;h6&gt;</code>タグで書いているか</span>
+    </label>
+    <div class="description">
+      セクションのタイトルや項目名など、見出しとして機能するテキストは必ず見出しタグを使用してください。<code>&lt;p&gt;</code>タグで書いてはいけません。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例</div>
+        <pre><code>&lt;p class="section-title"&gt;メニュー&lt;/p&gt;
+&lt;p class="item-name"&gt;クロワッサン&lt;/p&gt;</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>&lt;h2 class="section-title"&gt;メニュー&lt;/h2&gt;
+&lt;h3 class="item-name"&gt;クロワッサン&lt;/h3&gt;</code></pre>
+      </div>
+      
+      <div class="important">
+        <strong>判断基準：</strong> 「これは何のセクションか」「これは何の項目か」を示すテキストは見出しです。CSSでサイズを調整できるので、見た目ではなく役割で判断してください。
+      </div>
+    </div>
+  </div>
+
+  <h3>3. セマンティックHTML</h3>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span><code>&lt;main&gt;</code>タグでメインコンテンツを囲んでいるか</span>
+    </label>
+    <div class="description">
+      ページの主要なコンテンツは<code>&lt;main&gt;</code>タグで囲みます。<code>&lt;header&gt;</code>、<code>&lt;footer&gt;</code>、<code>&lt;nav&gt;</code>などは含めません。
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>&lt;body&gt;
+  &lt;header&gt;...&lt;/header&gt;
+  &lt;main&gt;
+    &lt;section class="hero"&gt;...&lt;/section&gt;
+    &lt;section class="about"&gt;...&lt;/section&gt;
+    &lt;section class="menu"&gt;...&lt;/section&gt;
+  &lt;/main&gt;
+  &lt;footer&gt;...&lt;/footer&gt;
+&lt;/body&gt;</code></pre>
+      </div>
+      
+      <div class="note">
+        <strong>ルール：</strong> <code>&lt;main&gt;</code>は1ページに1つだけです。
+      </div>
+    </div>
+  </div>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span><code>&lt;header&gt;</code>、<code>&lt;footer&gt;</code>、<code>&lt;nav&gt;</code>、<code>&lt;section&gt;</code>、<code>&lt;article&gt;</code>を適切に使っているか</span>
+    </label>
+    <div class="description">
+      セマンティックタグを使うことで、HTMLの構造が明確になり、アクセシビリティとSEOが向上します。
+      
+      <ul style="margin-top: 10px; margin-left: 20px; line-height: 1.8;">
+        <li><code>&lt;header&gt;</code>: サイトヘッダーやセクションのヘッダー</li>
+        <li><code>&lt;footer&gt;</code>: サイトフッターやセクションのフッター</li>
+        <li><code>&lt;nav&gt;</code>: ナビゲーションメニュー</li>
+        <li><code>&lt;section&gt;</code>: 独立したコンテンツのまとまり（見出し必須）</li>
+        <li><code>&lt;article&gt;</code>: 単独で完結する記事やコンテンツ</li>
+      </ul>
+      
+      <div class="note">
+        <strong>ポイント：</strong> header、footer、nav、sectionあたりは使い方を覚えましょう。それ以外は、自信がない場合は無理にセマンティックタグを使わず、<code>&lt;div&gt;</code>を使う方が安全とも言えます。間違った使い方の方が問題になります。
+      </div>
+    </div>
+  </div>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>見出しのない<code>&lt;section&gt;</code>を使っていないか（→<code>&lt;div&gt;</code>にすべき）</span>
+    </label>
+    <div class="description">
+      <code>&lt;section&gt;</code>には必ず見出しが必要です。見出しがない場合は<code>&lt;div&gt;</code>を使用してください。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例</div>
+        <pre><code>&lt;section class="container"&gt;  &lt;!-- 見出しがない --&gt;
+  &lt;div class="item"&gt;...&lt;/div&gt;
+&lt;/section&gt;</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>&lt;div class="container"&gt;
+  &lt;div class="item"&gt;...&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <h3>4. 画像とアクセシビリティ</h3>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>すべての<code>&lt;img&gt;</code>タグに<code>alt</code>属性があるか</span>
+    </label>
+    <div class="description">
+      <code>alt</code>属性は必須です。画像が表示されない場合や、スクリーンリーダーを使用するユーザーのために必要です。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例</div>
+        <pre><code>&lt;img src="bread.jpg"&gt;  &lt;!-- alt属性がない --&gt;</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>&lt;img src="bread.jpg" alt="焼きたてのクロワッサン"&gt;</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span><code>alt</code>属性は空や画像ファイル名ではなく、内容を説明しているか</span>
+    </label>
+    <div class="description">
+      <code>alt</code>属性には画像の内容を具体的に説明するテキストを入れます。ファイル名をそのまま使うのはNGです。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例</div>
+        <pre><code>&lt;img src="croissant.jpg" alt="croissant"&gt;
+&lt;img src="logo.svg" alt="logo"&gt;</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>&lt;img src="croissant.jpg" alt="焼きたてのクロワッサン"&gt;
+&lt;img src="logo.svg" alt="Boulangerie HAL"&gt;</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>装飾画像の<code>alt</code>は空（<code>alt=""</code>）にしているか</span>
+    </label>
+    <div class="description">
+      装飾目的だけの画像（背景パターン、デザイン要素など）は、<code>alt=""</code>（空）にすることで、スクリーンリーダーが読み飛ばします。
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>&lt;img src="decoration.svg" alt=""&gt;  &lt;!-- 装飾画像 --&gt;</code></pre>
+      </div>
+      
+      <div class="note">
+        <strong>判断基準：</strong> 「この画像がなくても内容が理解できるか？」→ Yes なら装飾画像（<code>alt=""</code>）
+      </div>
+    </div>
+  </div>
+
+  <h3>5. リンクとボタン</h3>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>ページ内リンクの場合、飛び先に対応する<code>id</code>属性を設定しているか</span>
+    </label>
+    <div class="description">
+      ページ内リンク（アンカーリンク）を使う場合、リンク先の要素に対応する<code>id</code>属性が必要です。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例</div>
+        <pre><code>&lt;a href="#menu"&gt;メニューへ&lt;/a&gt;
+
+&lt;section class="menu"&gt;  &lt;!-- id属性がない --&gt;
+  &lt;h2&gt;メニュー&lt;/h2&gt;
+&lt;/section&gt;</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>&lt;a href="#menu"&gt;メニューへ&lt;/a&gt;
+
+&lt;section class="menu" id="menu"&gt;  &lt;!-- id属性を追加 --&gt;
+  &lt;h2&gt;メニュー&lt;/h2&gt;
+&lt;/section&gt;</code></pre>
+      </div>
+      
+      <div class="note">
+        <strong>確認方法：</strong> リンクをクリックして、実際に目的の場所にジャンプするか確認してください。
+      </div>
+    </div>
+  </div>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>JavaScriptで処理する場合は<code>&lt;button&gt;</code>を使っているか</span>
+    </label>
+    <div class="description">
+      ページ遷移しない操作（モーダルを開く、メニューを開閉するなど）は<code>&lt;a&gt;</code>ではなく<code>&lt;button&gt;</code>を使います。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例</div>
+        <pre><code>&lt;a href="#" onclick="openModal()"&gt;詳細を見る&lt;/a&gt;</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>&lt;button onclick="openModal()"&gt;詳細を見る&lt;/button&gt;</code></pre>
+      </div>
+      
+      <div class="note">
+        <strong>使い分け：</strong> <code>&lt;a&gt;</code>はページ遷移、<code>&lt;button&gt;</code>は操作・アクション
+      </div>
+    </div>
+  </div>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>不必要に<code>&lt;a&gt;</code>の中に<code>&lt;p&gt;</code>を入れていないか</span>
+    </label>
+    <div class="description">
+      HTML5では<code>&lt;a&gt;</code>の中にブロック要素を入れることができますが、単純なテキストリンクの場合は<code>&lt;p&gt;</code>は不要です。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 不必要な例</div>
+        <pre><code>&lt;a href="#home"&gt;&lt;p&gt;ホーム&lt;/p&gt;&lt;/a&gt;</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>&lt;a href="#home"&gt;ホーム&lt;/a&gt;</code></pre>
+      </div>
+      
+      <div class="note">
+        <strong>使って良い場合：</strong> カード型リンクなど、複数の要素をまとめてリンクにする場合は適切です。
+      </div>
+    </div>
+  </div>
+
+  <h3>6. ファイルパス</h3>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>画像パスの書き方が統一されているか</span>
+    </label>
+    <div class="description">
+      画像パスの書き方（<code>./images/</code>、<code>images/</code>、<code>../images/</code>）が混在していないか確認してください。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例（混在）</div>
+        <pre><code>&lt;img src="images/hero.jpg" alt="店舗外観"&gt;
+&lt;img src="./images/bread.jpg" alt="パン"&gt;
+&lt;img src="../images/shop.jpg" alt="店内の様子"&gt;</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例（統一）</div>
+        <pre><code>&lt;img src="./images/hero.jpg" alt="店舗外観"&gt;
+&lt;img src="./images/bread.jpg" alt="パン"&gt;
+&lt;img src="./images/shop.jpg" alt="店内の様子"&gt;</code></pre>
+      </div>
+      
+      <div class="note">
+        <strong>推奨：</strong> HTMLファイルから見た相対パスで統一するのが分かりやすいです。
+      </div>
+    </div>
+  </div>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>ファイル名に日本語や空白を使っていないか</span>
+    </label>
+    <div class="description">
+      ファイル名は半角英数字と記号（ハイフン、アンダースコア）のみを使用してください。日本語や空白はサーバーやブラウザによって問題が起きる可能性があります。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例</div>
+        <pre><code>images/写真素材_BoulangerieHAL/パン001.jpg
+images/Rectangle 14.png</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>images/boulangerie-hal/pain001.jpg
+images/rectangle-14.png</code></pre>
+      </div>
+      
+      <div class="important">
+        <strong>重要：</strong> 特にサーバーにアップロードする際、日本語ファイル名は文字化けやリンク切れの原因になります。
+      </div>
+    </div>
+  </div>
+
+  <h3>7. コピーライト表記</h3>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>コピーライトは正しい形式で書いているか</span>
+    </label>
+    <div class="description">
+      コピーライト表記は<code>&lt;small&gt;</code>タグを使って以下の形式で記載します。基本は「©マーク + 最初の発行年 + 著作権者名」です。
+      
+      <div class="example">
+        <div class="example-title">✅ 基本形式</div>
+        <pre><code>&lt;p&gt;&lt;small&gt;&copy; 2025 Boulangerie HAL&lt;/small&gt;&lt;/p&gt;</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 最初の発行年を明記する場合</div>
+        <pre><code>&lt;p&gt;&lt;small&gt;&copy; 2020 Boulangerie HAL&lt;/small&gt;&lt;/p&gt;</code></pre>
+      </div>
+      
+      <div class="note">
+        <strong>ポイント：</strong> 著作権は最初に発行（公開）された年から発生します。更新年は記載しなくても問題ありません。リニューアルの場合も、最初の発行年を記載するのが基本です。
+      </div>
+    </div>
+  </div>
+
+  <!-- CSS Section -->
+  <h2>CSSコーディング時に気をつけること</h2>
+
+  <h3>1. セレクタの書き方</h3>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>要素型セレクタとクラスを併記していないか</span>
+    </label>
+    <div class="description">
+      <code>section.news</code>のように要素型とクラスを併記すると、詳細度が無駄に高くなります。クラスだけで十分です。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例</div>
+        <pre><code>section.news { }
+div.contents { }
+p.date { }</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>.news { }
+.contents { }
+.date { }</code></pre>
+      </div>
+      
+      <div class="note">
+        <strong>理由：</strong> 詳細度が高いと、後から上書きするのが難しくなります。また、要素型を指定すると以下の問題があります：
+        <ul style="margin-top: 10px; margin-left: 20px; line-height: 1.8;">
+          <li>HTML構造が変わったとき（<code>section</code>から<code>div</code>に変更など）にCSSも修正が必要</li>
+          <li>同じ見た目でも要素が違う場合（<code>&lt;a&gt;</code>のボタンと<code>&lt;button&gt;</code>のボタン）にスタイルを共有できない</li>
+          <li>他のページで再利用しにくい</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>要素セレクタに直接スタイルを書いていないか</span>
+    </label>
+    <div class="description">
+      <code>header</code>や<code>footer</code>などの要素セレクタに直接スタイルを書くと、再利用性が低くなります。クラスを付けて管理しましょう。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例</div>
+        <pre><code>header {
+  background-color: #333;
+  padding: 20px;
+}
+
+footer {
+  background-color: #333;
+  padding: 20px;
+}</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>.site-header {
+  background-color: #333;
+  padding: 20px;
+}
+
+.site-footer {
+  background-color: #333;
+  padding: 20px;
+}</code></pre>
+      </div>
+      
+      <div class="note">
+        <strong>例外：</strong> リセットCSS的な基本スタイル（<code>body { font-family: sans-serif; }</code>など）は要素セレクタでOKです。
+      </div>
+    </div>
+  </div>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>セレクタチェーンが長すぎないか（3〜4階層まで）</span>
+    </label>
+    <div class="description">
+      セレクタチェーンが長いと詳細度が高くなり、メンテナンスが困難になります。3〜4階層を目安にしてください。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例</div>
+        <pre><code>.section .container .item .text .title {
+  /* 5階層 */
+}</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>.item-title {
+  /* シンプル */
+}</code></pre>
+      </div>
+      
+      <div class="note">
+        <strong>ヒント：</strong> クラス名で意味を表現できれば、深いネストは不要です。
+      </div>
+    </div>
+  </div>
+
+  <h3>2. コードの重複</h3>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>同じスタイルを複数回書いていないか</span>
+    </label>
+    <div class="description">
+      同じスタイルを複数の場所で書いている場合は、共通クラスにまとめましょう。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例</div>
+        <pre><code>.news h2 {
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.menu h2 {
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.address h2 {
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 50px;
+}</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>.section-title {
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 50px;
+}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>共通化できるスタイルをまとめているか</span>
+    </label>
+    <div class="description">
+      複数の要素で使用するスタイルは、共通クラスとして定義します。
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>/* 共通クラス */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.section-padding {
+  padding: 80px 0;
+}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>CSS変数を定義したのに使っていないということはないか</span>
+    </label>
+    <div class="description">
+      CSS変数（カスタムプロパティ）を定義したら、実際に使用しているか確認してください。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例</div>
+        <pre><code>:root {
+  --primary-color: #333;
+  --secondary-color: #666;
+}
+
+/* 変数を使わず直接色を指定 */
+.header {
+  background-color: #333;
+}</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>:root {
+  --primary-color: #333;
+  --secondary-color: #666;
+}
+
+.header {
+  background-color: var(--primary-color);
+}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <h3>3. レイアウト</h3>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span><code>width</code>を使うべきところで<code>max-width</code>を使っているか</span>
+    </label>
+    <div class="description">
+      コンテナの幅指定には<code>max-width</code>を使うことで、小さい画面でも適切に表示されます。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例</div>
+        <pre><code>.container {
+  width: 1200px;  /* 画面幅が1200px未満だと横スクロールが出る */
+}</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>.container {
+  max-width: 1200px;  /* 画面幅に応じて縮小される */
+  margin: 0 auto;
+}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span><code>body</code>や要素に固定高さを指定していないか</span>
+    </label>
+    <div class="description">
+      <code>body</code>や通常のコンテンツ要素に固定の<code>height</code>を指定すると、コンテンツが増えたときに問題が起きます。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例</div>
+        <pre><code>body {
+  height: 1080px;  /* コンテンツが増えると溢れる */
+}
+
+.card {
+  height: 200px;  /* テキストが増えると溢れる */
+}</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>body {
+  min-height: 100vh;  /* 最小高さを指定 */
+}
+
+.card {
+  /* heightは指定せず、paddingで調整 */
+  padding: 20px;
+}</code></pre>
+      </div>
+      
+      <div class="note">
+        <strong>例外：</strong> ヒーローセクションなど、意図的に画面全体の高さにする場合は<code>height: 100vh;</code>（または<code>100svh</code>）などを使用してOKです。
+      </div>
+    </div>
+  </div>
+
+  <h3>4. 詳細度</h3>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span><code>!important</code>を使っていないか</span>
+    </label>
+    <div class="description">
+      <code>!important</code>は最終手段です。適切なセレクタ設計で<code>!important</code>なしで実現できます。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例</div>
+        <pre><code>.text {
+  color: #333 !important;
+  font-size: 16px !important;
+}</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>.text {
+  color: #333;
+  font-size: 16px;
+}</code></pre>
+      </div>
+      
+      <div class="note">
+        <strong>どうしても必要な場合：</strong> 外部ライブラリのスタイルを上書きする場合など、限定的に使用することもあります。
+      </div>
+    </div>
+  </div>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>詳細度が無駄に高くなっていないか</span>
+    </label>
+    <div class="description">
+      詳細度が高すぎると、後から上書きするのが困難になります。シンプルなセレクタを心がけましょう。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例（詳細度が高い）</div>
+        <pre><code>section.menu div.contents div.item {
+  /* 詳細度: 0-0-3-3 */
+}</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例（詳細度が低い）</div>
+        <pre><code>.menu-item {
+  /* 詳細度: 0-0-1-0 */
+}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <h3>5. ブラウザ互換性</h3>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>最新のCSS機能を使う場合、対応ブラウザを確認しているか</span>
+    </label>
+    <div class="description">
+      比較的新しいCSS機能（<code>animation-timeline: view()</code>、<code>:has()</code>など）を使う場合は、対応ブラウザを確認してください。
+      
+      <div class="note">
+        <strong>確認方法：</strong> <a href="https://caniuse.com/" target="_blank" style="color: var(--secondary-color);">Can I use</a>で対応ブラウザを確認できます。
+      </div>
+      
+      <div class="important">
+        <strong>注意：</strong> 学習課題では最新機能を試すのは良いですが、実案件では対応ブラウザの要件を確認してください。
+      </div>
+    </div>
+  </div>
+
+  <h3>6. 値の書き方</h3>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>色の表記が統一されているか</span>
+    </label>
+    <div class="description">
+      色の指定方法（hex、rgb、color name）が混在していないか確認してください。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例（混在）</div>
+        <pre><code>.header {
+  background-color: #333;
+  color: rgb(255, 255, 255);
+  border-color: white;
+}</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例（統一）</div>
+        <pre><code>.header {
+  background-color: #333;
+  color: #fff;
+  border-color: #fff;
+}</code></pre>
+      </div>
+      
+      <div class="note">
+        <strong>推奨：</strong> CSS変数を使うと、さらに管理しやすくなります。
+      </div>
+      
+      <div class="note">
+        <strong>補足：</strong> 透過（alpha値）を使う場合は、16進数（<code>#333</code>）とrgba（<code>rgba(51, 51, 51, 0.8)</code>）が混在することはあります。
+      </div>
+    </div>
+  </div>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>無効なCSSプロパティを使っていないか</span>
+    </label>
+    <div class="description">
+      存在しないプロパティや、無効な値を使っていないか確認してください。
+      
+      <div class="example">
+        <div class="example-title bad">❌ 悪い例</div>
+        <pre><code>.box {
+  padding: 20px auto;  /* paddingにautoは使えない */
+}</code></pre>
+      </div>
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>.box {
+  padding: 20px 0;
+  margin: 0 auto;  /* 中央寄せならmarginでauto */
+}</code></pre>
+      </div>
+      
+      <div class="note">
+        <strong>確認方法：</strong> ブラウザの開発者ツールで、無効なプロパティには警告が表示されます。
+      </div>
+    </div>
+  </div>
+
+  <!-- General Section -->
+  <h2>全般的なチェック項目</h2>
+
+  <h3>1. 命名規則</h3>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>クラス名が一貫しているか</span>
+    </label>
+    <div class="description">
+      クラス名の命名規則が統一されているか確認してください。
+      
+      <ul style="margin-top: 10px; margin-left: 20px; line-height: 1.8;">
+        <li>ケバブケース: <code>section-title</code></li>
+        <li>キャメルケース: <code>sectionTitle</code></li>
+        <li>スネークケース: <code>section_title</code></li>
+      </ul>
+      
+      <div class="note">
+        <strong>重要：</strong> どの記法を選んでも構いませんが、プロジェクト内で統一することが大切です。
+      </div>
+    </div>
+  </div>
+
+  <h3>2. プロジェクト構成</h3>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>SCSSを使う場合、正しくコンパイルされているか</span>
+    </label>
+    <div class="description">
+      SCSSファイルをCSSにコンパイルする際、エラーが出ていないか確認してください。ブラウザで表示確認し、意図した通りにスタイルが適用されているかチェックしましょう。
+    </div>
+  </div>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>パーシャルファイルを使う場合、適切に分割されているか</span>
+    </label>
+    <div class="description">
+      SCSSでパーシャルファイル（_header.scss、_footer.scssなど）を使う場合、適切にインポートされているか確認してください。
+      
+      <div class="example">
+        <div class="example-title">✅ 良い例</div>
+        <pre><code>// style.scss
+@import 'reset';
+@import 'variables';
+@import 'header';
+@import 'main';
+@import 'footer';</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <h3>3. デバッグ</h3>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>ブラウザの開発者ツールでHTMLの構造を確認したか</span>
+    </label>
+    <div class="description">
+      ブラウザの開発者ツール（F12キー）でHTML構造を確認し、タグの閉じ忘れやネストの誤りがないかチェックしてください。
+      
+      <div class="note">
+        <strong>確認ポイント：</strong>
+        <ul style="margin-top: 10px; margin-left: 20px; line-height: 1.8;">
+          <li>タグが正しく閉じられているか</li>
+          <li>ネストが正しいか</li>
+          <li>意図しない要素が追加されていないか</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>コンソールにエラーが出ていないか</span>
+    </label>
+    <div class="description">
+      ブラウザのコンソール（開発者ツール内）で、エラーや警告が表示されていないか確認してください。
+      
+      <div class="note">
+        <strong>よくあるエラー：</strong>
+        <ul style="margin-top: 10px; margin-left: 20px; line-height: 1.8;">
+          <li>画像ファイルが見つからない（404エラー）</li>
+          <li>JavaScriptの構文エラー</li>
+          <li>CSSファイルが見つからない</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>HTMLValidatorでチェックしたか</span>
+    </label>
+    <div class="description">
+      W3CのHTML Validatorで、HTMLの文法をチェックしてください。
+      
+      <div class="note">
+        <strong>チェック方法：</strong> <a href="https://validator.w3.org/" target="_blank" style="color: var(--secondary-color);">W3C Markup Validation Service</a>にアクセスし、HTMLファイルをアップロードまたはURLを入力してチェックします。
+      </div>
+    </div>
+  </div>
+
+  <h3>4. タイポチェック</h3>
+
+  <div class="checklist-item">
+    <label>
+      <input type="checkbox">
+      <span>全体的にスペルミスや誤字脱字がないか</span>
+    </label>
+    <div class="description">
+      コード全体を見直し、以下のようなミスがないか確認してください。
+      
+      <ul style="margin-top: 10px; margin-left: 20px; line-height: 1.8;">
+        <li>クラス名のスペルミス</li>
+        <li>画像ファイル名のミス（<code>logo.png</code> を <code>rogo.png</code>など）</li>
+        <li>HTMLタグのスペルミス</li>
+        <li>CSSプロパティのスペルミス</li>
+        <li>altテキストやコンテンツの誤字</li>
+      </ul>
+      
+      <div class="note">
+        <strong>ヒント：</strong> エディタのスペルチェック機能を活用しましょう。
+      </div>
+    </div>
+  </div>
+
+  <hr style="margin: 60px 0; border: none; border-top: 2px solid var(--border-color);">
+
+  <div style="text-align: center; padding: 40px 0; background-color: var(--code-bg); border-radius: 8px;">
+    <p style="font-size: 1.1rem; font-weight: bold; color: var(--secondary-color); margin-bottom: 15px;">
+      ✅ すべての項目をチェックしましたか？
+    </p>
+    <p style="font-size: 0.95rem; color: #666; line-height: 1.8;">
+      コーディング後は必ずこのチェックリストで確認してください。<br>
+      最初は時間がかかりますが、慣れると自然に注意できるようになります。<br>
+      良いコーディング習慣を身につけましょう！
+    </p>
+  </div>
+
+</div>
+
+</body>
+</html>
