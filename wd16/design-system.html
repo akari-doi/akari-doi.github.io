@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>デザインシステムとデザイントークン</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f0f4fa;
+    --surface: #ffffff;
+    --surface2: #f8fafd;
+    --border: #e2e8f0;
+    --text: #1a202c;
+    --text-muted: #64748b;
+    --accent-blue: #2563eb;
+    --accent-blue-light: #dbeafe;
+    --token-pink: #e83d7a;
+    --token-pink-light: #fce7f0;
+    --token-purple: #7c3aed;
+    --token-purple-light: #ede9fe;
+    --dads-blue: #1f4e79;
+    --dads-blue-light: #e3edf7;
+    --code-bg: #1e293b;
+    --code-text: #e2e8f0;
+    --green: #059669;
+    --green-light: #d1fae5;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* ヘッダー */
+  header {
+    background: var(--dads-blue);
+    color: #fff;
+    padding: 48px 40px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    right: -60px; bottom: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+  header .label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #93c5fd;
+    margin-bottom: 12px;
+  }
+  header h1 {
+    font-size: clamp(22px, 4vw, 32px);
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+  header p {
+    font-size: 14px;
+    color: #bfdbfe;
+    max-width: 560px;
+  }
+
+  /* コンテンツ */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* セクション */
+  section { margin-bottom: 64px; }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-blue);
+    margin-bottom: 8px;
+  }
+  h2 {
+    font-size: clamp(18px, 3vw, 24px);
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--border);
+  }
+  h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 28px 0 10px;
+    color: var(--dads-blue);
+  }
+  p { font-size: 14px; margin-bottom: 14px; color: #374151; }
+
+  /* カード */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 600px) { .card-grid { grid-template-columns: 1fr; } }
+
+  /* 比較ボックス */
+  .compare-box {
+    border-radius: 10px;
+    padding: 20px;
+    font-size: 13px;
+  }
+  .compare-box .tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+  }
+  .compare-box h4 { font-size: 15px; margin-bottom: 8px; }
+  .compare-box p { font-size: 13px; margin-bottom: 6px; }
+  .compare-box.problem { background: #fef2f2; border: 1px solid #fecaca; }
+  .compare-box.problem .tag { background: #fee2e2; color: #b91c1c; }
+  .compare-box.solution { background: var(--green-light); border: 1px solid #a7f3d0; }
+  .compare-box.solution .tag { background: #a7f3d0; color: var(--green); }
+
+  /* コード */
+  .code-block {
+    background: var(--code-bg);
+    border-radius: 10px;
+    padding: 20px 24px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--code-text);
+    margin: 16px 0;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .code-block .comment { color: #64748b; }
+  .code-block .key { color: #93c5fd; }
+  .code-block .val { color: #86efac; }
+  .code-block .ref { color: #fde68a; }
+
+  /* トークン階層図 */
+  .token-diagram {
+    background: #edf3fb;
+    border-radius: 16px;
+    padding: 32px 24px;
+    margin: 20px 0;
+  }
+  .token-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .token-row:last-child { margin-bottom: 0; }
+  .token-layer {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    min-width: 110px;
+    color: var(--text-muted);
+  }
+  .token-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .color-dot {
+    width: 16px; height: 16px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .arrow {
+    color: var(--text-muted);
+    font-size: 18px;
+    margin: 0 2px;
+  }
+  .token-chip.global .color-dot { background: #e83d7a; }
+  .token-chip.global-purple .color-dot { background: #7c3aed; }
+  .token-chip.semantic { }
+  .token-chip.component { }
+  .token-chip .dot-semantic { background: #e83d7a; }
+  .token-chip .dot-purple-semantic { background: #7c3aed; }
+
+  /* 変更シナリオ */
+  .scenario-box {
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    font-size: 13px;
+  }
+  .scenario-box.before {
+    background: var(--token-pink-light);
+    border: 1px solid #f9a8d4;
+  }
+  .scenario-box.after {
+    background: var(--token-purple-light);
+    border: 1px solid #c4b5fd;
+  }
+  .scenario-box .sc-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .scenario-box.before .sc-label { color: var(--token-pink); }
+  .scenario-box.after .sc-label { color: var(--token-purple); }
+
+  /* UI プレビュー（トークンの色で） */
+  .ui-preview {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .ui-input {
+    border: 2px solid currentColor;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 13px;
+    background: #fff;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+  .ui-button {
+    border: none;
+    border-radius: 6px;
+    padding: 8px 18px;
+    font-size: 13px;
+    color: #fff;
+    font-weight: 700;
+    cursor: default;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+  .ui-circle {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 3px solid currentColor;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+    background: #fff;
+  }
+  .pink-ui .ui-input { color: var(--token-pink); }
+  .pink-ui .ui-button { background: var(--token-pink); }
+  .pink-ui .ui-circle { color: var(--token-pink); }
+  .purple-ui .ui-input { color: var(--token-purple); }
+  .purple-ui .ui-button { background: var(--token-pink); } /* button-primary は pink のまま */
+  .purple-ui .ui-circle { color: var(--token-purple); }
+
+  /* デジタル庁セクション */
+  .dads-banner {
+    background: var(--dads-blue);
+    color: #fff;
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .dads-logo {
+    width: 48px; height: 48px;
+    background: #fff;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 10px; color: var(--dads-blue);
+    text-align: center; line-height: 1.3;
+    flex-shrink: 0;
+  }
+  .dads-banner h3 { color: #fff; margin: 0 0 4px; font-size: 15px; }
+  .dads-banner p { color: #bfdbfe; font-size: 12px; margin: 0; }
+
+  .dads-structure {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+  }
+  @media (max-width: 600px) { .dads-structure { grid-template-columns: 1fr; } }
+  .dads-item {
+    background: var(--dads-blue-light);
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .dads-item .icon { font-size: 20px; margin-bottom: 6px; }
+  .dads-item h4 { font-size: 13px; font-weight: 700; color: var(--dads-blue); margin-bottom: 4px; }
+  .dads-item p { font-size: 12px; color: #374151; margin: 0; }
+
+  .dads-components {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0;
+  }
+  .comp-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    color: var(--dads-blue);
+    font-weight: 500;
+  }
+
+  /* まとめ表 */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 16px 0;
+  }
+  th {
+    background: var(--dads-blue);
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12px;
+  }
+  th:first-child { border-radius: 8px 0 0 0; }
+  th:last-child { border-radius: 0 8px 0 0; }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: var(--surface2); }
+
+  /* ポイントボックス */
+  .point-box {
+    background: var(--accent-blue-light);
+    border-left: 4px solid var(--accent-blue);
+    border-radius: 0 10px 10px 0;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 13px;
+  }
+  .point-box strong { color: var(--accent-blue); }
+
+  /* CSSとの対応 */
+  .css-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 16px 0;
+  }
+  @media (max-width: 600px) { .css-compare { grid-template-columns: 1fr; } }
+  .css-box {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .css-box .label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 8px 16px;
+  }
+  .css-box.figma .label { background: #7c3aed; color: #fff; }
+  .css-box.css .label { background: #0f766e; color: #fff; }
+  .css-box .code-block { border-radius: 0 0 10px 10px; margin: 0; }
+
+  /* フッター */
+  footer {
+    text-align: center;
+    padding: 32px;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="label">Web Design Fundamentals / Lesson Material</div>
+  <h1>デザインシステムと<br>デザイントークン</h1>
+  <p>大きなプロダクトを複数人で一貫してつくるための仕組みと、その中核となる「値の管理」の考え方を学びます。</p>
+</header>
+
+<main>
+
+  <!-- ① デザインシステムとは -->
+  <section>
+    <div class="section-label">01 — Design System</div>
+    <h2>デザインシステムとは？</h2>
+
+    <p>
+      デザインシステムとは、<strong>「デザインのルールブック＋再利用できる部品集」</strong>のことです。
+      Webサイトやアプリを複数ページ・複数人で作るときに起こる「バラつき」や「非効率」を防ぎます。
+    </p>
+
+    <div class="card-grid">
+      <div class="compare-box problem">
+        <div class="tag">❌ デザインシステムなし</div>
+        <h4>こんな問題が起きる</h4>
+        <p>・AさんとBさんで作ったボタンの色が微妙に違う</p>
+        <p>・ページによってフォントサイズがバラバラ</p>
+        <p>・「青を少し変えたい」→ 全ページを手直し</p>
+        <p>・新メンバーが「どの色を使えばいい？」と毎回聞く</p>
+      </div>
+      <div class="compare-box solution">
+        <div class="tag">✅ デザインシステムあり</div>
+        <h4>こうなる</h4>
+        <p>・誰が作っても同じルールで統一される</p>
+        <p>・1か所変えると全体に反映される</p>
+        <p>・新メンバーもルールを見れば自分で判断できる</p>
+        <p>・デザインと開発が同じ言葉で話せる</p>
+      </div>
+    </div>
+
+    <h3>デザインシステムに含まれるもの</h3>
+    <div class="card">
+      <div class="dads-structure">
+        <div class="dads-item">
+          <div class="icon">🎨</div>
+          <h4>スタイルガイド</h4>
+          <p>色・フォント・余白・角丸などのルール一覧</p>
+        </div>
+        <div class="dads-item">
+          <div class="icon">🧩</div>
+          <h4>コンポーネント</h4>
+          <p>ボタン・カード・ナビゲーションなど再利用できる部品</p>
+        </div>
+        <div class="dads-item">
+          <div class="icon">🏷️</div>
+          <h4>デザイントークン</h4>
+          <p>値を名前で管理する仕組み（詳しくは次のセクションで）</p>
+        </div>
+        <div class="dads-item">
+          <div class="icon">📖</div>
+          <h4>ガイドライン</h4>
+          <p>いつ何を使うかの判断基準・使用例</p>
+        </div>
+        <div class="dads-item">
+          <div class="icon">♿</div>
+          <h4>アクセシビリティ</h4>
+          <p>誰でも使えるデザインにするためのルール</p>
+        </div>
+        <div class="dads-item">
+          <div class="icon">🔤</div>
+          <h4>タイポグラフィ</h4>
+          <p>見出し・本文・キャプションなど文字のルール</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="point-box">
+      <strong>📌 まとめ：</strong>デザインシステムは「チームで一貫したデザインをつくるための共通言語と部品」。<br>
+      有名な例：Google の <strong>Material Design</strong>、Apple の <strong>Human Interface Guidelines</strong>
+    </div>
+  </section>
+
+  <!-- ② デザイントークンとは -->
+  <section>
+    <div class="section-label">02 — Design Token</div>
+    <h2>デザイントークンとは？</h2>
+
+    <p>
+      デザイントークンとは、<strong>「デザインの値（色・サイズ・余白など）に名前をつけて管理する仕組み」</strong>です。
+      デザインシステムの中で「ルールの値を保管する箱」の役割を担います。
+    </p>
+
+    <h3>なぜ名前をつけるの？</h3>
+    <div class="card">
+      <p><strong>例：</strong>ブランドカラーのピンク <code>#e83d7a</code> を300ページに直接使っていたとします。</p>
+      <p>「やっぱり色を変えたい」→ 300か所すべてを手動で書き換える必要があります。</p>
+      <p>デザイントークンを使えば、<strong>名前を1か所変えるだけ</strong>で全体に反映されます。</p>
+
+      <div class="code-block">
+<span class="comment">/* ❌ 値を直接使っていると… */</span>
+<span class="key">button</span> {
+  <span class="key">background</span>: <span class="val">#e83d7a</span>;
+}
+<span class="key">input:focus</span> {
+  <span class="key">border-color</span>: <span class="val">#e83d7a</span>;
+}
+<span class="key">.icon</span> {
+  <span class="key">color</span>: <span class="val">#e83d7a</span>;
+}
+<span class="comment">→ 色を変えるときに全部探して書き換え…</span>
+
+<span class="comment">/* ✅ デザイントークンを使うと */</span>
+<span class="key">:root</span> {
+  <span class="key">--brand-pink</span>: <span class="val">#e83d7a</span>;  <span class="comment">← 1か所だけ変えればOK</span>
+}
+<span class="key">button</span> {
+  <span class="key">background</span>: <span class="ref">var(--brand-pink)</span>;
+}
+<span class="key">input:focus</span> {
+  <span class="key">border-color</span>: <span class="ref">var(--brand-pink)</span>;
+}
+<span class="key">.icon</span> {
+  <span class="key">color</span>: <span class="ref">var(--brand-pink)</span>;
+}
+      </div>
+      <p style="font-size:12px;color:var(--text-muted);">※ CSSのカスタムプロパティ（変数）と全く同じ考え方です！</p>
+    </div>
+  </section>
+
+  <!-- ③ トークンの階層 -->
+  <section>
+    <div class="section-label">03 — Token Structure</div>
+    <h2>トークンの3層構造</h2>
+
+    <p>
+      実際のプロジェクトではトークンを<strong>3つの階層</strong>に分けて管理します。
+      以下の図はFigma公式ドキュメントの図解をもとにした構造です。
+    </p>
+
+    <table>
+      <tr>
+        <th>階層名</th>
+        <th>名前の例</th>
+        <th>役割</th>
+      </tr>
+      <tr>
+        <td><strong>プリミティブ（原色）</strong></td>
+        <td><code>pink-600 = #e83d7a</code></td>
+        <td>純粋な値を登録する</td>
+      </tr>
+      <tr>
+        <td><strong>セマンティック（意味）</strong></td>
+        <td><code>accent-hover = pink-600</code></td>
+        <td>「何に使う色か」を表す</td>
+      </tr>
+      <tr>
+        <td><strong>コンポーネント</strong></td>
+        <td><code>search-border-active = accent-hover</code></td>
+        <td>「どの部品のどこか」を表す</td>
+      </tr>
+    </table>
+
+    <!-- 画像1：pink-600がグローバルトークン -->
+    <div class="token-diagram">
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:20px;font-family:'Space Mono',monospace;letter-spacing:0.05em;">▼ シナリオA：pink-600 がグローバルトークン</p>
+
+      <!-- Layer 1: Global -->
+      <div class="token-row">
+        <span class="token-layer">Global Token</span>
+        <div class="token-chip global">
+          <div class="color-dot"></div>
+          pink-600 = #e83d7a
+        </div>
+      </div>
+
+      <!-- Layer 2: Semantic -->
+      <div class="token-row" style="padding-left: 32px;">
+        <span class="token-layer">Semantic Token</span>
+        <div class="token-chip">
+          <div class="color-dot" style="background:#e83d7a;"></div>
+          accent-hover → pink-600
+        </div>
+        <div class="token-chip">
+          <div class="color-dot" style="background:#e83d7a;"></div>
+          surface-highlight → pink-600
+        </div>
+      </div>
+
+      <!-- Layer 3: Component -->
+      <div class="token-row" style="padding-left: 64px;">
+        <span class="token-layer">Component Token</span>
+        <div class="token-chip">
+          <div class="color-dot" style="background:#e83d7a;"></div>
+          search-border-active → accent-hover
+        </div>
+        <div class="token-chip">
+          <div class="color-dot" style="background:#e83d7a;"></div>
+          habit-list-progress → accent-hover
+        </div>
+        <div class="token-chip">
+          <div class="color-dot" style="background:#e83d7a;"></div>
+          button-primary → surface-highlight
+        </div>
+      </div>
+
+      <!-- UI Preview A -->
+      <div style="margin-top:20px;padding-top:20px;border-top:1px dashed #c7d9ef;">
+        <p style="font-size:11px;color:var(--text-muted);margin-bottom:8px;font-family:'Space Mono',monospace;">UI（pink-600 適用時）</p>
+        <div class="ui-preview pink-ui">
+          <input class="ui-input" type="text" value="Weather" readonly>
+          <div class="ui-circle">90%</div>
+          <button class="ui-button">Button</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 画像2：purple-600が accent-hover に変更 -->
+    <div class="token-diagram" style="background:#f0ecff;">
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:20px;font-family:'Space Mono',monospace;letter-spacing:0.05em;">▼ シナリオB：accent-hover のみ purple-600 に変更</p>
+
+      <div class="token-row">
+        <span class="token-layer">Global Token</span>
+        <div class="token-chip" style="border-color:#c4b5fd;">
+          <div class="color-dot" style="background:#7c3aed;border-radius:4px;"></div>
+          purple-600 = #7c3aed
+        </div>
+        <span style="color:var(--text-muted);font-size:12px;margin-left:4px;">（新たに追加）</span>
+        <div class="token-chip" style="margin-left:12px;">
+          <div class="color-dot" style="background:#e83d7a;"></div>
+          pink-600 = #e83d7a
+        </div>
+      </div>
+
+      <div class="token-row" style="padding-left: 32px;">
+        <span class="token-layer">Semantic Token</span>
+        <div class="token-chip" style="border-color:#c4b5fd;background:#f5f3ff;">
+          <div class="color-dot" style="background:#7c3aed;"></div>
+          accent-hover → <strong>purple-600</strong>
+        </div>
+        <div class="token-chip">
+          <div class="color-dot" style="background:#e83d7a;"></div>
+          surface-highlight → pink-600
+        </div>
+      </div>
+
+      <div class="token-row" style="padding-left: 64px;">
+        <span class="token-layer">Component Token</span>
+        <div class="token-chip" style="border-color:#c4b5fd;background:#f5f3ff;">
+          <div class="color-dot" style="background:#7c3aed;"></div>
+          search-border-active
+        </div>
+        <div class="token-chip" style="border-color:#c4b5fd;background:#f5f3ff;">
+          <div class="color-dot" style="background:#7c3aed;"></div>
+          habit-list-progress
+        </div>
+        <div class="token-chip">
+          <div class="color-dot" style="background:#e83d7a;"></div>
+          button-primary（ピンクのまま）
+        </div>
+      </div>
+
+      <div style="margin-top:20px;padding-top:20px;border-top:1px dashed #c4b5fd;">
+        <p style="font-size:11px;color:var(--text-muted);margin-bottom:8px;font-family:'Space Mono',monospace;">UI（accent-hover のみ変更後）</p>
+        <div class="ui-preview purple-ui">
+          <input class="ui-input" type="text" value="Weather" readonly>
+          <div class="ui-circle">90%</div>
+          <button class="ui-button">Button</button>
+        </div>
+        <p style="font-size:11px;color:var(--text-muted);margin-top:8px;">→ インプットの枠線・プログレスは紫に。ボタンはピンクのまま維持。</p>
+      </div>
+    </div>
+
+    <div class="point-box">
+      <strong>📌 3層構造のポイント：</strong><br>
+      Global（原色の値）→ Semantic（意味）→ Component（部品のどこか）<br>
+      上流を変えると下流すべてが変わる。階層を分けることで「全体を変える/一部だけ変える」を自在にコントロールできます。
+    </div>
+
+    <!-- CSSとの対応 -->
+    <h3>CSS変数との対応関係</h3>
+    <p>HTMLとCSSを学んでいれば、CSSカスタムプロパティの考え方とまったく同じです。</p>
+    <div class="css-compare">
+      <div class="css-box figma">
+        <div class="label">Figma バリアブル</div>
+        <div class="code-block">
+<span class="comment">// Global Token</span>
+<span class="key">pink-600</span> = <span class="val">#e83d7a</span>
+
+<span class="comment">// Semantic Token（エイリアス）</span>
+<span class="key">accent-hover</span> = <span class="ref">pink-600</span>
+<span class="key">button-primary</span> = <span class="ref">accent-hover</span>
+        </div>
+      </div>
+      <div class="css-box css">
+        <div class="label">CSS カスタムプロパティ</div>
+        <div class="code-block">
+<span class="comment">/* Global Token */</span>
+<span class="key">--pink-600</span>: <span class="val">#e83d7a</span>;
+
+<span class="comment">/* Semantic Token */</span>
+<span class="key">--accent-hover</span>: <span class="ref">var(--pink-600)</span>;
+<span class="key">--button-primary</span>: <span class="ref">var(--accent-hover)</span>;
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ デジタル庁の例 -->
+  <section>
+    <div class="section-label">04 — Real World Example</div>
+    <h2>実例：デジタル庁デザインシステム</h2>
+
+    <div class="dads-banner">
+      <div class="dads-logo">デジタル<br>庁</div>
+      <div>
+        <h3>デジタル庁デザインシステム β版（DADS）</h3>
+        <p>日本政府のWebサービスを一貫して設計するための公式デザインシステム。無償で公開されており、誰でも参照・利用できます。</p>
+      </div>
+    </div>
+
+    <p>
+      デジタル庁は、行政サービスのWebサイトを<strong>誰でも使いやすく、統一感のあるデザイン</strong>で提供するために、
+      デザインシステムをオープンに公開しています。
+    </p>
+
+    <h3>含まれている内容</h3>
+    <div class="dads-structure">
+      <div class="dads-item">
+        <div class="icon">🎨</div>
+        <h4>基本デザイン</h4>
+        <p>カラー・タイポグラフィ・余白・アイコン・角丸など</p>
+      </div>
+      <div class="dads-item">
+        <div class="icon">🧩</div>
+        <h4>コンポーネント</h4>
+        <p>40種類以上のUIパーツをコードつきで公開</p>
+      </div>
+      <div class="dads-item">
+        <div class="icon">♿</div>
+        <h4>アクセシビリティ</h4>
+        <p>JIS X 8341-3（WCAG）への対応方針を明示</p>
+      </div>
+    </div>
+
+    <h3>収録されているコンポーネントの例</h3>
+    <div class="dads-components">
+      <span class="comp-chip">ボタン</span>
+      <span class="comp-chip">インプットテキスト</span>
+      <span class="comp-chip">チェックボックス</span>
+      <span class="comp-chip">ラジオボタン</span>
+      <span class="comp-chip">モーダルダイアログ</span>
+      <span class="comp-chip">アコーディオン</span>
+      <span class="comp-chip">パンくずリスト</span>
+      <span class="comp-chip">テーブル</span>
+      <span class="comp-chip">カード</span>
+      <span class="comp-chip">ページナビゲーション</span>
+      <span class="comp-chip">ヘッダーコンテナ</span>
+      <span class="comp-chip">検索ボックス</span>
+      <span class="comp-chip">日付ピッカー</span>
+      <span class="comp-chip">ステップナビゲーション</span>
+      <span class="comp-chip">… 全40種以上</span>
+    </div>
+
+    <div class="point-box">
+      <strong>📌 デジタル庁デザインシステムとは</strong><br>
+      主に行政機関・公共機関での利用を念頭に構築されており、<strong>アクセシビリティの確保を優先</strong>した作りになっています。
+      行政サービスの画面で利用しやすいルールがそろっており、手続きのオンライン化などのプロジェクトで活用することで<strong>作業の効率化</strong>が図れます。
+      行政・公共機関に限らず<strong>どなたでも無料で利用可能</strong>です。<br><br>
+      <a href="https://design.digital.go.jp/dads/" target="_blank" style="color:var(--accent-blue);">→ デジタル庁デザインシステム公式サイト</a>
+    </div>
+  </section>
+
+  <!-- ⑤ まとめ -->
+  <section>
+    <div class="section-label">05 — Summary</div>
+    <h2>まとめ：全体の関係性</h2>
+
+    <table>
+      <tr>
+        <th>概念</th>
+        <th>一言で言うと</th>
+        <th>Figmaでの実現手段</th>
+      </tr>
+      <tr>
+        <td><strong>デザインシステム</strong></td>
+        <td>デザインのルールブック＋部品集</td>
+        <td>ライブラリファイル全体</td>
+      </tr>
+      <tr>
+        <td><strong>デザイントークン</strong></td>
+        <td>デザインの値に名前をつけて管理</td>
+        <td>バリアブル（Variables）</td>
+      </tr>
+      <tr>
+        <td><strong>スタイル</strong></td>
+        <td>複数の値をセットで管理</td>
+        <td>スタイル（Styles）</td>
+      </tr>
+      <tr>
+        <td><strong>コンポーネント</strong></td>
+        <td>再利用できる部品</td>
+        <td>コンポーネント（Components）</td>
+      </tr>
+    </table>
+
+
+  </section>
+
+</main>
+
+<footer>
+  <p>参考：<a href="https://help.figma.com/hc/ja/articles/15871097384471" target="_blank" style="color:var(--accent-blue);">Figma公式ドキュメント「バリアブルとスタイルの違い」</a>　/　<a href="https://design.digital.go.jp/dads/" target="_blank" style="color:var(--accent-blue);">デジタル庁デザインシステム</a></p>
+</footer>
+
+</body>
+</html>
