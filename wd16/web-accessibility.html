@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ウェブアクセシビリティ 講義資料</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1a5276;
+      --primary-light: #2e86c1;
+      --accent: #e67e22;
+      --accent-light: #f39c12;
+      --ok: #1e8449;
+      --ok-bg: #eafaf1;
+      --ng: #922b21;
+      --ng-bg: #fdedec;
+      --note-bg: #fef9e7;
+      --note-border: #f39c12;
+      --review-bg: #eaf4fb;
+      --review-border: #2e86c1;
+      --new-bg: #fdf2e9;
+      --new-border: #e67e22;
+      --bg: #f5f7fa;
+      --surface: #ffffff;
+      --text: #1c1c1e;
+      --text-sub: #555;
+      --border: #dde3ea;
+      --code-bg: #1e2530;
+      --code-text: #e8eaf0;
+      --tag-html: #e74c3c;
+      --tag-attr: #3498db;
+      --tag-val: #27ae60;
+      --tag-comment: #7f8c8d;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    /* ヘッダー */
+    .page-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: #fff;
+      padding: 3rem 2rem 2.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 20px,
+        rgba(255,255,255,.03) 20px,
+        rgba(255,255,255,.03) 40px
+      );
+    }
+    .page-header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: .05em;
+      position: relative;
+    }
+    .page-header .subtitle {
+      margin-top: .5rem;
+      font-size: .9rem;
+      opacity: .85;
+      position: relative;
+    }
+    .page-header .badges {
+      display: flex;
+      gap: .5rem;
+      justify-content: center;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+      position: relative;
+    }
+    .badge {
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 20px;
+      padding: .2rem .8rem;
+      font-size: .78rem;
+    }
+
+    /* コンテナ */
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* 目次 */
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .toc h2 {
+      font-size: .85rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--text-sub);
+      margin-bottom: 1rem;
+      border: none;
+    }
+    .toc ol {
+      padding-left: 1.2rem;
+    }
+    .toc li {
+      margin: .3rem 0;
+    }
+    .toc a {
+      color: var(--primary-light);
+      text-decoration: none;
+      font-size: .9rem;
+    }
+    .toc a:hover { text-decoration: underline; }
+
+    /* セクション */
+    .chapter {
+      background: var(--surface);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    .chapter-header {
+      background: var(--primary);
+      color: #fff;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+    }
+    .chapter-num {
+      background: rgba(255,255,255,.2);
+      border-radius: 6px;
+      padding: .1rem .5rem;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .05em;
+    }
+    .chapter-header h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      border: none;
+      margin: 0;
+      color: #fff;
+    }
+
+    .chapter-body {
+      padding: 1.5rem 2rem;
+    }
+
+    h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 1.8rem 0 .8rem;
+      padding-left: .7rem;
+      border-left: 3px solid var(--primary-light);
+    }
+    h3:first-child { margin-top: 0; }
+
+    p { margin-bottom: .8rem; color: var(--text); }
+    p:last-child { margin-bottom: 0; }
+
+    /* ラベルバッジ */
+    .label {
+      display: inline-block;
+      font-size: .7rem;
+      font-weight: 700;
+      padding: .1rem .5rem;
+      border-radius: 4px;
+      margin-right: .4rem;
+      vertical-align: middle;
+      letter-spacing: .03em;
+    }
+    .label-review { background: var(--review-bg); color: var(--primary); border: 1px solid var(--review-border); }
+    .label-new    { background: var(--new-bg);    color: var(--accent);  border: 1px solid var(--new-border); }
+
+    /* ノートボックス */
+    .note, .note-new, .note-review, .note-important {
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      margin: 1rem 0;
+      font-size: .9rem;
+    }
+    .note          { background: var(--note-bg);   border-left: 4px solid var(--note-border); }
+    .note-new      { background: var(--new-bg);    border-left: 4px solid var(--new-border); }
+    .note-review   { background: var(--review-bg); border-left: 4px solid var(--review-border); }
+    .note-important{ background: #fdf0f0;           border-left: 4px solid var(--ng); }
+    .note-title {
+      font-weight: 700;
+      font-size: .82rem;
+      margin-bottom: .4rem;
+      letter-spacing: .03em;
+    }
+
+    /* テーブル */
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .88rem;
+    }
+    th {
+      background: var(--primary);
+      color: #fff;
+      padding: .6rem 1rem;
+      text-align: left;
+      font-weight: 700;
+      font-size: .82rem;
+    }
+    td {
+      padding: .6rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:nth-child(even) td { background: #f8f9fb; }
+    .td-center { text-align: center; }
+
+    /* コードブロック */
+    .code-block {
+      background: var(--code-bg);
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: .8rem 0;
+    }
+    .code-label {
+      background: rgba(255,255,255,.08);
+      padding: .35rem .9rem;
+      font-size: .72rem;
+      color: rgba(255,255,255,.5);
+      font-family: 'Source Code Pro', monospace;
+      letter-spacing: .05em;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    pre {
+      padding: 1rem 1.2rem;
+      margin: 0;
+      overflow-x: auto;
+    }
+    code {
+      font-family: 'Source Code Pro', monospace;
+      font-size: .83rem;
+      line-height: 1.75;
+      color: var(--code-text);
+    }
+    /* インラインコード（通常の白背景エリア用） */
+    p code, li code, td code {
+      background: #eef1f5;
+      color: #c0392b;
+      padding: .1rem .4rem;
+      border-radius: 4px;
+      font-size: .83rem;
+    }
+    /* コードブロック内・ノートボックス内のインラインコードは上書き */
+    .code-block code,
+    .note code, .note-new code, .note-review code, .note-important code {
+      background: rgba(255,255,255,.12);
+      color: #e8eaf0;
+      padding: .1rem .4rem;
+      border-radius: 4px;
+      font-size: .83rem;
+    }
+    .note code, .note-new code, .note-review code, .note-important code {
+      background: rgba(0,0,0,.07);
+      color: #c0392b;
+    }
+
+    /* シンタックスカラー */
+    .t  { color: #e8eaf0; } /* テキスト */
+    .tg { color: #e06c75; } /* タグ */
+    .at { color: #61afef; } /* 属性名 */
+    .vl { color: #98c379; } /* 属性値 */
+    .cm { color: #7f848e; font-style: italic; } /* コメント */
+    .kw { color: #c678dd; } /* キーワード(CSS) */
+    .pr { color: #61afef; } /* プロパティ */
+    .va { color: #98c379; } /* 値 */
+    .sl { color: #e5c07b; } /* セレクタ */
+
+    /* OK / NG */
+    .ok-ng-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .8rem;
+      margin: .8rem 0;
+    }
+    @media (max-width: 600px) {
+      .ok-ng-grid { grid-template-columns: 1fr; }
+    }
+    .ok-box, .ng-box {
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .ok-box { border: 1px solid #a9dfbf; }
+    .ng-box { border: 1px solid #f1948a; }
+    .ok-label, .ng-label {
+      padding: .3rem .8rem;
+      font-weight: 700;
+      font-size: .78rem;
+      letter-spacing: .05em;
+    }
+    .ok-label { background: var(--ok-bg); color: var(--ok); }
+    .ng-label { background: var(--ng-bg); color: var(--ng); }
+    .ok-box .code-block,
+    .ng-box .code-block {
+      border-radius: 0;
+      margin: 0;
+    }
+
+    /* リスト */
+    ul.list, ol.list {
+      padding-left: 1.4rem;
+      margin: .5rem 0;
+    }
+    ul.list li, ol.list li {
+      margin: .35rem 0;
+      font-size: .92rem;
+    }
+
+    /* 規格関係図 */
+    .spec-flow {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      flex-wrap: wrap;
+      margin: .8rem 0;
+      font-size: .85rem;
+    }
+    .spec-box {
+      background: var(--primary);
+      color: #fff;
+      padding: .4rem .9rem;
+      border-radius: 6px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .spec-box.sub { background: var(--primary-light); }
+    .spec-box.accent { background: var(--accent); }
+    .spec-arrow { color: var(--text-sub); font-size: 1.1rem; }
+
+    /* リンク集 */
+    .link-list { list-style: none; padding: 0; }
+    .link-list li {
+      border-bottom: 1px solid var(--border);
+      padding: .7rem 0;
+    }
+    .link-list li:last-child { border-bottom: none; }
+    .link-list a {
+      color: var(--primary-light);
+      font-weight: 700;
+      text-decoration: none;
+      font-size: .92rem;
+    }
+    .link-list a:hover { text-decoration: underline; }
+    .link-desc {
+      display: block;
+      font-size: .82rem;
+      color: var(--text-sub);
+      margin-top: .15rem;
+    }
+    .link-tag {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      font-size: .68rem;
+      font-weight: 700;
+      padding: .05rem .45rem;
+      border-radius: 3px;
+      margin-right: .4rem;
+      vertical-align: middle;
+    }
+
+    /* フッター */
+    .page-footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: .8rem;
+      color: var(--text-sub);
+      border-top: 1px solid var(--border);
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+<header class="page-header">
+  <h1>ウェブアクセシビリティ</h1>
+  <p class="subtitle">Web Accessibility — すべてのユーザーが使えるWebをつくるために</p>
+  <div class="badges">
+    <span class="badge">WCAG 2.2</span>
+    <span class="badge">JIS X 8341-3</span>
+    <span class="badge">WAIC</span>
+    <span class="badge">HTML実装例</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- 目次 -->
+  <nav class="toc" aria-label="目次">
+    <h2>目次 / Contents</h2>
+    <ol class="list">
+      <li><a href="#ch1">ウェブアクセシビリティとは</a></li>
+      <li><a href="#ch2">規格・ガイドラインの全体像</a></li>
+      <li><a href="#ch3">WCAGの4原則と適合レベル</a></li>
+      <li><a href="#ch4">実装ポイント</a></li>
+      <li><a href="#ch5">チェック・検証方法</a></li>
+      <li><a href="#ch6">参考リンク集</a></li>
+    </ol>
+  </nav>
+
+
+  <!-- Chapter 1 -->
+  <section class="chapter" id="ch1">
+    <div class="chapter-header">
+      <span class="chapter-num">Chapter 1</span>
+      <h2>ウェブアクセシビリティとは</h2>
+    </div>
+    <div class="chapter-body">
+
+      <h3>定義</h3>
+      <p>ウェブアクセシビリティとは、<strong>年齢・障害の有無・使用環境に関わらず、誰もがWebを利用できる状態</strong>のことです。</p>
+      <p>似た言葉の「ユーザビリティ」は使いやすさ全般を指しますが、アクセシビリティは特に<strong>使えるかどうか（利用可能性）</strong>に焦点を当てています。</p>
+
+      <h3>誰のための話か</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>障害・状況</th>
+              <th>Webで困ること</th>
+              <th>対応例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>視覚障害</td>
+              <td>画像の内容がわからない、スクリーンリーダーで読めない</td>
+              <td>alt属性、適切な見出し構造</td>
+            </tr>
+            <tr>
+              <td>色覚特性</td>
+              <td>色だけで伝えられた情報がわからない</td>
+              <td>コントラスト確保、色以外の情報も併用</td>
+            </tr>
+            <tr>
+              <td>肢体不自由</td>
+              <td>マウス操作ができない</td>
+              <td>キーボードだけで操作できる設計</td>
+            </tr>
+            <tr>
+              <td>聴覚障害</td>
+              <td>動画の音声内容がわからない</td>
+              <td>字幕・テキストトランスクリプトの提供</td>
+            </tr>
+            <tr>
+              <td>認知・学習障害</td>
+              <td>複雑な操作、難しい言葉が理解しにくい</td>
+              <td>わかりやすい文章、明確なラベル</td>
+            </tr>
+            <tr>
+              <td>高齢者</td>
+              <td>小さい文字が見えない、操作しにくい</td>
+              <td>十分なフォントサイズ、大きなタップ領域</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note">
+        <div class="note-title">💡 ポイント</div>
+        障害のある人だけの話ではありません。スマートフォンのユーザー、屋外の明るい場所での利用、一時的な怪我、非ネイティブスピーカーなど、<strong>誰もが恩恵を受ける</strong>設計です。
+      </div>
+
+      <h3>なぜ今、必要なのか</h3>
+      <ul class="list">
+        <li><strong>障害者差別解消法（2024年4月改正）</strong>：民間事業者にも「合理的配慮」の提供が義務化。WebサイトのアクセシビリティはこのDEの対象になりうる</li>
+        <li><strong>公共機関は対応が必須</strong>：国・自治体のサイトはJIS X 8341-3 レベルAAへの準拠が求められている</li>
+        <li><strong>就職・仕事での需要増</strong>：クライアントから求められるスキルになっている</li>
+        <li><strong>SEO・UXとも連動</strong>：適切な見出し構造・alt属性・テキスト情報はSEOにも直結する</li>
+      </ul>
+
+    </div>
+  </section>
+
+
+  <!-- Chapter 2 -->
+  <section class="chapter" id="ch2">
+    <div class="chapter-header">
+      <span class="chapter-num">Chapter 2</span>
+      <h2>規格・ガイドラインの全体像</h2>
+    </div>
+    <div class="chapter-body">
+
+      <h3>規格の関係を整理する</h3>
+      <div class="spec-flow">
+        <div class="spec-box">WCAG 2.x<br><small style="font-weight:400;font-size:.75rem;">W3C（国際）</small></div>
+        <span class="spec-arrow">→ 国際規格化</span>
+        <div class="spec-box sub">ISO/IEC 40500<br><small style="font-weight:400;font-size:.75rem;">国際規格</small></div>
+        <span class="spec-arrow">→ 日本規格化</span>
+        <div class="spec-box accent">JIS X 8341-3<br><small style="font-weight:400;font-size:.75rem;">日本産業規格</small></div>
+      </div>
+      <p>日本のJIS規格はWCAGをベースにしています。つまり<strong>WCAGを理解すればJISも理解できます</strong>。</p>
+
+      <h3>WCAG（ウェブ・コンテンツ・アクセシビリティ・ガイドライン）</h3>
+      <p>W3C（ウェブ技術の国際標準化団体）の中の<strong>WAI（Web Accessibility Initiative）</strong>が策定する国際ガイドライン。</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>バージョン</th><th>年</th><th>特徴</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>WCAG 2.0</td><td>2008年</td><td>現行JISのベース。レベルA+AAで38項目</td></tr>
+            <tr><td>WCAG 2.1</td><td>2018年</td><td>モバイル・認知障害への対応を追加。レベルA+AAで50項目</td></tr>
+            <tr><td><strong>WCAG 2.2</strong></td><td>2023年</td><td>最新版。タップ領域・フォーカス表示などを強化。レベルA+AAで50項目（合計86項目）</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>JIS X 8341-3（日本の規格）</h3>
+      <ul class="list">
+        <li>現行：<strong>JIS X 8341-3:2016</strong>（WCAG 2.0ベース）</li>
+        <li>⚠️ <strong>2026年度に改正予定</strong>（WCAG 2.2対応へ）— 「廃止」ではなく「アップデート」</li>
+        <li>公共機関は適合レベル<strong>AA</strong>への準拠が求められている</li>
+      </ul>
+
+      <h3>WAIC（ウェブアクセシビリティ基盤委員会）</h3>
+      <p><strong>日本のウェブアクセシビリティにおいて最も重要な委員会</strong>です。JIS X 8341-3の理解・普及促進、WCAG日本語訳の公開などを行っています。</p>
+      <div class="note-new">
+        <div class="note-title">📌 WAIC が提供している主なコンテンツ</div>
+        <ul class="list">
+          <li><strong>WCAG 2.2 日本語訳</strong>：原文を日本語で読める</li>
+          <li><strong>JIS X 8341-3:2016 解説</strong>：JIS規格の読み解き方</li>
+          <li><strong>達成基準 早見表（レベルA & AA）</strong>：チェックリストとして使える</li>
+          <li><strong>ウェブアクセシビリティ方針策定ガイドライン</strong>：実務で方針ページを作るときに</li>
+        </ul>
+        <p style="margin-top:.6rem;">👉 <a href="https://waic.jp/" target="_blank" rel="noopener">https://waic.jp/</a></p>
+      </div>
+
+      <h3>その他、日本の関連ガイドライン</h3>
+      <ul class="list">
+        <li><strong>デジタル庁「ウェブアクセシビリティ導入ガイドブック」</strong>：初心者向け・図解豊富</li>
+        <li><strong>総務省「みんなの公共サイト運用ガイドライン（2024年版）」</strong>：公共機関向け手順書</li>
+      </ul>
+
+    </div>
+  </section>
+
+
+  <!-- Chapter 3 -->
+  <section class="chapter" id="ch3">
+    <div class="chapter-header">
+      <span class="chapter-num">Chapter 3</span>
+      <h2>WCAGの4原則と適合レベル</h2>
+    </div>
+    <div class="chapter-body">
+
+      <h3>4原則（POUR）</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>原則</th><th>英語</th><th>意味</th><th>例</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>知覚可能</strong></td>
+              <td>Perceivable</td>
+              <td>情報をユーザーが認識できること</td>
+              <td>画像にalt、動画に字幕</td>
+            </tr>
+            <tr>
+              <td><strong>操作可能</strong></td>
+              <td>Operable</td>
+              <td>UIを操作できること</td>
+              <td>キーボード操作、十分な時間</td>
+            </tr>
+            <tr>
+              <td><strong>理解可能</strong></td>
+              <td>Understandable</td>
+              <td>情報・操作方法が理解できること</td>
+              <td>lang属性、明確なエラー表示</td>
+            </tr>
+            <tr>
+              <td><strong>堅牢</strong></td>
+              <td>Robust</td>
+              <td>支援技術に対応できること</td>
+              <td>正しいHTMLマークアップ、ARIA</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>適合レベル</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>レベル</th><th>内容</th><th>基準数（WCAG 2.2）</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>A</strong></td>
+              <td>最低限の対応。これができていないと一部ユーザーが利用不可能になる</td>
+              <td>31項目</td>
+            </tr>
+            <tr>
+              <td><strong>AA ★</strong></td>
+              <td>推奨レベル。公共機関サイトはこれが求められる</td>
+              <td>A+AAで50項目</td>
+            </tr>
+            <tr>
+              <td><strong>AAA</strong></td>
+              <td>最高レベル。すべてのコンテンツへの適用は難しい場合もある</td>
+              <td>合計86項目</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note">
+        <div class="note-title">💡 「準拠」と「一部準拠」</div>
+        公共サイトのフッターなどに「JIS X 8341-3:2016 レベルAAに準拠」と記載されているのを見たことがあるかもしれません。<strong>すべての基準を満たせば「準拠」、1つでも満たせなければ「一部準拠」</strong>と表記します。
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- Chapter 4 -->
+  <section class="chapter" id="ch4">
+    <div class="chapter-header">
+      <span class="chapter-num">Chapter 4</span>
+      <h2>実装ポイント</h2>
+    </div>
+    <div class="chapter-body">
+
+      <!-- alt -->
+      <h3>alt属性（代替テキスト）</h3>
+      <p>画像の意味をテキストで伝える属性です。スクリーンリーダーはこの内容を読み上げます。</p>
+      <div class="ok-ng-grid">
+        <div class="ng-box">
+          <div class="ng-label">❌ NG — alt属性なし</div>
+          <div class="code-block">
+            <pre><code><span class="cm">&lt;!-- ファイル名が読み上げられてしまう --&gt;</span>
+<span class="tg">&lt;img</span> <span class="at">src</span>=<span class="vl">"banner.jpg"</span><span class="tg">&gt;</span></code></pre>
+          </div>
+        </div>
+        <div class="ok-box">
+          <div class="ok-label">✅ OK — 内容を説明</div>
+          <div class="code-block">
+            <pre><code><span class="tg">&lt;img</span> <span class="at">src</span>=<span class="vl">"banner.jpg"</span>
+     <span class="at">alt</span>=<span class="vl">"春の新商品キャンペーン告知"</span><span class="tg">&gt;</span></code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="ok-ng-grid">
+        <div class="ng-box">
+          <div class="ng-label">❌ NG — ファイル名や「画像」はダメ</div>
+          <div class="code-block">
+            <pre><code><span class="tg">&lt;img</span> <span class="at">src</span>=<span class="vl">"logo.svg"</span> <span class="at">alt</span>=<span class="vl">"logo.svg"</span><span class="tg">&gt;</span>
+<span class="tg">&lt;img</span> <span class="at">src</span>=<span class="vl">"photo.jpg"</span> <span class="at">alt</span>=<span class="vl">"画像"</span><span class="tg">&gt;</span></code></pre>
+          </div>
+        </div>
+        <div class="ok-box">
+          <div class="ok-label">✅ OK — 装飾画像はalt=""（空）</div>
+          <div class="code-block">
+            <pre><code><span class="cm">&lt;!-- 情報を持たない装飾画像は空にする --&gt;</span>
+<span class="tg">&lt;img</span> <span class="at">src</span>=<span class="vl">"deco.png"</span> <span class="at">alt</span>=<span class="vl">""</span><span class="tg">&gt;</span></code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="note">
+        <div class="note-title">💡 alt=""（空）と alt属性なし の違い</div>
+        <code>alt=""</code> はスクリーンリーダーが画像の存在自体をスキップします。一方、<code>alt</code>属性がない場合はファイル名などを読み上げてしまうことがあります。装飾画像には必ず <code>alt=""</code> を書きましょう。
+      </div>
+
+      <!-- 見出し構造 -->
+      <h3>見出し構造（h1〜h6）</h3>
+      <p>見出しはスクリーンリーダーユーザーがページを「ナビゲート」するために使います。<strong>見た目のサイズを調整したいだけのために見出しタグを選ぶのはNG</strong>です。</p>
+      <div class="ok-ng-grid">
+        <div class="ng-box">
+          <div class="ng-label">❌ NG — 見た目だけで選んでいる</div>
+          <div class="code-block">
+            <pre><code><span class="cm">&lt;!-- 大きく見せたいだけでh1を使う --&gt;</span>
+<span class="tg">&lt;h1&gt;</span>会社概要<span class="tg">&lt;/h1&gt;</span>
+<span class="tg">&lt;h1&gt;</span>事業内容<span class="tg">&lt;/h1&gt;</span>
+<span class="tg">&lt;h1&gt;</span>お問い合わせ<span class="tg">&lt;/h1&gt;</span></code></pre>
+          </div>
+        </div>
+        <div class="ok-box">
+          <div class="ok-label">✅ OK — 階層構造に沿って使う</div>
+          <div class="code-block">
+            <pre><code><span class="tg">&lt;h1&gt;</span>株式会社〇〇<span class="tg">&lt;/h1&gt;</span>
+  <span class="tg">&lt;h2&gt;</span>会社概要<span class="tg">&lt;/h2&gt;</span>
+    <span class="tg">&lt;h3&gt;</span>沿革<span class="tg">&lt;/h3&gt;</span>
+  <span class="tg">&lt;h2&gt;</span>事業内容<span class="tg">&lt;/h2&gt;</span>
+  <span class="tg">&lt;h2&gt;</span>お問い合わせ<span class="tg">&lt;/h2&gt;</span></code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="note-important">
+        <div class="note-title">⚠️ よくある間違い</div>
+        <code>h1</code> はページ内に<strong>1つだけ</strong>が基本です。見出しレベルは飛ばさないようにしましょう（h2 の次に h4 など）。
+      </div>
+
+      <!-- lang属性 -->
+      <h3>lang属性</h3>
+      <p>スクリーンリーダーが正しい言語で読み上げるために必要な属性です。</p>
+      <div class="code-block">
+        <div class="code-label">HTML</div>
+        <pre><code><span class="cm">&lt;!-- 日本語ページには lang="ja" を必ず指定 --&gt;</span>
+<span class="tg">&lt;html</span> <span class="at">lang</span>=<span class="vl">"ja"</span><span class="tg">&gt;</span>
+
+<span class="cm">&lt;!-- ページ内に英語が含まれる場合は部分的に指定も可能 --&gt;</span>
+<span class="tg">&lt;p&gt;</span>詳細は <span class="tg">&lt;span</span> <span class="at">lang</span>=<span class="vl">"en"</span><span class="tg">&gt;</span>Privacy Policy<span class="tg">&lt;/span&gt;</span> をご確認ください。<span class="tg">&lt;/p&gt;</span></code></pre>
+      </div>
+
+      <!-- フォームとlabel -->
+      <h3>フォームと label 要素</h3>
+      <p><code>label</code> 要素を使ってフォーム部品と説明を関連づけます。スクリーンリーダーはラベルを読み上げて、何を入力するかをユーザーに伝えます。</p>
+      <div class="ok-ng-grid">
+        <div class="ng-box">
+          <div class="ng-label">❌ NG — placeholderだけに頼っている</div>
+          <div class="code-block">
+            <pre><code><span class="cm">&lt;!-- 入力後はplaceholderが消えて何の項目かわからなくなる --&gt;</span>
+<span class="tg">&lt;input</span> <span class="at">type</span>=<span class="vl">"text"</span> <span class="at">placeholder</span>=<span class="vl">"お名前"</span><span class="tg">&gt;</span></code></pre>
+          </div>
+        </div>
+        <div class="ok-box">
+          <div class="ok-label">✅ OK — for属性とidで紐づける</div>
+          <div class="code-block">
+            <pre><code><span class="tg">&lt;label</span> <span class="at">for</span>=<span class="vl">"name"</span><span class="tg">&gt;</span>お名前<span class="tg">&lt;/label&gt;</span>
+<span class="tg">&lt;input</span> <span class="at">type</span>=<span class="vl">"text"</span> <span class="at">id</span>=<span class="vl">"name"</span>
+       <span class="at">placeholder</span>=<span class="vl">"山田 太郎"</span><span class="tg">&gt;</span></code></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- コントラスト -->
+      <h3>カラーコントラスト比</h3>
+      <p>文字と背景の明暗差（コントラスト比）が不足すると、見えにくくなります。WCAGレベルAAでは<strong>通常テキストで4.5:1以上</strong>が必要です。</p>
+      <div class="ok-ng-grid">
+        <div class="ng-box">
+          <div class="ng-label">❌ NG — コントラスト不足</div>
+          <div class="code-block">
+            <pre><code><span class="cm">/* コントラスト比 約2.3:1（不十分） */</span>
+<span class="sl">.text</span> {
+  <span class="pr">color</span>: <span class="va">#aaaaaa</span>;
+  <span class="pr">background</span>: <span class="va">#ffffff</span>;
+}</code></pre>
+          </div>
+        </div>
+        <div class="ok-box">
+          <div class="ok-label">✅ OK — 4.5:1以上を確保</div>
+          <div class="code-block">
+            <pre><code><span class="cm">/* コントラスト比 約7:1（十分） */</span>
+<span class="sl">.text</span> {
+  <span class="pr">color</span>: <span class="va">#595959</span>;
+  <span class="pr">background</span>: <span class="va">#ffffff</span>;
+}</code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="note">
+        <div class="note-title">💡 大きな文字・ロゴは基準が異なる</div>
+        18pt以上の大きなテキストや太字テキスト（14pt以上）は<strong>3:1以上</strong>でOKです。ロゴなどに含まれる文字は基準の対象外です。
+      </div>
+
+      <!-- フォーカス -->
+      <h3>フォーカススタイル</h3>
+      <p>キーボードでTabキーを押して移動するとき、どこにフォーカスがあるかが視覚的に見えることが必要です。<code>outline: none</code> で消してしまうのは<strong>アクセシビリティ違反</strong>です。</p>
+      <div class="ok-ng-grid">
+        <div class="ng-box">
+          <div class="ng-label">❌ NG — フォーカスを消している</div>
+          <div class="code-block">
+            <pre><code><span class="sl">a:focus</span>,
+<span class="sl">button:focus</span> {
+  <span class="pr">outline</span>: <span class="va">none</span>; <span class="cm">/* ← 絶対にダメ */</span>
+}</code></pre>
+          </div>
+        </div>
+        <div class="ok-box">
+          <div class="ok-label">✅ OK — 視認できるスタイルを設定</div>
+          <div class="code-block">
+            <pre><code><span class="sl">a:focus-visible</span>,
+<span class="sl">button:focus-visible</span> {
+  <span class="pr">outline</span>: <span class="va">3px solid #005fcc</span>;
+  <span class="pr">outline-offset</span>: <span class="va">2px</span>;
+}</code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="note">
+        <div class="note-title">💡 :focus-visible を使う</div>
+        <code>:focus</code> ではなく <code>:focus-visible</code> を使うと、マウスクリック時にはフォーカスリングを表示せず、キーボード操作時にのみ表示させることができます。
+      </div>
+
+      <!-- sr-only -->
+      <h3>.sr-only（スクリーンリーダー専用テキスト）</h3>
+      <p>視覚的には非表示にしつつ、スクリーンリーダーには読み上げてもらいたいテキストに使うCSSパターンです。</p>
+      <div class="code-block">
+        <div class="code-label">CSS</div>
+        <pre><code><span class="sl">.sr-only</span> {
+  <span class="pr">position</span>: <span class="va">absolute</span>;
+  <span class="pr">width</span>: <span class="va">1px</span>;
+  <span class="pr">height</span>: <span class="va">1px</span>;
+  <span class="pr">padding</span>: <span class="va">0</span>;
+  <span class="pr">margin</span>: <span class="va">-1px</span>;
+  <span class="pr">overflow</span>: <span class="va">hidden</span>;
+  <span class="pr">clip</span>: <span class="va">rect(0, 0, 0, 0)</span>;
+  <span class="pr">white-space</span>: <span class="va">nowrap</span>;
+  <span class="pr">border</span>: <span class="va">0</span>;
+}</code></pre>
+      </div>
+      <div class="code-block">
+        <div class="code-label">HTML — 使用例</div>
+        <pre><code><span class="cm">&lt;!-- アイコンだけのボタン — 視覚的には✕アイコンだけ表示 --&gt;</span>
+<span class="tg">&lt;button</span> <span class="at">type</span>=<span class="vl">"button"</span><span class="tg">&gt;</span>
+  ✕
+  <span class="tg">&lt;span</span> <span class="at">class</span>=<span class="vl">"sr-only"</span><span class="tg">&gt;</span>モーダルを閉じる<span class="tg">&lt;/span&gt;</span>
+<span class="tg">&lt;/button&gt;</span>
+
+<span class="cm">&lt;!-- 「もっと見る」ボタン — スクリーンリーダーには何のリンクか補足 --&gt;</span>
+<span class="tg">&lt;a</span> <span class="at">href</span>=<span class="vl">"news.html"</span><span class="tg">&gt;</span>
+  もっと見る
+  <span class="tg">&lt;span</span> <span class="at">class</span>=<span class="vl">"sr-only"</span><span class="tg">&gt;</span>（ニュース一覧）<span class="tg">&lt;/span&gt;</span>
+<span class="tg">&lt;/a&gt;</span></code></pre>
+      </div>
+      <div class="note-important">
+        <div class="note-title">⚠️ display:none や visibility:hidden との違い</div>
+        <code>display: none</code> はスクリーンリーダーにも読まれません。<code>.sr-only</code> は「視覚的に隠しつつ、スクリーンリーダーには伝える」ための専用テクニックです。
+      </div>
+
+      <!-- WAI-ARIA -->
+      <h3>WAI-ARIAについて（参考）</h3>
+      <div class="note-review">
+        <div class="note-title">📎 HALベーカリー＆カフェの教材でも出てきましたね</div>
+        <p>ハンバーガーメニューで使った <code>aria-label</code> / <code>aria-controls</code> / <code>aria-expanded</code> / <code>aria-hidden</code>、アコーディオンで使った <code>aria-expanded</code> の動的切り替えがこれにあたります。</p>
+        <p style="margin-top:.6rem;">WAI-ARIAはHTMLだけでは支援技術に伝えられない情報を補うための仕様です。詳しくはWAICの「WAI-ARIA オーサリング・プラクティス（日本語訳）」を参照してください。</p>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- Chapter 5 -->
+  <section class="chapter" id="ch5">
+    <div class="chapter-header">
+      <span class="chapter-num">Chapter 5</span>
+      <h2>チェック・検証方法</h2>
+    </div>
+    <div class="chapter-body">
+
+      <h3>自動チェックツール（ブラウザ拡張）</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>ツール</th><th>特徴</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>axe DevTools</strong></td>
+              <td>Chrome拡張。開発者ツールに統合。問題箇所をコードと紐づけて表示</td>
+            </tr>
+            <tr>
+              <td><strong>WAVE</strong></td>
+              <td>Chrome拡張。ページ上にアイコンを重ねて視覚的に問題を確認できる</td>
+            </tr>
+            <tr>
+              <td><strong>Lighthouse</strong></td>
+              <td>Chrome DevToolsに内蔵。アクセシビリティスコアをまとめて確認</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note-important">
+        <div class="note-title">⚠️ 自動チェックで検出できるのは全体の30〜40%程度</div>
+        ツールで問題なしでも、キーボード操作の確認・実際にスクリーンリーダーで試すことが大切です。
+      </div>
+
+      <h3>カラーコントラストチェック</h3>
+      <ul class="list">
+        <li><strong>WebAIM Contrast Checker</strong>（<a href="https://webaim.org/resources/contrastchecker/" target="_blank" rel="noopener">webaim.org</a>）— 色コードを入力してコントラスト比を確認</li>
+        <li><strong>Figma プラグイン「Contrast」</strong> — デザイン段階でのチェックに</li>
+      </ul>
+
+      <h3>スクリーンリーダーで体験してみる</h3>
+      <ul class="list">
+        <li><strong>macOS：VoiceOver</strong>（標準搭載）— ⌘ + F5 で起動</li>
+        <li><strong>Windows：NVDA</strong>（無料・ダウンロード）</li>
+        <li><strong>iPhone：VoiceOver</strong>（設定 → アクセシビリティ）</li>
+        <li><strong>Android：TalkBack</strong>（設定 → ユーザー補助）</li>
+      </ul>
+
+      <h3>簡易チェックリスト</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th class="td-center">確認</th><th>項目</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-center">☐</td><td>全画像に <code>alt</code> 属性がある（装飾画像は <code>alt=""</code>）</td></tr>
+            <tr><td class="td-center">☐</td><td>見出し（h1〜h6）の階層が正しい</td></tr>
+            <tr><td class="td-center">☐</td><td><code>&lt;html&gt;</code> に <code>lang="ja"</code> がある</td></tr>
+            <tr><td class="td-center">☐</td><td>フォームの入力欄に <code>label</code> が紐づいている</td></tr>
+            <tr><td class="td-center">☐</td><td>文字と背景のコントラスト比が4.5:1以上</td></tr>
+            <tr><td class="td-center">☐</td><td><code>outline: none</code> でフォーカスを消していない</td></tr>
+            <tr><td class="td-center">☐</td><td>Tabキーだけで主要な操作ができる</td></tr>
+            <tr><td class="td-center">☐</td><td>リンクのテキストが「こちら」「詳しくはこちら」だけになっていない</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- Chapter 6 リンク集 -->
+  <section class="chapter" id="ch6">
+    <div class="chapter-header">
+      <span class="chapter-num">参考リンク集</span>
+      <h2>参考リンク集</h2>
+    </div>
+    <div class="chapter-body">
+      <ul class="link-list">
+        <li>
+          <a href="https://waic.jp/" target="_blank" rel="noopener">WAIC（ウェブアクセシビリティ基盤委員会）</a>
+          <span class="link-desc">WCAG 2.2日本語訳・JIS解説・達成基準早見表など、日本語での一次資料がまとまっている</span>
+        </li>
+        <li>
+          <a href="https://waic.jp/translations/WCAG22/" target="_blank" rel="noopener">WCAG 2.2 日本語訳（WAIC）</a>
+          <span class="link-desc">W3C公式ガイドラインの日本語訳。達成基準を原文で確認したいときに</span>
+        </li>
+        <li>
+          <a href="https://waic.jp/resource/cheatsheet/jis-x-8341-3-2016/" target="_blank" rel="noopener">JIS X 8341-3:2016 達成基準 早見表（WAIC）</a>
+          <span class="link-desc">レベルA & AA の達成基準一覧。チェックリストとして活用できる</span>
+        </li>
+        <li>
+          <a href="https://www.digital.go.jp/resources/introduction-to-web-accessibility-guidebook" target="_blank" rel="noopener">ウェブアクセシビリティ導入ガイドブック（デジタル庁）</a>
+          <span class="link-desc">図解が豊富で初心者でもわかりやすい。スマートフォン対応の章もある</span>
+        </li>
+        <li>
+          <a href="https://www.soumu.go.jp/main_sosiki/joho_tsusin/b_free/guideline.html" target="_blank" rel="noopener">みんなの公共サイト運用ガイドライン（総務省）</a>
+          <span class="link-desc">公的機関向けの手順書。2024年版にJIS改正動向も記載</span>
+        </li>
+        <li>
+          <a href="https://webaim.org/" target="_blank" rel="noopener">WebAIM（英語）</a>
+          <span class="link-desc">実践的な解説・コントラストチェッカー・スクリーンリーダー統計など情報が豊富</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+
+<footer class="page-footer">
+  <p>ウェブアクセシビリティ 講義資料 ／ WCAG 2.2 / JIS X 8341-3:2016 準拠</p>
+</footer>
+
+</body>
+</html>
