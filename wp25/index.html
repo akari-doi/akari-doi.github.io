@@ -73,15 +73,6 @@
       position: relative;
     }
     
-    .header::after {
-      content: "✂️";
-      position: absolute;
-      right: 15px;
-      bottom: -16px;
-      font-size: 24px;
-      transform: rotate(-10deg);
-    }
-    
     .title {
       font-family: 'Kaisei Decol', serif;
       font-size: 32px;
@@ -106,12 +97,6 @@
       background-size: 100px 8px;
     }
     
-    .date {
-      font-family: 'Yomogi', cursive;
-      font-size: 16px;
-      color: var(--fashion-5);
-      text-align: right;
-    }
     
     /* メインコンテンツ */
     .main-content {
@@ -366,20 +351,16 @@
         <div>
           <h1 class="title">WP25-CMS（WordPress）サイト制作</h1>
           <p style="font-family: 'Yomogi', cursive; margin-top: 5px; color: #475569;">
-            <span style="background: rgba(242, 196, 60, 0.3); padding: 0 5px;">WordPress学習カリキュラム</span> 📝
+            <span style="background: rgba(242, 196, 60, 0.3); padding: 0 5px;">WordPress学習カリキュラム 📝</span>
           </p>
           <div style="margin-top: 15px; text-align: center;">
             <div style="display: inline-block; padding: 10px 25px; background: rgba(242, 196, 60, 0.2); border-radius: 30px; transform: rotate(-1deg); position: relative;">
               <span style="font-family: 'Kaisei Decol', serif; font-size: 18px; color: var(--fashion-5);">
                 🎯 目標：世界シェアNo.1のWordPressでサイトを作れるようになる！
               </span>
-              <svg width="100" height="20" style="position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%);" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0,0 C25,20 75,20 100,0" stroke="#F2C53D" fill="none" stroke-width="2"/>
-              </svg>
             </div>
           </div>
         </div>
-        <div class="date"></div>
       </header>
       
       <main class="main-content">
