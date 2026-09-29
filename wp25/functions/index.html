@@ -567,18 +567,23 @@ endwhile;</code></pre>
 
         <div class="step">
             <h4>📁 Twenty Seventeenの実際の使用例を確認</h4>
-            <p>inc/template-tags.phpで以下のようなコードを探してみてください：</p>
+            <p>template-parts/post/content.phpで以下のようなコードを探してみてください：</p>
         </div>
 
-        <pre><code>// template-tags.php から
-function twentyseventeen_time_link() {
-    $time_string = sprintf( $time_string,
-        get_the_date( DATE_W3C ),  // 値を取得して変数に保存
-        get_the_date()            // 値を取得して変数に保存
-    );
-    
-    return '&lt;a href="' . esc_url( get_permalink() ) . '"&gt;' . $time_string . '&lt;/a&gt;';
+        <pre><code>// template-parts/post/content.php から（一部省略）
+if ( is_single() ) {
+    the_title( '&lt;h1 class="entry-title"&gt;', '&lt;/h1&gt;' );  // the_ : そのまま画面に出力
+} else {
+    // the_title() が画面に出力する文字列の中に、get_permalink() で受け取ったURLを組み込む
+    the_title( '&lt;h2 class="entry-title"&gt;&lt;a href="' . esc_url( get_permalink() ) . '" rel="bookmark"&gt;', '&lt;/a&gt;&lt;/h2&gt;' );
 }</code></pre>
+
+        <div class="highlight">
+            <strong>💡 ポイント</strong><br>
+            ・<code>the_title()</code> → 画面に出力するのが目的なので <code>the_</code> を使う<br>
+            ・<code>get_permalink()</code> → 文字列の材料として使い、<code>esc_url()</code> で加工もするので <code>get_</code> を使う<br>
+            ・「そのまま表示したい」なら <code>the_</code>、「受け取って加工・組み込みたい」なら <code>get_</code>
+        </div>
 
         <table>
             <thead>
