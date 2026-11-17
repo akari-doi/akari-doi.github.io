@@ -423,10 +423,12 @@
 					<ul>
 						<li><a href="#hamburger-menu">ハンバーガーメニューの実装（button🆗　div🆖）</a></li>
 						<li><a href="#picture-element">画像の出し分け（&lt;picture&gt;要素）</a></li>
+						<li><a href="#alt-text">alt 属性の書き分け</a></li>
 						<li><a href="#section-heading">セクションと見出し（&lt;section&gt;のルール）</a></li>
 						<li><a href="#card-layout">カード型レイアウトのマークアップ（li？ div？）</a></li>
 						<li><a href="#footer-nav">フッターのナビゲーション</a></li>
 						<li><a href="#small-element">&lt;small&gt; の本来の意味</a></li>
+						<li><a href="#iframe-title">Googleマップの埋め込み（iframe）と title 属性</a></li>
 						<li><a href="#anchor-links">ページ内リンク（アンカーリンク）</a></li>
 					</ul>
 				</li>
@@ -440,6 +442,7 @@
 						<li><a href="#nth-child">nth-child による要素の選択</a></li>
 						<li><a href="#transform-center">transform による中央配置</a></li>
 						<li><a href="#transition">transition によるアニメーション</a></li>
+						<li><a href="#dvh">100vh ではなく 100dvh を使う理由</a></li>
 						<li><a href="#color-mix">color-mix による色の透明化</a></li>
 						<li><a href="#flexbox-basics">Flexbox の基礎</a></li>
 						<li><a href="#calc-font-size">フォントサイズの計算（calc）</a></li>
@@ -524,6 +527,38 @@
 				</ul>
 			</div>
 
+			<h3 id="alt-text">alt 属性の書き分け</h3>
+			<p><code>alt</code> は「画像の説明」というより、<strong>画像が見えないときに、代わりに置かれる文章</strong>です。スクリーンリーダーはこの文章を読み上げ、画像が読み込めなかったときはこの文章が表示されます。</p>
+			<p>「この画像を文章に置き換えるなら何と書くか」で考えると、画像の役割によって書き方が変わります。今回のサイトでは3つのパターンがあります。</p>
+
+			<h4>1. ロゴ：書かれている文字そのもの</h4>
+			<pre><code class="html">&lt;<span class="tag">img</span> <span class="attr">src</span>=<span class="val">"images/logo.svg"</span> <span class="attr">alt</span>=<span class="val">"HAL BAKERY &amp; CAFE"</span>&gt;</code></pre>
+			<p>ロゴは「文字を画像にしたもの」なので、書かれている文字をそのまま入れます。「ロゴ」「ロゴ画像」とは書きません。ヘッダーでは <code>h1</code> の中にあるので、この <code>alt</code> がページの見出しの文章になります。</p>
+
+			<h4>2. メインビジュアル：写真の内容</h4>
+			<pre><code class="html">&lt;<span class="tag">img</span> <span class="attr">src</span>=<span class="val">"images/mv-sp.jpg"</span> <span class="attr">alt</span>=<span class="val">"HAL BAKERY &amp; CAFEの店内の様子"</span>&gt;</code></pre>
+			<p>お店の雰囲気を伝える写真なので、何が写っているかを短く書きます。</p>
+
+			<h4>3. 商品画像：空にする（考え方が2つあります）</h4>
+			<pre><code class="html">&lt;<span class="tag">h3</span> <span class="attr">class</span>=<span class="val">"pick-up-item-title"</span>&gt;ハニーレモンスコーン&lt;/<span class="tag">h3</span>&gt;
+...
+&lt;<span class="tag">img</span> <span class="attr">src</span>=<span class="val">"images/item-01.jpg"</span> <span class="attr">alt</span>=<span class="val">""</span>&gt;</code></pre>
+			<p>今回は <code>alt=""</code> と空にしています。すぐ近くに商品名の見出し（<code>h3</code>）があるので、<code>alt</code> にも商品名を入れると、読み上げでは<strong>商品名が2回</strong>読まれてしまうからです。</p>
+			<ul>
+				<li><strong>alt を空にする:</strong> 近くの文章で同じ情報が伝わっているなら、重複させないという考え方です。空にすると、スクリーンリーダーはその画像を読み飛ばします。</li>
+				<li><strong>商品名を入れる:</strong> 画像が何であるかを必ず伝える、という考え方です。</li>
+			</ul>
+			<p>どちらか一方だけが正解というわけではありません。「この <code>alt</code> がなくなったら、伝わらなくなる情報はあるか？」を基準に判断します。</p>
+			<p><strong>注意：</strong>空にする場合も <code>alt</code> 属性そのものは消しません。<code>alt=""</code> は「この画像は読み飛ばしてよい」という意思表示ですが、<code>alt</code> 属性を書かないと、スクリーンリーダーがファイル名（item-01.jpg）を読み上げてしまうことがあります。</p>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://html.spec.whatwg.org/multipage/images.html#alt" target="_blank" rel="noopener">HTML Standard: 画像の代替テキストの要件</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/HTML/Element/img" target="_blank" rel="noopener">MDN: &lt;img&gt;</a></li>
+					<li><a href="https://www.w3.org/WAI/tutorials/images/decision-tree/" target="_blank" rel="noopener">W3C WAI: An alt Decision Tree（alt の判定ツリー）</a></li>
+				</ul>
+			</div>
+
 			<h3 id="section-heading">セクションと見出し（&lt;section&gt;のルール）</h3>
 			<pre><code class="html">&lt;<span class="tag">section</span> <span class="attr">class</span>=<span class="val">"section"</span>&gt;
   &lt;<span class="tag">h2</span> <span class="attr">class</span>=<span class="val">"section-title"</span>&gt;...&lt;/<span class="tag">h2</span>&gt;</code></pre>
@@ -587,6 +622,31 @@
 				</ul>
 			</div>
 
+
+			<h3 id="iframe-title">Googleマップの埋め込み（iframe）と title 属性</h3>
+			<pre><code class="html">&lt;<span class="tag">iframe</span>
+  <span class="attr">title</span>=<span class="val">"HAL BAKERY &amp; CAFEの地図"</span>
+  <span class="attr">src</span>=<span class="val">"https://www.google.com/maps/embed?..."</span>
+  <span class="attr">width</span>=<span class="val">"600"</span> <span class="attr">height</span>=<span class="val">"450"</span> <span class="attr">loading</span>=<span class="val">"lazy"</span> ...&gt;&lt;/<span class="tag">iframe</span>&gt;</code></pre>
+			<p><code>iframe</code> は、ページの中に別のページを埋め込む要素です。Googleマップの「共有」→「地図を埋め込む」でコピーしたコードを貼り付けています。</p>
+
+			<h4>title 属性は自分で足す</h4>
+			<p>Googleからコピーしたコードには <code>title</code> 属性が<strong>ついていません</strong>。そのままだと、スクリーンリーダーの利用者には「何かが埋め込まれている」ことしか伝わりません。そこで今回は、コピーしたコードに <code>title</code> 属性を自分で書き足しています。</p>
+			<p><code>title</code> には「何が埋め込まれているか」を短く書きます。画像でいう <code>alt</code> のような役割です。YouTubeなど、ほかの埋め込みでも同じように足します。</p>
+
+			<h4>そのほかの属性</h4>
+			<ul>
+				<li><strong>width / height:</strong> Googleが用意した初期サイズです。今回はCSSで <code>width: 100%</code> と高さを指定して上書きしています。</li>
+				<li><strong>loading="lazy":</strong> 画面に近づくまで読み込みを遅らせて、ページの表示を速くします。</li>
+			</ul>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-iframe-element" target="_blank" rel="noopener">HTML Standard: iframe要素</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/HTML/Element/iframe" target="_blank" rel="noopener">MDN: &lt;iframe&gt;</a></li>
+					<li><a href="https://www.w3.org/WAI/WCAG21/Techniques/html/H64" target="_blank" rel="noopener">W3C: H64 iframe 要素の title 属性を使用する</a></li>
+				</ul>
+			</div>
 
 			<h3 id="anchor-links">ページ内リンク（アンカーリンク）</h3>
 			<p>今回のサイトでは、ヘッダーとフッターのメニューから各セクションへジャンプできるように、ページ内リンク（アンカーリンク）を実装しています。</p>
@@ -653,8 +713,6 @@
 				<li><strong>href属性には必ず # を付けます</strong> - <code>href="pick-up"</code>ではなく<code>href="#pick-up"</code></li>
 				<li><strong>id名は英数字とハイフン、アンダースコアが使えます</strong> - 数字から始めることはできません</li>
 			</ul>
-			
-			<p><strong>今回のプロジェクトでは：</strong>授業中にリンクを空（<code>href=""</code>）のままにして、各セクションにもid属性を設定していませんでした。実際にサイトを完成させるには、上記の2つの作業を行う必要があります。</p>
 			
 			<div class="reference-links">
 				<div class="reference-links-title">📚 参考リンク</div>
@@ -1012,6 +1070,29 @@
 			</div>
 
 
+			<h3 id="dvh">100vh ではなく 100dvh を使う理由</h3>
+			<pre><code class="css"><span class="selector">.header-nav</span> {
+  <span class="prop">position</span>: <span class="val">fixed</span>;
+  <span class="prop">top</span>: <span class="val">0</span>;
+  <span class="prop">height</span>: <span class="val">100dvh</span>; <span class="comment">/* 100vh ではなく 100dvh */</span>
+}</code></pre>
+			<p>スマホのスライドメニューを画面の高さいっぱいにするために、<code>100vh</code> ではなく <code>100dvh</code> を使っています。</p>
+			<p><code>vh</code> は「画面（ビューポート）の高さの1%」という単位です。ところがスマホのブラウザでは、スクロールに合わせて<strong>アドレスバーが出たり引っ込んだり</strong>します。<code>100vh</code> は「アドレスバーが引っ込んだときの、いちばん広い高さ」で計算されるため、アドレスバーが出ている間は、要素の下のほうが画面の外にはみ出してしまいます。</p>
+			<ul>
+				<li><strong>100vh:</strong> アドレスバーを考慮しない高さ（スマホでは実際の表示より大きくなることがある）</li>
+				<li><strong>100dvh:</strong> いま実際に見えている高さ。アドレスバーの出入りに合わせて変わります（d は dynamic の d）</li>
+			</ul>
+			<p>今回のメニューは項目が上に3つあるだけなので <code>100vh</code> でも見た目は困りませんが、メニューのいちばん下にボタンなどを置くデザインだと、<code>100vh</code> では押せなくなることがあります。</p>
+			<p><strong>補足：</strong>ほかに <code>svh</code>（アドレスバーが出ているときの、いちばん狭い高さ）と <code>lvh</code>（引っ込んだときの、いちばん広い高さ）もあります。PCではどれも同じ値になります。</p>
+			<div class="reference-links">
+				<div class="reference-links-title">📚 参考リンク</div>
+				<ul>
+					<li><a href="https://www.w3.org/TR/css-values-4/#viewport-relative-lengths" target="_blank" rel="noopener">W3C: CSS Values - Viewport-percentage lengths (dvh, svh, lvh)</a></li>
+					<li><a href="https://developer.mozilla.org/ja/docs/Web/CSS/length" target="_blank" rel="noopener">MDN: length - ビューポートに基づく単位</a></li>
+					<li><a href="https://web.dev/blog/viewport-units" target="_blank" rel="noopener">web.dev: The large, small, and dynamic viewport units</a></li>
+				</ul>
+			</div>
+
 			<h3 id="color-mix">color-mix による色の透明化</h3>
 			<pre><code class="css"><span class="prop">background-color</span>: <span class="val">color-mix(in srgb, var(--bg) 95%, transparent)</span>;</code></pre>
 			<p>最新のCSS関数です。異なる2つの色を指定した割合で混ぜ合わせます。</p>
@@ -1195,7 +1276,6 @@
   <span class="prop">display</span>: <span class="val">inline-block</span>; <span class="comment">/* widthとheightを指定するためインラインレベルから変更 */</span>
   <span class="prop">width</span>: <span class="val">9px</span>; <span class="comment">/* アイコンサイズ */</span>
   <span class="prop">height</span>: <span class="val">15px</span>; <span class="comment">/* アイコンサイズ */</span>
-  <span class="prop">margin-left</span>: <span class="val">8px</span>; <span class="comment">/* ボタンテキストとの間隔 */</span>
   <span class="prop">background-image</span>: <span class="val">url('../images/icon-arrow-white.svg')</span>; <span class="comment">/* 矢印画像を背景として配置 */</span>
   <span class="prop">background-size</span>: <span class="val">contain</span>; <span class="comment">/* 背景に画像を切り取ったり縦横比を崩したりすることなく配置 */</span>
   <span class="prop">background-repeat</span>: <span class="val">no-repeat</span>; <span class="comment">/* 画像の繰り返しを防ぐ */</span>
@@ -1471,7 +1551,7 @@
 
 
 			<h3 id="css-property-order">プロパティを書く順序</h3>
-			<p>今回の授業では説明しながらプロパティを記述していったため、順番がバラバラになっていますが、実際の制作現場では一定のルールに従って記述することが推奨されます。</p>
+			<p>実際の制作現場では、プロパティを一定のルールに従った順序で記述することが推奨されます。</p>
 			
 			<h4>WordPress CSSコーディング規約の順序</h4>
 			<p>私はWordPress CSSコーディング規約に沿ってプロパティを記述しています：</p>
